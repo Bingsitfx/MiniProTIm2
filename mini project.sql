@@ -190,3 +190,16 @@ foreign key (uesk_usex_id) references users.users_experiences(usex_id)
 
 alter table users.users_experiences_skill add constraint uesk_uski_id
 foreign key (uesk_uski_id) references users.users_skill(uski_id)
+
+
+-- update default now ()
+alter table users.users alter column user_modified_date set default now()
+alter table users.users_roles alter column usro_modified_date set default now()
+alter table users.users_media alter column usme_modified_date set default now()
+alter table users.users_license alter column usli_modified_date set default now()
+ALTER table users.users_email alter column pmail_modified_date set default now()
+alter table users.users_education alter column usdu_modified_date set default now()
+alter table users.phone_number_type alter column ponty_modified_date set default now()
+alter table users.users_phones alter column uspo_modified_date set default now()
+alter table users.users_address alter column etad_modified_date set default now()
+alter table users.users_skill alter column uski_modified_date set default now()
