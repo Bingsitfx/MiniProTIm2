@@ -68,6 +68,14 @@ create table sales.sales_order_header(
 --select * from sales.sales_order_header;
 --drop table sales.sales_order_header;
 
+--mengupdate kolum sohe_status pada table sales.sales_order_header
+alter table sales.sales_order_header
+drop constraint sales_order_header_sohe_status_fkey,
+add constraint sales_order_header_sohe_status_fkey
+foreign key (sohe_status)
+references master.status(status)
+on delete cascade;
+
 create table sales.sales_order_detail(
 	sode_id serial primary key,
 	sode_qty integer not null,
@@ -91,4 +99,4 @@ create table sales.cart_items (
 	cait_prog_entity_id integer references curriculum.program_entity(prog_entity_id) on delete cascade
 )
 
-drop table sales.cart_items;
+--drop table sales.cart_items;
