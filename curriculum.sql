@@ -132,4 +132,14 @@ create table curriculum.section_detail_material(
 
 
 
+alter table curriculum.program_entity alter column prog_modified_date set default now()
+alter table curriculum.program_reviews alter column prow_modified_date set default now()
+alter table curriculum.section alter column sect_modified_date set default now()
+alter table curriculum.section_detail alter column secd_modified_date set default now()
+alter table curriculum.section_detail_material alter column sedm_modified_date set default now()
+
+
+//add column
+alter table curriculum.section add column sect_modified_date timestamptz
+
 
