@@ -35,27 +35,62 @@ CREATE SCHEMA users;
 ALTER SCHEMA users OWNER TO postgres;
 
 --
--- Name: get_transaction_payment(); Type: FUNCTION; Schema: payment; Owner: postgres
+-- Name: spaccountnumber(json, json, character varying); Type: PROCEDURE; Schema: payment; Owner: postgres
 --
 
-CREATE FUNCTION payment.get_transaction_payment() RETURNS TABLE(trpa_id integer, trpa_code_number character varying, trpa_order_number character varying, trpa_debet numeric, trpa_credit numeric, trpa_type character varying, trpa_note character varying, trpa_modified_date timestamp with time zone, trpa_source_id character varying, trpa_target_id character varying, trpa_user_entity_id integer)
+CREATE PROCEDURE payment.spaccountnumber(IN data1 json, IN data2 json, IN trpa_target_id character varying)
     LANGUAGE plpgsql
     AS $$
+DECLARE
+    new_UserAccountNumber int;
+    new_TransactionPaymentId int;
+    source_account_number varchar(25);
+    target_account_number varchar(25);
 BEGIN
-  RETURN QUERY
-  SELECT tp.trpa_id, tp.trpa_code_number, tp.trpa_order_number, tp.trpa_debet, tp.trpa_credit,
-       tp.trpa_type, tp.trpa_note, tp.trpa_modified_date,
-       ua_source.usac_account_number AS trpa_source_account_number,
-       ua_target.usac_account_number AS trpa_target_account_number,
-       tp.trpa_user_entity_id
-  FROM payment.transaction_payment tp
-  JOIN payment.users_account ua_source ON ua_source.usac_user_entity_id = tp.trpa_source_id
-  JOIN payment.users_account ua_target ON ua_target.usac_user_entity_id = tp.trpa_target_id;
+    WITH trpa_user_entity AS (
+        INSERT INTO payment.transaction_payment(trpa_user_entity_id, trpa_source_id, trpa_target_id)
+        SELECT x.trpa_user_entity_id, x.trpa_source_id, trpa_target_id
+        FROM json_to_recordset(data1) x (trpa_user_entity_id int, trpa_source_id varchar)
+        RETURNING trpa_id
+    )
+    SELECT trpa_id INTO new_TransactionPaymentId FROM trpa_user_entity;
+    
+    SELECT x.usac_account_number INTO source_account_number
+    FROM json_to_recordset(data2) x (usac_user_entity_id int, usac_account_number varchar)
+    WHERE x.usac_user_entity_id = new_TransactionPaymentId;
+    
+    INSERT INTO payment.users_account(usac_user_entity_id, usac_account_number)
+    SELECT new_TransactionPaymentId, source_account_number;
+    
+    -- Transfer funds from source to target
+    INSERT INTO payment.transaction_payment(trpa_source_id, trpa_target_id, trpa_debet, trpa_type, trpa_modified_date)
+    SELECT tp.trpa_source_id, tp.trpa_target_id, tp.trpa_debet, 'transfer', now()
+    FROM payment.transaction_payment tp
+    WHERE tp.trpa_id = new_TransactionPaymentId;
+    
+    -- Update the source's credit by subtracting the transfer amount
+    UPDATE payment.transaction_payment
+    SET trpa_credit = trpa_credit - (SELECT trpa_debet FROM payment.transaction_payment WHERE trpa_id = new_TransactionPaymentId)
+    WHERE trpa_id = new_TransactionPaymentId;
+    
+    -- Get the target's account number
+    SELECT ua.usac_account_number INTO target_account_number
+    FROM payment.transaction_payment tp
+    JOIN payment.users_account ua ON ua.usac_user_entity_id = tp.trpa_target_id
+    WHERE tp.trpa_id = new_TransactionPaymentId;
+    
+    -- Update the target's credit by adding the transfer amount
+    UPDATE payment.transaction_payment
+    SET trpa_credit = trpa_credit + (SELECT trpa_debet FROM payment.transaction_payment WHERE trpa_id = new_TransactionPaymentId)
+    WHERE trpa_id = trpa_target_id;
+    
+    -- Optional: You can add additional validation or error handling here if required.
+    
 END;
 $$;
 
 
-ALTER FUNCTION payment.get_transaction_payment() OWNER TO postgres;
+ALTER PROCEDURE payment.spaccountnumber(IN data1 json, IN data2 json, IN trpa_target_id character varying) OWNER TO postgres;
 
 SET default_tablespace = '';
 
@@ -69,7 +104,7 @@ CREATE TABLE payment.bank (
     bank_entity_id integer NOT NULL,
     bank_code character varying(10),
     bank_name character varying(55),
-    bank_modified_date timestamp with time zone
+    bank_modified_date timestamp with time zone DEFAULT now()
 );
 
 
@@ -83,7 +118,7 @@ CREATE TABLE payment.fintech (
     fint_entity_id integer NOT NULL,
     fint_code character varying(10),
     fint_name character varying(55),
-    fint_modified_date timestamp with time zone
+    fint_modified_date timestamp with time zone DEFAULT now()
 );
 
 
@@ -101,7 +136,7 @@ CREATE TABLE payment.transaction_payment (
     trpa_credit numeric,
     trpa_type character varying(15),
     trpa_note character varying(255),
-    trpa_modified_date timestamp with time zone,
+    trpa_modified_date timestamp with time zone DEFAULT now(),
     trpa_source_id character varying(25) NOT NULL,
     trpa_target_id character varying(25) NOT NULL,
     trpa_user_entity_id integer,
@@ -143,9 +178,9 @@ CREATE TABLE payment.users_account (
     usac_account_number character varying(25),
     usac_saldo numeric,
     usac_type character varying(15),
-    usac_start_date timestamp with time zone,
-    usac_end_date timestamp with time zone,
-    usac_modified_date timestamp with time zone,
+    usac_start_date date,
+    usac_end_date date,
+    usac_modified_date timestamp with time zone DEFAULT now(),
     usac_status character varying(15),
     CONSTRAINT users_account_usac_status_check CHECK (((usac_status)::text = ANY ((ARRAY['active'::character varying, 'inactive'::character varying, 'blokir'::character varying])::text[]))),
     CONSTRAINT users_account_usac_type_check CHECK (((usac_type)::text = ANY ((ARRAY['debet'::character varying, 'credit card'::character varying, 'payment'::character varying])::text[])))
