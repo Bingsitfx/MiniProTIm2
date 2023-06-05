@@ -1,29 +1,19 @@
 
-CREATE TYPE hr.emp_marital_status AS ENUM ('M', 'S');
-
-CREATE TYPE hr.emp_gender AS ENUM ('M', 'F');
-
-CREATE TYPE hr.emp_salaried_flag AS ENUM ('0','1');
-
-CREATE TYPE hr.emp_current_flag AS ENUM ('0','1');
-
-CREATE TYPE hr.emp_type AS ENUM ('internal', 'outsource');
-
 CREATE TABLE hr.employee(
 	emp_entity_id integer PRIMARY KEY,
 	emp_emp_number varchar(25) UNIQUE,
 	emp_national_id varchar(25) UNIQUE,
 	emp_birth_date date NOT NULL,
-	emp_marital_status hr.emp_marital_status,
-	emp_gender hr.emp_gender,	
-	emp_hire_date TIMESTAMPTZ,
-	emp_salaried_flag hr.emp_salaried_flag,
+	emp_marital_status char(1) check (emp_marital_status in ('M', 'S')),
+	emp_gender char(1) check (emp_gender in ('M', 'F')),	
+	emp_hire_date date,
+	emp_salaried_flag char(1) check (emp_salaried_flag in('0','1')),
 	emp_vacation_hours SMALLINT,
 	emp_sickleave_hours SMALLINT,
-	emp_current_flag hr.emp_current_flag,
+	emp_current_flag smallint check (emp_current_flag in('0','1')),
 	emp_emp_entity_id INT,
 	emp_modified_date TIMESTAMPTZ,
-	emp_type hr.emp_type,
+	emp_type varchar(15) check (emp_type in('internal', 'outsource')),
 	emp_joro_id INT,
 	CONSTRAINT fk_emp_entity_id
       FOREIGN KEY(emp_emp_entity_id) 
@@ -45,19 +35,17 @@ foreign key(emp_joro_id)
 references master.job_role(joro_id);
 
 
-CREATE TYPE hr.ecco_status AS ENUM ('onsite', 'online', 'hybrid')
-
 CREATE TABLE hr.employee_client_contract(
 	ecco_id serial,
 	ecco_entity_id INT,
 	ecco_contract_no VARCHAR(55),
-	ecco_contract_date TIMESTAMPTZ,
-	ecco_start_date TIMESTAMPTZ,
-	ecco_end_date TIMESTAMPTZ,
+	ecco_contract_date date NOT NULL,
+	ecco_start_date date NOT NULL,
+	ecco_end_date date NOT NULL,
 	ecco_notes VARCHAR(512),
 	ecco_modified_date TIMESTAMPTZ,
 	ecco_media_link VARCHAR(255),
-	ecco_status hr.ecco_status,
+	ecco_status varchar(15) check (ecco_status in('onsite', 'online', 'hybrid')),
 	ecco_joty_id INT,
 	ecco_account_manager INT,
 	ecco_clit_id INT,
@@ -87,7 +75,7 @@ references job.client(clit_id);
 alter table hr.employee_client_contract
 add constraint fk_ecco_account_manager
 foreign key(ecco_account_manager)
-references tabelenyagaktau(account_manager); 
+references hr.employee(emp_joro_id); 
 
 CREATE TABLE hr.department(
 	dept_id serial PRIMARY KEY,
