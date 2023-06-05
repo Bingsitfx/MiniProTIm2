@@ -35,50 +35,10 @@ CREATE SCHEMA users;
 ALTER SCHEMA users OWNER TO postgres;
 
 --
--- Name: trpa_type; Type: TYPE; Schema: payment; Owner: postgres
---
-
-CREATE TYPE payment.trpa_type AS ENUM (
-    'topup',
-    'transfer',
-    'order',
-    'refund'
-);
-
-
-ALTER TYPE payment.trpa_type OWNER TO postgres;
-
---
--- Name: usac_status; Type: TYPE; Schema: payment; Owner: postgres
---
-
-CREATE TYPE payment.usac_status AS ENUM (
-    'active',
-    'inactive',
-    'blokir'
-);
-
-
-ALTER TYPE payment.usac_status OWNER TO postgres;
-
---
--- Name: usac_type; Type: TYPE; Schema: payment; Owner: postgres
---
-
-CREATE TYPE payment.usac_type AS ENUM (
-    'debet',
-    'credit card',
-    'payment'
-);
-
-
-ALTER TYPE payment.usac_type OWNER TO postgres;
-
---
 -- Name: get_transaction_payment(); Type: FUNCTION; Schema: payment; Owner: postgres
 --
 
-CREATE FUNCTION payment.get_transaction_payment() RETURNS TABLE(trpa_id integer, trpa_code_number character varying, trpa_order_number character varying, trpa_debet numeric, trpa_credit numeric, trpa_type payment.trpa_type, trpa_note character varying, trpa_modified_date timestamp with time zone, trpa_source_id integer, trpa_target_id integer, trpa_user_entity_id integer)
+CREATE FUNCTION payment.get_transaction_payment() RETURNS TABLE(trpa_id integer, trpa_code_number character varying, trpa_order_number character varying, trpa_debet numeric, trpa_credit numeric, trpa_type character varying, trpa_note character varying, trpa_modified_date timestamp with time zone, trpa_source_id character varying, trpa_target_id character varying, trpa_user_entity_id integer)
     LANGUAGE plpgsql
     AS $$
 BEGIN
@@ -139,12 +99,13 @@ CREATE TABLE payment.transaction_payment (
     trpa_order_number character varying(25),
     trpa_debet numeric,
     trpa_credit numeric,
-    trpa_type payment.trpa_type,
+    trpa_type character varying(15),
     trpa_note character varying(255),
     trpa_modified_date timestamp with time zone,
-    trpa_source_id integer,
-    trpa_target_id integer,
-    trpa_user_entity_id integer
+    trpa_source_id character varying(25) NOT NULL,
+    trpa_target_id character varying(25) NOT NULL,
+    trpa_user_entity_id integer,
+    CONSTRAINT transaction_payment_trpa_type_check CHECK (((trpa_type)::text = ANY ((ARRAY['topup'::character varying, 'transfer'::character varying, 'order'::character varying, 'refund'::character varying])::text[])))
 );
 
 
@@ -181,11 +142,13 @@ CREATE TABLE payment.users_account (
     usac_user_entity_id integer NOT NULL,
     usac_account_number character varying(25),
     usac_saldo numeric,
-    usac_type payment.usac_type,
+    usac_type character varying(15),
     usac_start_date timestamp with time zone,
     usac_end_date timestamp with time zone,
     usac_modified_date timestamp with time zone,
-    usac_status payment.usac_status
+    usac_status character varying(15),
+    CONSTRAINT users_account_usac_status_check CHECK (((usac_status)::text = ANY ((ARRAY['active'::character varying, 'inactive'::character varying, 'blokir'::character varying])::text[]))),
+    CONSTRAINT users_account_usac_type_check CHECK (((usac_type)::text = ANY ((ARRAY['debet'::character varying, 'credit card'::character varying, 'payment'::character varying])::text[])))
 );
 
 
