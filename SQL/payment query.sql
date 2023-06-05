@@ -2,9 +2,11 @@ create table users.business_entity(
 entity_id serial primary key
 )
 
+
 create table users.users(
 user_entity_id serial primary key
 )
+
 
 create table payment.bank(
 bank_entity_id integer primary key references users.business_entity(entity_id),	
@@ -13,6 +15,7 @@ bank_name varchar(55) unique,
 bank_modified_date timestamptz
 )
 
+
 create table payment.fintech(
 fint_entity_id integer primary key references users.business_entity(entity_id),
 fint_code varchar(10) unique,
@@ -20,8 +23,9 @@ fint_name varchar(55) unique,
 fint_modified_date timestamptz
 )
 
+
 create table payment.users_account(
-usac_entity_id serial  references payment.bank(bank_entity_id) references payment.fintech(fint_entity_id),
+usac_bank_entity_id integer references payment.bank(bank_entity_id) references payment.fintech(fint_entity_id),
 usac_user_entity_id integer references users.users(user_entity_id),
 usac_account_number varchar(25) unique,
 usac_saldo numeric,
@@ -30,7 +34,7 @@ usac_start_date timestamptz,
 usac_end_date timestamptz,
 usac_modified_date timestamptz,
 usac_status varchar(15) CHECK (usac_status in('active','inactive','blokir')),
-primary key (usac_user_entity_id,usac_entity_id)
+primary key (usac_user_entity_id,usac_bank_entity_id)
 )
 
 

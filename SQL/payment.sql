@@ -138,7 +138,7 @@ ALTER SEQUENCE payment.transaction_payment_trpa_id_seq OWNED BY payment.transact
 --
 
 CREATE TABLE payment.users_account (
-    usac_entity_id integer NOT NULL,
+    usac_bank_entity_id integer NOT NULL,
     usac_user_entity_id integer NOT NULL,
     usac_account_number character varying(25),
     usac_saldo numeric,
@@ -153,28 +153,6 @@ CREATE TABLE payment.users_account (
 
 
 ALTER TABLE payment.users_account OWNER TO postgres;
-
---
--- Name: users_account_usac_entity_id_seq; Type: SEQUENCE; Schema: payment; Owner: postgres
---
-
-CREATE SEQUENCE payment.users_account_usac_entity_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE payment.users_account_usac_entity_id_seq OWNER TO postgres;
-
---
--- Name: users_account_usac_entity_id_seq; Type: SEQUENCE OWNED BY; Schema: payment; Owner: postgres
---
-
-ALTER SEQUENCE payment.users_account_usac_entity_id_seq OWNED BY payment.users_account.usac_entity_id;
-
 
 --
 -- Name: business_entity; Type: TABLE; Schema: users; Owner: postgres
@@ -250,13 +228,6 @@ ALTER TABLE ONLY payment.transaction_payment ALTER COLUMN trpa_id SET DEFAULT ne
 
 
 --
--- Name: users_account usac_entity_id; Type: DEFAULT; Schema: payment; Owner: postgres
---
-
-ALTER TABLE ONLY payment.users_account ALTER COLUMN usac_entity_id SET DEFAULT nextval('payment.users_account_usac_entity_id_seq'::regclass);
-
-
---
 -- Name: business_entity entity_id; Type: DEFAULT; Schema: users; Owner: postgres
 --
 
@@ -298,7 +269,7 @@ COPY payment.transaction_payment (trpa_id, trpa_code_number, trpa_order_number, 
 -- Data for Name: users_account; Type: TABLE DATA; Schema: payment; Owner: postgres
 --
 
-COPY payment.users_account (usac_entity_id, usac_user_entity_id, usac_account_number, usac_saldo, usac_type, usac_start_date, usac_end_date, usac_modified_date, usac_status) FROM stdin;
+COPY payment.users_account (usac_bank_entity_id, usac_user_entity_id, usac_account_number, usac_saldo, usac_type, usac_start_date, usac_end_date, usac_modified_date, usac_status) FROM stdin;
 \.
 
 
@@ -323,13 +294,6 @@ COPY users.users (user_entity_id) FROM stdin;
 --
 
 SELECT pg_catalog.setval('payment.transaction_payment_trpa_id_seq', 1, false);
-
-
---
--- Name: users_account_usac_entity_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
---
-
-SELECT pg_catalog.setval('payment.users_account_usac_entity_id_seq', 1, false);
 
 
 --
@@ -415,7 +379,7 @@ ALTER TABLE ONLY payment.transaction_payment
 --
 
 ALTER TABLE ONLY payment.users_account
-    ADD CONSTRAINT users_account_pkey PRIMARY KEY (usac_user_entity_id, usac_entity_id);
+    ADD CONSTRAINT users_account_pkey PRIMARY KEY (usac_user_entity_id, usac_bank_entity_id);
 
 
 --
@@ -467,19 +431,19 @@ ALTER TABLE ONLY payment.transaction_payment
 
 
 --
--- Name: users_account users_account_usac_entity_id_fkey; Type: FK CONSTRAINT; Schema: payment; Owner: postgres
+-- Name: users_account users_account_usac_bank_entity_id_fkey; Type: FK CONSTRAINT; Schema: payment; Owner: postgres
 --
 
 ALTER TABLE ONLY payment.users_account
-    ADD CONSTRAINT users_account_usac_entity_id_fkey FOREIGN KEY (usac_entity_id) REFERENCES payment.bank(bank_entity_id);
+    ADD CONSTRAINT users_account_usac_bank_entity_id_fkey FOREIGN KEY (usac_bank_entity_id) REFERENCES payment.bank(bank_entity_id);
 
 
 --
--- Name: users_account users_account_usac_entity_id_fkey1; Type: FK CONSTRAINT; Schema: payment; Owner: postgres
+-- Name: users_account users_account_usac_bank_entity_id_fkey1; Type: FK CONSTRAINT; Schema: payment; Owner: postgres
 --
 
 ALTER TABLE ONLY payment.users_account
-    ADD CONSTRAINT users_account_usac_entity_id_fkey1 FOREIGN KEY (usac_entity_id) REFERENCES payment.fintech(fint_entity_id);
+    ADD CONSTRAINT users_account_usac_bank_entity_id_fkey1 FOREIGN KEY (usac_bank_entity_id) REFERENCES payment.fintech(fint_entity_id);
 
 
 --
