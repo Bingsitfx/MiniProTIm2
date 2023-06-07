@@ -31,7 +31,7 @@ import { PaymentModule } from './payment/payment.module';
     BootcampModule,
     JobhireModule,
     SalesModule,
-    PaymentModule,
+    PaymentModule
   ],
   controllers: [],
   providers: [],
