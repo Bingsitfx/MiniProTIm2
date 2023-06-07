@@ -3845,14 +3845,6 @@ ALTER TABLE ONLY jobhire.talent_apply_progress
 
 
 --
--- Name: client unique_clit_addr_id; Type: CONSTRAINT; Schema: jobhire; Owner: postgres
---
-
-ALTER TABLE ONLY jobhire.client
-    ADD CONSTRAINT unique_clit_addr_id UNIQUE (clit_addr_id);
-
-
---
 -- Name: address address_addr_line1_key; Type: CONSTRAINT; Schema: master; Owner: postgres
 --
 
@@ -4753,7 +4745,7 @@ ALTER TABLE ONLY jobhire.job_post_desc
 --
 
 ALTER TABLE ONLY jobhire.job_post
-    ADD CONSTRAINT job_post_jopo_addr_id_fkey FOREIGN KEY (jopo_addr_id) REFERENCES jobhire.client(clit_addr_id);
+    ADD CONSTRAINT job_post_jopo_addr_id_fkey FOREIGN KEY (jopo_addr_id) REFERENCES master.address(addr_id);
 
 
 --
