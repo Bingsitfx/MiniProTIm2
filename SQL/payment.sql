@@ -111,6 +111,28 @@ CREATE TABLE payment.bank (
 ALTER TABLE payment.bank OWNER TO postgres;
 
 --
+-- Name: bank_bank_entity_id_seq; Type: SEQUENCE; Schema: payment; Owner: postgres
+--
+
+CREATE SEQUENCE payment.bank_bank_entity_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE payment.bank_bank_entity_id_seq OWNER TO postgres;
+
+--
+-- Name: bank_bank_entity_id_seq; Type: SEQUENCE OWNED BY; Schema: payment; Owner: postgres
+--
+
+ALTER SEQUENCE payment.bank_bank_entity_id_seq OWNED BY payment.bank.bank_entity_id;
+
+
+--
 -- Name: fintech; Type: TABLE; Schema: payment; Owner: postgres
 --
 
@@ -123,6 +145,28 @@ CREATE TABLE payment.fintech (
 
 
 ALTER TABLE payment.fintech OWNER TO postgres;
+
+--
+-- Name: fintech_fint_entity_id_seq; Type: SEQUENCE; Schema: payment; Owner: postgres
+--
+
+CREATE SEQUENCE payment.fintech_fint_entity_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE payment.fintech_fint_entity_id_seq OWNER TO postgres;
+
+--
+-- Name: fintech_fint_entity_id_seq; Type: SEQUENCE OWNED BY; Schema: payment; Owner: postgres
+--
+
+ALTER SEQUENCE payment.fintech_fint_entity_id_seq OWNED BY payment.fintech.fint_entity_id;
+
 
 --
 -- Name: transaction_payment; Type: TABLE; Schema: payment; Owner: postgres
@@ -188,6 +232,50 @@ CREATE TABLE payment.users_account (
 
 
 ALTER TABLE payment.users_account OWNER TO postgres;
+
+--
+-- Name: users_account_usac_bank_entity_id_seq; Type: SEQUENCE; Schema: payment; Owner: postgres
+--
+
+CREATE SEQUENCE payment.users_account_usac_bank_entity_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE payment.users_account_usac_bank_entity_id_seq OWNER TO postgres;
+
+--
+-- Name: users_account_usac_bank_entity_id_seq; Type: SEQUENCE OWNED BY; Schema: payment; Owner: postgres
+--
+
+ALTER SEQUENCE payment.users_account_usac_bank_entity_id_seq OWNED BY payment.users_account.usac_bank_entity_id;
+
+
+--
+-- Name: users_account_usac_user_entity_id_seq; Type: SEQUENCE; Schema: payment; Owner: postgres
+--
+
+CREATE SEQUENCE payment.users_account_usac_user_entity_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE payment.users_account_usac_user_entity_id_seq OWNER TO postgres;
+
+--
+-- Name: users_account_usac_user_entity_id_seq; Type: SEQUENCE OWNED BY; Schema: payment; Owner: postgres
+--
+
+ALTER SEQUENCE payment.users_account_usac_user_entity_id_seq OWNED BY payment.users_account.usac_user_entity_id;
+
 
 --
 -- Name: business_entity; Type: TABLE; Schema: users; Owner: postgres
@@ -256,10 +344,38 @@ ALTER SEQUENCE users.users_user_entity_id_seq OWNED BY users.users.user_entity_i
 
 
 --
+-- Name: bank bank_entity_id; Type: DEFAULT; Schema: payment; Owner: postgres
+--
+
+ALTER TABLE ONLY payment.bank ALTER COLUMN bank_entity_id SET DEFAULT nextval('payment.bank_bank_entity_id_seq'::regclass);
+
+
+--
+-- Name: fintech fint_entity_id; Type: DEFAULT; Schema: payment; Owner: postgres
+--
+
+ALTER TABLE ONLY payment.fintech ALTER COLUMN fint_entity_id SET DEFAULT nextval('payment.fintech_fint_entity_id_seq'::regclass);
+
+
+--
 -- Name: transaction_payment trpa_id; Type: DEFAULT; Schema: payment; Owner: postgres
 --
 
 ALTER TABLE ONLY payment.transaction_payment ALTER COLUMN trpa_id SET DEFAULT nextval('payment.transaction_payment_trpa_id_seq'::regclass);
+
+
+--
+-- Name: users_account usac_bank_entity_id; Type: DEFAULT; Schema: payment; Owner: postgres
+--
+
+ALTER TABLE ONLY payment.users_account ALTER COLUMN usac_bank_entity_id SET DEFAULT nextval('payment.users_account_usac_bank_entity_id_seq'::regclass);
+
+
+--
+-- Name: users_account usac_user_entity_id; Type: DEFAULT; Schema: payment; Owner: postgres
+--
+
+ALTER TABLE ONLY payment.users_account ALTER COLUMN usac_user_entity_id SET DEFAULT nextval('payment.users_account_usac_user_entity_id_seq'::regclass);
 
 
 --
@@ -281,6 +397,8 @@ ALTER TABLE ONLY users.users ALTER COLUMN user_entity_id SET DEFAULT nextval('us
 --
 
 COPY payment.bank (bank_entity_id, bank_code, bank_name, bank_modified_date) FROM stdin;
+1	001	BCA	2023-06-07 09:00:25.381159+07
+2	002	BNI	2023-06-07 09:00:34.913113+07
 \.
 
 
@@ -289,6 +407,8 @@ COPY payment.bank (bank_entity_id, bank_code, bank_name, bank_modified_date) FRO
 --
 
 COPY payment.fintech (fint_entity_id, fint_code, fint_name, fint_modified_date) FROM stdin;
+1	Goto	Gojek Tokopedia	2023-06-07 09:01:07.05947+07
+2	Paylater	Shopee	2023-06-07 09:12:45.282575+07
 \.
 
 
@@ -313,6 +433,16 @@ COPY payment.users_account (usac_bank_entity_id, usac_user_entity_id, usac_accou
 --
 
 COPY users.business_entity (entity_id) FROM stdin;
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
 \.
 
 
@@ -325,10 +455,38 @@ COPY users.users (user_entity_id) FROM stdin;
 
 
 --
+-- Name: bank_bank_entity_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
+--
+
+SELECT pg_catalog.setval('payment.bank_bank_entity_id_seq', 2, true);
+
+
+--
+-- Name: fintech_fint_entity_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
+--
+
+SELECT pg_catalog.setval('payment.fintech_fint_entity_id_seq', 2, true);
+
+
+--
 -- Name: transaction_payment_trpa_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
 --
 
 SELECT pg_catalog.setval('payment.transaction_payment_trpa_id_seq', 1, false);
+
+
+--
+-- Name: users_account_usac_bank_entity_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
+--
+
+SELECT pg_catalog.setval('payment.users_account_usac_bank_entity_id_seq', 1, false);
+
+
+--
+-- Name: users_account_usac_user_entity_id_seq; Type: SEQUENCE SET; Schema: payment; Owner: postgres
+--
+
+SELECT pg_catalog.setval('payment.users_account_usac_user_entity_id_seq', 1, false);
 
 
 --

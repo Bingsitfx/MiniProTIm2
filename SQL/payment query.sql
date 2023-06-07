@@ -2,31 +2,39 @@ create table users.business_entity(
 entity_id serial primary key
 )
 
+drop table users.business_entity
+
 
 create table users.users(
 user_entity_id serial primary key
 )
 
+drop table users.users
+
 
 create table payment.bank(
-bank_entity_id integer primary key references users.business_entity(entity_id),	
+bank_entity_id serial primary key references users.business_entity(entity_id),	
 bank_code varchar(10) unique,
 bank_name varchar(55) unique,
 bank_modified_date timestamptz default now()
 )
 
+drop table payment.bank
+
 
 create table payment.fintech(
-fint_entity_id integer primary key references users.business_entity(entity_id),
+fint_entity_id serial primary key references users.business_entity(entity_id),
 fint_code varchar(10) unique,
 fint_name varchar(55) unique,
 fint_modified_date timestamptz default now()
 )
 
+drop table payment.fintech
+
 
 create table payment.users_account(
-usac_bank_entity_id integer references payment.bank(bank_entity_id) references payment.fintech(fint_entity_id),
-usac_user_entity_id integer references users.users(user_entity_id),
+usac_bank_entity_id serial references payment.bank(bank_entity_id) references payment.fintech(fint_entity_id),
+usac_user_entity_id serial references users.users(user_entity_id),
 usac_account_number varchar(25) unique,
 usac_saldo numeric,
 usac_type varchar(15) CHECK (usac_type in('debet','credit card','payment')),
@@ -36,6 +44,8 @@ usac_modified_date timestamptz default now(),
 usac_status varchar(15) CHECK (usac_status in('active','inactive','blokir')),
 primary key (usac_user_entity_id,usac_bank_entity_id)
 )
+
+drop table payment.users_account
 
 
 create table payment.transaction_payment(
@@ -51,6 +61,15 @@ trpa_source_id varchar (25) NOT NULL,
 trpa_target_id varchar (25) NOT NULL,
 trpa_user_entity_id integer references users.users(user_entity_id)
 )
+
+UPDATE payment.transaction_payment AS tp
+SET trpa_source_id = ua_source.usac_account_number,
+    trpa_target_id = ua_target.usac_account_number
+FROM payment.users_account AS ua_source, payment.users_account AS ua_target
+WHERE tp.trpa_source_id = ua_source.usac_user_entity_id::varchar
+  AND tp.trpa_target_id = ua_target.usac_user_entity_id::varchar;
+
+drop table payment.transaction_payment
 
 
 CREATE OR REPLACE PROCEDURE payment.SPAccountNumber(In data1 json, In data2 json, In trpa_target_id varchar)
