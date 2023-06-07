@@ -2,17 +2,26 @@
 create table master.category(
 	cate_id serial primary key
 )
+
+alter table master.category
+add column cate_name varchar(255) unique not null;
+
 create table master.status(
 	status varchar(15) primary key
 )
 --select * from master.category
-
+select * from master.status;
 -------------------------------------------------------------------------------------------------------------
 
 --schema curriculum
 create table curriculum.program_entity (
 	prog_entity_id serial primary key
 )
+
+alter table curriculum.program_entity
+add column prog_title varchar(256) not null;
+
+select * from curriculum.program_entity;
 
 -------------------------------------------------------------------------------------------------------------
 
@@ -21,6 +30,13 @@ create table curriculum.program_entity (
 create table users.users(
 	user_entity_id int primary key
 )
+-------------------------------------------------------------------------------------------------------------
+
+--schema payment
+create table payment.transaction_payment(
+	trpa_code_number varchar(55) unique
+)
+
 -------------------------------------------------------------------------------------------------------------
 
 --schema sales
@@ -36,6 +52,17 @@ create table sales.special_offer (
 	spof_modified_date timestamp not null default current_timestamp,
 	spof_cate_id integer references master.category(cate_id) on delete cascade	
 )
+alter table sales.special_offer
+add column spof_description varchar(256) not null;
+
+alter table sales.special_offer
+alter column spof_start_date type date,
+alter column spof_end_date type date
+
+ALTER TABLE sales.special_offer
+ALTER COLUMN spof_start_date SET NOT NULL,
+ALTER COLUMN spof_end_date SET NOT NULL;
+
 --drop table sales.special_offer
 select * from sales.special_offer;
 
@@ -47,7 +74,7 @@ create table sales.special_offer_programs(
 	soco_modified_date timestamp default current_timestamp
 )
 --drop table sales.special_offer_programs;
---select * from sales.special_offer_programs;
+select * from sales.special_offer_programs;
 
 create table sales.sales_order_header(
 	sohe_id serial primary key,
@@ -64,17 +91,30 @@ create table sales.sales_order_header(
 	sohe_modified_date timestamp default current_timestamp,
 	sohe_user_entity_id integer references users.users(user_entity_id) on delete cascade,
 	sohe_status varchar(15) references master.status(status) check (sohe_status in ('open','shipping','cancelled','refund'))
-)	
---select * from sales.sales_order_header;
---drop table sales.sales_order_header;
+)
 
---mengupdate kolum sohe_status pada table sales.sales_order_header
+alter table sales.sales_order_header
+alter column sohe_order_date type date,
+alter column sohe_due_time type date,
+alter column sohe_ship_date type date;
+
+alter table sales.sales_order_header
+drop constraint sales_order_header_sohe_trpa_code_number_fkey,
+add constraint sales_order_header_sohe_trpa_code_number_fkey
+foreign key (sohe_trpa_code_number)
+references payment.transaction_payment(trpa_code_number)
+on delete cascade;
+
 alter table sales.sales_order_header
 drop constraint sales_order_header_sohe_status_fkey,
 add constraint sales_order_header_sohe_status_fkey
 foreign key (sohe_status)
 references master.status(status)
 on delete cascade;
+
+
+--select * from sales.sales_order_header;
+
 
 create table sales.sales_order_detail(
 	sode_id serial primary key,
@@ -100,3 +140,182 @@ create table sales.cart_items (
 )
 
 --drop table sales.cart_items;
+
+-------------------------------------------------------------------------------------------------------------------------
+
+--insert data
+
+insert into curriculum.program_entity(prog_title)
+values ('percobaan2');
+
+insert into master.category(cate_name)
+values ('percobaan2');
+
+insert into payment.transaction_payment(trpa_code_number)
+values ('TR-20230525-00001')
+
+insert into master.status(status)
+values('refund')
+
+insert into sales.sales_order_header(sohe_order_date,sohe_due_time,sohe_ship_date,sohe_order_number,sohe_account_number,sohe_trpa_code_number,sohe_subtotal,sohe_tax,sohe_total_due,sohe_license_code,sohe_user_entity_id,sohe_status)
+values ('2023-06-07','2023-06-08','2023-06-09','orderpertama01','wiwiwiwiwi','TR-20230525-00001','100','10','110','licensecode1',1,'open')
+
+select * from sales.sales_order_header;
+
+call sales.insertspecialoffer(
+'[
+	{
+		"spof_description":"percobaan kedua memasukkan data",
+		"spof_discount":9,
+		"spof_type":"apa",
+		"spof_start_date":"2023-10-10",
+		"spof_end_date":"2023-11-30",
+		"spof_min_qty":1,
+		"spof_max_qty":10,
+		"spof_cate_id":1,
+		"soco_prog_entity_id":1,
+		"soco_status":"closed"
+	},
+	{
+		"spof_description":"percobaan ketiga memasukkan data",
+		"spof_discount":30,
+		"spof_type":"sembarang",
+		"spof_start_date":"2022-09-01",
+		"spof_end_date":"2022-10-30",
+		"spof_min_qty":6,
+		"spof_max_qty":11,
+		"spof_cate_id":2,
+		"soco_prog_entity_id":2,
+		"soco_status":"cancelled"
+	}
+	]'
+);
+
+CALL sales.insertsalesorders('[
+{
+    "sohe_order_date": "2023-06-06",
+    "sohe_due_time": "2023-06-07",
+    "sohe_ship_date": "2023-06-08",
+    "sohe_order_number": "ORD001",
+    "sohe_account_number": "ACC001",
+    "sohe_trpa_code_number": "TR-20230525-00001",
+    "sohe_subtotal": 100,
+    "sohe_tax": 10,
+    "sohe_total_due": 110,
+    "sohe_license_code": "LICENSE001",
+    "sohe_user_entity_id": 1,
+    "sohe_status": "open",
+	"item":[
+		{
+            "qty": 2,
+            "unit_price": 50,
+            "unit_discount": 5,
+            "line_total": 95,
+            "prog_entity_id": 1
+        },
+        {
+            "qty": 1,
+            "unit_price": 30,
+            "unit_discount": 2,
+            "line_total": 28,
+            "prog_entity_id": 2
+        }					
+	]
+}]')
+------------------------------------------------------------------------------------------------------------------------
+
+--store procedure 
+
+CREATE OR REPLACE PROCEDURE sales.insertspecialoffer(
+	IN data json)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    new_spof_id INTEGER;
+BEGIN
+    WITH spof_id AS (
+        INSERT INTO sales.special_offer (spof_description, spof_discount, spof_type, spof_start_date, spof_end_date, spof_min_qty, spof_max_qty, spof_cate_id)
+        SELECT spof_description, spof_discount, spof_type, spof_start_date::DATE, spof_end_date::DATE, spof_min_qty, spof_max_qty, spof_cate_id
+        FROM json_to_recordset(data) AS special_offer (spof_description varchar,spof_discount INTEGER, spof_type VARCHAR, spof_start_date TEXT, spof_end_date TEXT, spof_min_qty INTEGER, spof_max_qty INTEGER, spof_cate_id INTEGER)
+        RETURNING spof_id
+    )
+    SELECT spof_id INTO new_spof_id FROM spof_id;
+
+    INSERT INTO sales.special_offer_programs (soco_prog_entity_id, soco_status, soco_spof_id)
+    SELECT soco_prog_entity_id, soco_status, new_spof_id
+    FROM json_to_recordset(data) AS special_offer_programs (soco_prog_entity_id INTEGER, soco_status VARCHAR);
+
+    COMMIT;
+END
+$BODY$;
+
+
+CREATE OR REPLACE PROCEDURE sales.insertsalesorders(
+	IN data json)
+LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+    header_id INTEGER;
+BEGIN
+    -- Insert into sales_order_header table
+   
+		insert into sales.sales_order_header(sohe_order_date,sohe_due_time,sohe_ship_date,sohe_order_number,sohe_account_number,sohe_trpa_code_number,sohe_subtotal,sohe_tax,sohe_total_due,sohe_license_code,sohe_user_entity_id,sohe_status)
+		select (sohe_order_date::DATE),(sohe_due_time::DATE),(sohe_ship_date::DATE),sohe_order_number,sohe_account_number,sohe_trpa_code_number,sohe_subtotal,sohe_tax,sohe_total_due,sohe_license_code,sohe_user_entity_id,sohe_status
+		from json_to_recordset (data) as sales_order_header (sohe_order_date TEXT,sohe_due_time TEXT,sohe_ship_date TEXT,sohe_order_number varchar,sohe_account_number varchar, sohe_trpa_code_number varchar,sohe_subtotal integer,sohe_tax integer,sohe_total_due integer,sohe_license_code varchar,sohe_user_entity_id integer,sohe_status varchar )
+		returning sohe_id into header_id;
+
+	insert into sales.sales_order_detail (
+		sode_qty,
+        sode_unit_price,
+        sode_unit_discount,
+        sode_line_total,
+        sode_sohe_id,
+        sode_prog_entity_id
+	)
+	SELECT
+        (item ->> 'qty')::INTEGER,
+        (item ->> 'unit_price')::INTEGER,
+        (item ->> 'unit_discount')::INTEGER,
+        (item ->> 'line_total')::INTEGER,
+        header_id,
+        (item ->> 'prog_entity_id')::INTEGER
+    FROM json_to_recordset(data) AS x(item);
+    -- Commit the transaction
+    COMMIT;
+END
+$BODY$;
+
+drop procedure sales.insertsalesorders
+
+
+CREATE OR REPLACE PROCEDURE sales.insertorder(
+	IN data json,
+	IN datas json)
+LANGUAGE 'plpgsql'
+AS $BODY$
+	declare idOrder int;
+
+begin
+
+	with orderId as(
+	insert into sales.sales_order_header(sohe_order_date,sohe_due_time,sohe_ship_date,sohe_order_number,sohe_account_number,sohe_trpa_code_number,sohe_subtotal,sohe_tax,sohe_total_due,sohe_license_code,sohe_user_entity_id,sohe_status)
+	select x.sohe_order_date::date,x.sohe_due_time::date,x.sohe_ship_date::date,x.sohe_order_number,x.sohe_account_number,x.sohe_trpa_code_number,x.sohe_subtotal,x.sohe_tax,x.sohe_total_due,x.sohe_license_code,x.sohe_user_entity_id,x.sohe_status from json_to_recordset(data) x
+		(
+			sohe_order_date text,sohe_due_time text,sohe_ship_date text,sohe_order_number varchar,sohe_account_number varchar,sohe_trpa_code_number varchar,sohe_subtotal integer,sohe_tax integer,sohe_total_due integer,sohe_license_code varchar,sohe_user_entity_id integer,sohe_status varchar
+		)
+		returning sohe_id
+	)
+	
+	select sohe_id into idOrder from orderId;
+	
+	insert into sales.sales_order_detail(sode_sohe_id,sode_qty,sode_unit_price,sode_unit_discount,sode_line_total,sode_prog_entity_id)
+	select idOrder,x.product_id, x.quantity from json_to_recordset(datas) x
+	(
+	order_id int,
+	product_id int,
+	quantity int
+	);
+
+end
+$BODY$;
+
