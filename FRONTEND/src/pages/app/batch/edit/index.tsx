@@ -25,7 +25,7 @@ import { useRouter } from "next/router";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { MyPage } from "@/components/types";
 
-const NewBatch:MyPage = () => {
+const EditBatch:MyPage = () => {
   const router = useRouter();
   const [checked, setChecked] = useState<number[]>([]);
 
@@ -50,6 +50,7 @@ const NewBatch:MyPage = () => {
   //submit
   const handleRegistration = async (data: any) => {
     // try {
+    console.log(data);
     data.selectedMembers = checked.sort((a, b) => a - b);
     if (data.selectedMembers.length < 1) {
       console.log("pilih membernya");
@@ -247,7 +248,7 @@ const NewBatch:MyPage = () => {
 
   return (
     <div>
-      <Content title="CREATE BATCH">
+      <Content title="EDIT BATCH #berapa Sama Judulnya apa">
         {/* <div className="mt-2">
           <form onSubmit={handleSubmit(handleRegistration, handleError)}>
             <div className="grid grid-cols-1 gap-4 max-w-xl m-auto">
@@ -616,5 +617,5 @@ const NewBatch:MyPage = () => {
   );
 };
 
-NewBatch.Layout="Admin"
-export default NewBatch;
+EditBatch.Layout="Admin"
+export default EditBatch;

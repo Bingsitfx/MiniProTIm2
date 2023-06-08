@@ -1,4 +1,4 @@
-import Content1 from "@/pages/shared/content1";
+import Content1 from "@/components/shared/content1";
 import {
   Button,
   Card,
@@ -16,6 +16,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded";
 import ReviewModal from "./editreview";
+import { MyPage } from "@/components/types";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -60,7 +61,7 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const EvaluationBatch = () => {
+const EvaluationBatch:MyPage = () => {
   const dataUser = [
     {
       id: 1,
@@ -193,7 +194,6 @@ const EvaluationBatch = () => {
   };
 
   const handleEvaluation = () => {
-    console.log(selected);
     setAnchorEl(null);
   };
 
@@ -202,7 +202,6 @@ const EvaluationBatch = () => {
     setAnchorEl(null);
   };
   const handleResign = () => {
-    console.log(selected);
     setAnchorEl(null);
   };
   const router = useRouter();
@@ -280,4 +279,5 @@ const EvaluationBatch = () => {
   );
 };
 
+EvaluationBatch.Layout="Admin"
 export default EvaluationBatch;
