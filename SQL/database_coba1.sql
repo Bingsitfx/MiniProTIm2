@@ -355,6 +355,38 @@ CREATE TYPE public.sedm_filetype_status AS ENUM (
 
 ALTER TYPE public.sedm_filetype_status OWNER TO postgres;
 
+--
+-- Name: batch_modified_date_function(); Type: FUNCTION; Schema: bootcamp; Owner: postgres
+--
+
+CREATE FUNCTION bootcamp.batch_modified_date_function() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	NEW.batch_modified_date = NOW();
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION bootcamp.batch_modified_date_function() OWNER TO postgres;
+
+--
+-- Name: batch_trainee_modified_date_function(); Type: FUNCTION; Schema: bootcamp; Owner: postgres
+--
+
+CREATE FUNCTION bootcamp.batch_trainee_modified_date_function() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	NEW.batr_modified_date = NOW();
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION bootcamp.batch_trainee_modified_date_function() OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -495,20 +527,6 @@ ALTER SEQUENCE bootcamp.batch_trainee_evaluation_btev_id_seq OWNED BY bootcamp.b
 
 
 --
--- Name: instructor_programs; Type: TABLE; Schema: bootcamp; Owner: postgres
---
-
-CREATE TABLE bootcamp.instructor_programs (
-    batch_id integer NOT NULL,
-    inpro_entity_id integer NOT NULL,
-    inpro_emp_entity_id integer NOT NULL,
-    inpro_modified_date timestamp with time zone DEFAULT now()
-);
-
-
-ALTER TABLE bootcamp.instructor_programs OWNER TO postgres;
-
---
 -- Name: program_apply; Type: TABLE; Schema: bootcamp; Owner: postgres
 --
 
@@ -610,6 +628,20 @@ ALTER TABLE bootcamp.talent_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE bootcamp.talent_id_seq OWNED BY bootcamp.talent.id;
 
+
+--
+-- Name: trainer_programs; Type: TABLE; Schema: bootcamp; Owner: postgres
+--
+
+CREATE TABLE bootcamp.trainer_programs (
+    batch_id integer NOT NULL,
+    inpro_entity_id integer NOT NULL,
+    inpro_emp_entity_id integer NOT NULL,
+    inpro_modified_date timestamp with time zone DEFAULT now()
+);
+
+
+ALTER TABLE bootcamp.trainer_programs OWNER TO postgres;
 
 --
 -- Name: section_prog_entity_id_seq; Type: SEQUENCE; Schema: curriculum; Owner: postgres
@@ -2739,14 +2771,6 @@ COPY bootcamp.batch_trainee_evaluation (btev_id, btev_type, btev_header, btev_se
 
 
 --
--- Data for Name: instructor_programs; Type: TABLE DATA; Schema: bootcamp; Owner: postgres
---
-
-COPY bootcamp.instructor_programs (batch_id, inpro_entity_id, inpro_emp_entity_id, inpro_modified_date) FROM stdin;
-\.
-
-
---
 -- Data for Name: program_apply; Type: TABLE DATA; Schema: bootcamp; Owner: postgres
 --
 
@@ -2767,6 +2791,14 @@ COPY bootcamp.program_apply_progress (parog_id, parog_user_entity_id, parog_prog
 --
 
 COPY bootcamp.talent (id, fullname, talent_user_entity_id, teknologi, talent_batch_id, talent_start_date, talent_end_date, talent_trainer, talent_skill, status) FROM stdin;
+\.
+
+
+--
+-- Data for Name: trainer_programs; Type: TABLE DATA; Schema: bootcamp; Owner: postgres
+--
+
+COPY bootcamp.trainer_programs (batch_id, inpro_entity_id, inpro_emp_entity_id, inpro_modified_date) FROM stdin;
 \.
 
 
@@ -3597,10 +3629,10 @@ ALTER TABLE ONLY bootcamp.batch
 
 
 --
--- Name: instructor_programs instructor_programs_pkey; Type: CONSTRAINT; Schema: bootcamp; Owner: postgres
+-- Name: trainer_programs instructor_programs_pkey; Type: CONSTRAINT; Schema: bootcamp; Owner: postgres
 --
 
-ALTER TABLE ONLY bootcamp.instructor_programs
+ALTER TABLE ONLY bootcamp.trainer_programs
     ADD CONSTRAINT instructor_programs_pkey PRIMARY KEY (batch_id, inpro_entity_id, inpro_emp_entity_id);
 
 
@@ -4421,6 +4453,20 @@ ALTER TABLE ONLY users.users_skill
 
 
 --
+-- Name: batch batch_modified_date_trigger; Type: TRIGGER; Schema: bootcamp; Owner: postgres
+--
+
+CREATE TRIGGER batch_modified_date_trigger BEFORE UPDATE ON bootcamp.batch FOR EACH ROW EXECUTE FUNCTION bootcamp.batch_modified_date_function();
+
+
+--
+-- Name: batch_trainee batch_trainee_modified_date_trigger; Type: TRIGGER; Schema: bootcamp; Owner: postgres
+--
+
+CREATE TRIGGER batch_trainee_modified_date_trigger BEFORE UPDATE ON bootcamp.batch_trainee FOR EACH ROW EXECUTE FUNCTION bootcamp.batch_trainee_modified_date_function();
+
+
+--
 -- Name: batch batch_batch_entity_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
 --
 
@@ -4477,26 +4523,26 @@ ALTER TABLE ONLY bootcamp.batch
 
 
 --
--- Name: instructor_programs instructor_programs_batch_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
+-- Name: trainer_programs instructor_programs_batch_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
 --
 
-ALTER TABLE ONLY bootcamp.instructor_programs
+ALTER TABLE ONLY bootcamp.trainer_programs
     ADD CONSTRAINT instructor_programs_batch_id_fkey FOREIGN KEY (batch_id) REFERENCES bootcamp.batch(batch_id);
 
 
 --
--- Name: instructor_programs instructor_programs_inpro_emp_entity_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
+-- Name: trainer_programs instructor_programs_inpro_emp_entity_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
 --
 
-ALTER TABLE ONLY bootcamp.instructor_programs
+ALTER TABLE ONLY bootcamp.trainer_programs
     ADD CONSTRAINT instructor_programs_inpro_emp_entity_id_fkey FOREIGN KEY (inpro_emp_entity_id) REFERENCES hr.employee(emp_entity_id);
 
 
 --
--- Name: instructor_programs instructor_programs_inpro_entity_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
+-- Name: trainer_programs instructor_programs_inpro_entity_id_fkey; Type: FK CONSTRAINT; Schema: bootcamp; Owner: postgres
 --
 
-ALTER TABLE ONLY bootcamp.instructor_programs
+ALTER TABLE ONLY bootcamp.trainer_programs
     ADD CONSTRAINT instructor_programs_inpro_entity_id_fkey FOREIGN KEY (inpro_entity_id) REFERENCES bootcamp.batch(batch_entity_id);
 
 
