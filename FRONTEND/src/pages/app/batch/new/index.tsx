@@ -1,4 +1,4 @@
-import Content from "@/pages/shared/content";
+import Content from "@/components/shared/content";
 import {
   Autocomplete,
   Box,
