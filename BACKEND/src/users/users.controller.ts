@@ -7,9 +7,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Post('/bootcamp')
+  @Post('/guest')
   signUpExternal(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.signUpBootcamp(createUserDto);
+    return this.usersService.signUpGuest(createUserDto);
   }
 
   @Get()

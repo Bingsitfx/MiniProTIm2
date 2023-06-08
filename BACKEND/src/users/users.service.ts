@@ -12,12 +12,12 @@ export class UsersService {
     private sequelize: Sequelize
   ) { }
 
-  async signUpBootcamp(createUserDto: CreateUserDto) {
+  async signUpGuest(createUserDto: CreateUserDto) {
     try {
       let phoneCode = 'Cell'
       createUserDto.uspo_ponty_code = phoneCode
 
-      let role = 2
+      let role = 6
       createUserDto.usro_role_id = role
 
       let passHash = await bcrypt.hash(createUserDto.user_password, 10)
