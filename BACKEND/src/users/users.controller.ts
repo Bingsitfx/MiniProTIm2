@@ -5,11 +5,19 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UsersController {
+<<<<<<< HEAD
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+=======
+  constructor(private readonly usersService: UsersService) { }
+
+  @Post('/bootcamp')
+  signUpExternal(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.signUpBootcamp(createUserDto);
+>>>>>>> Nael-HR
   }
 
   @Get()
@@ -17,6 +25,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+<<<<<<< HEAD
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(+id);
@@ -31,4 +40,16 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
+=======
+  @Get('/username/:username')
+  findByName(@Param('username') username: string) {
+    return this.usersService.findByName(username);
+  }
+
+  @Get('/email/:email')
+  findByEmail(@Param('email') email: string) {
+    return this.usersService.findByEmail(email);
+  }
+
+>>>>>>> Nael-HR
 }

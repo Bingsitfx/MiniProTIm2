@@ -8,6 +8,7 @@ import { BootcampModule } from './bootcamp/bootcamp.module';
 import { JobhireModule } from './jobhire/jobhire.module';
 import { SalesModule } from './sales/sales.module';
 import { PaymentModule } from './payment/payment.module';
+<<<<<<< HEAD
 
 @Module({
   imports: [
@@ -24,6 +25,24 @@ import { PaymentModule } from './payment/payment.module';
     //   models: [],
     //   autoLoadModels: true,
     // }),
+=======
+import { ProfileModule } from './users/profile/profile.module';
+import { AuthModule } from './users/auth/auth.module';
+
+@Module({
+  imports: [
+    SequelizeModule.forRoot({
+      dialect: 'postgres',
+      host: 'localhost',
+      port: parseInt(process.env.DATABASE_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      models: [],
+      autoLoadModels: true,
+      synchronize: true
+    }),
+>>>>>>> Nael-HR
     UsersModule,
     MasterModule,
     HrModule,
@@ -32,8 +51,17 @@ import { PaymentModule } from './payment/payment.module';
     JobhireModule,
     SalesModule,
     PaymentModule,
+<<<<<<< HEAD
+=======
+    ProfileModule,
+    AuthModule
+>>>>>>> Nael-HR
   ],
   controllers: [],
   providers: [],
 })
+<<<<<<< HEAD
 export class AppModule {}
+=======
+export class AppModule { }
+>>>>>>> Nael-HR

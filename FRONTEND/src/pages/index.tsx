@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Button } from '@mui/material'
 import Image from 'next/image'
 import TopBar from './shared/topbar'
@@ -23,3 +24,13 @@ export default function Home() {
     </>
   )
 }
+=======
+import { MyPage } from "@/components/types";
+
+const Home: MyPage = () => {
+  return <h1>Welcome</h1>;
+};
+
+Home.Layout = "User";
+export default Home;
+>>>>>>> Nael-HR
