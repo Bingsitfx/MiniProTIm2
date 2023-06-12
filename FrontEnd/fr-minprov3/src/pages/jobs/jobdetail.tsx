@@ -15,7 +15,7 @@ const JobDetail = () => {
         <div className="container grid lg:grid-cols-2">
             <div >
                 {/* Section Nama Perusahaan Start    */}
-                <section className="pt-28 pb-6">
+                <section className="pt-28 pb-6 border-b-2">
                     <div className="container">
                         <div className="flex">
                             <Image src={imgDummy} alt="gambar" height={80} width={80} className="float-left mr-3 h-20 w-20 pr-2 md:h-24 md:w-24 lg:h-28 lg:w-28" />

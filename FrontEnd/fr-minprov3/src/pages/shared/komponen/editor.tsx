@@ -16,7 +16,7 @@ function Editor() {
     };
 
     setLoaded(true);
-  }, []); // run on mounting
+  }); // run on mounting
 
    const API_URL = "https://noteyard-backend.herokuapp.com"
    const UPLOAD_ENDPOINT = "../../../../testuploads"

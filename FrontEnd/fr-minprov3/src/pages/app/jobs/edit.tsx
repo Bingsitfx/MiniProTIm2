@@ -5,12 +5,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import CKEditor from "../shared/komponen/editor";
-import imgDefault from "../../../public/imageTest/img.png";
+import CKEditor from "../../shared/komponen/editor";
+import imgDefault from "../../../../public/imageTest/img.png";
 import Image from "next/image";
-import ToggleSwitch from "../shared/komponen/switch";
-import Button from "../shared/komponen/button";
+import ToggleSwitch from "../../shared/komponen/switch";
+import Button from "../../shared/komponen/button";
 import { useForm } from "react-hook-form";
+import Content1 from "../../shared/content1";
+import { useRouter } from "next/router";
 // import {CKEditor} from "@ckeditor/ckeditor5-react";
 // import CKEditor from 'react-ckeditor-component';
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -158,12 +160,13 @@ const JobEdit = () => {
     console.log("aa", ...formData);
     console.log(data);
   };
+  const router = useRouter();
+  
+  const { id }: any = router.query;
   return (
+    <Content1 title="Edit Posting Job" path='/app/jobs' button="Back" >
     <div>
       <form onSubmit={handleSubmit(handleRegistration)}>
-        <h1 className="uppercase pt-24 w-full text-lg font-bold mb-6 text-center">
-          Edit Job Posting
-        </h1>
         <div className="lg:grid lg:grid-cols-2">
           {/* Input Form Start*/}
           <section className="pt-4 pb-10">
@@ -557,6 +560,7 @@ const JobEdit = () => {
         </section>
       </form>
     </div>
+    </Content1>
   );
 };
 

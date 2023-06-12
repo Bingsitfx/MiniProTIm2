@@ -24,7 +24,7 @@ const Pagination = (props: any): any => {
           className={`relative z-10 inline-flex items-center ${currentPage === i
               ? "bg-blue-500 text-white focus-visible:outline-indigo-600"
               : "bg-white text-black"
-            } px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded`}
+            } px-4 py-2 text-sm font-semibold focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 `}
         >
           {i}
         </a>
@@ -36,9 +36,9 @@ const Pagination = (props: any): any => {
 
 
   return (
-    <div className="py-2 text-center">
+    <div className="py-2 text-center ">
       <nav
-        className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+        className="isolate inline-flex -space-x-px  shadow-sm"
         aria-label="Pagination"
       >
         <a
@@ -46,7 +46,7 @@ const Pagination = (props: any): any => {
             handlePageChange(currentPage - 1 <= 1 ? 1 : currentPage - 1)
           }
           href="#"
-          className="relative inline-flex items-center rounded-l-md px-2 py-2  hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+          className=" relative inline-flex items-center rounded-l-md px-2 py-2  hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
         >
           <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
         </a>
@@ -61,7 +61,7 @@ const Pagination = (props: any): any => {
             )
           }
           href="#"
-          className="relative inline-flex items-center rounded-r-md px-2 py-2  hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+          className=" relative inline-flex items-center rounded-r-md px-2 py-2 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
         >
           <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
         </a>

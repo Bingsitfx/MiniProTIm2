@@ -15,7 +15,7 @@ const CardJob = (props: any) => {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 ">
       {(props.dataArray || []).map((data: any) => (
         <Link href={{
-          pathname: "/jobs/jobdetail",
+          pathname: "jobs/jobdetail",
           query: {
             id: data.id,
             name: data.namaCompany,

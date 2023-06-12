@@ -5,12 +5,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import CKEditor from "../shared/komponen/editor";
-import imgDefault from "../../../public/imageTest/img.png";
+import CKEditor from "../../shared/komponen/editor";
+import imgDefault from "../../../../public/imageTest/img.png";
 import Image from "next/image";
-import ToggleSwitch from "../shared/komponen/switch";
-import Button from "../shared/komponen/button";
+import ToggleSwitch from "../../shared/komponen/switch";
+import Button from "../../shared/komponen/button";
 import { useForm } from "react-hook-form";
+import Content1 from "../../shared/content1";
+import { useDispatch, useSelector } from "react-redux";
+import { doRequestGetCurnumber } from "@/pages/redux/JobhireSchema/action/actionreducer";
 // import {CKEditor} from "@ckeditor/ckeditor5-react";
 // import CKEditor from 'react-ckeditor-component';
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -90,6 +93,7 @@ const JobCreate = () => {
     remote: boolean;
     description : string;
     image : string;
+    jopo_number : string;
   };
 
   const {
@@ -124,10 +128,6 @@ const JobCreate = () => {
     setSelectedImage(file);
     setIsImageSelected(true);
   }
-
-  
-  
-
   
   const handleRemoveImage = () => {
     setSelectedImage(null);
@@ -157,12 +157,26 @@ const JobCreate = () => {
     console.log("aa",...formData)
    console.log(data);
   };
+
+  /* koneksi ke backend  */
+  let { cur_number,job_post, message, status, refresh } = useSelector(
+    (state: any) => state.JobPostReducers
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+
+    dispatch(doRequestGetCurnumber());
+  },[refresh])
+
+  // console.log('new',job_post)
+  // console.log('new2',cur_number)
+
+
   return (
+    <Content1 title="Posting Job" path="/app/jobs" button="Back">
     <div>
       <form onSubmit={handleSubmit(handleRegistration)} >
-      <h1 className="uppercase pt-24 w-full text-lg font-bold mb-6 text-center">
-          Create Job Posting
-        </h1>
         <div className="lg:grid lg:grid-cols-2">
           {/* Input Form Start*/}
           <section className="pt-4 pb-10">
@@ -309,8 +323,8 @@ const JobCreate = () => {
                   </div>
 
                   {/* Industri Type & Specification Role */}
-                  <div className="pad-input grid grid-cols-2 gap-4">
-                    <div>
+                  <div className="pad-input ">
+                    {/* <div>
                       <h1 className="text-format">Industry Type</h1>
                       <TextField
                         id="outlined"
@@ -326,7 +340,8 @@ const JobCreate = () => {
                           </MenuItem>
                         ))}
                       </TextField>
-                    </div>
+                    </div> */}
+
                     <div>
                       <h1 className="text-format">Specification Role</h1>
                       <TextField
@@ -454,12 +469,13 @@ const JobCreate = () => {
                     <h1 className="text-format">Posting Number</h1>
                     <TextField
                       id="outlined-basic"
-                      disabled
-                      defaultValue="JOB-20120"
+                      value={cur_number}
+                      {...register("jopo_number")}
                       variant="outlined"
                       className="w-full bg-slate-300 opacity-80 lg:w-[18.7rem]"
                       size="small"
                     />
+                    
                   </div>
                   <div className="w-full pl-[33px] justify-center lg:pl-0">
                     <div className="pb-10">
@@ -542,6 +558,7 @@ const JobCreate = () => {
         </section>
       </form>
     </div>
+  </Content1>
   );
 };
 

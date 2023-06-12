@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 214, 300, 220;
   --background-end-rgb: 255, 255, 255;
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -77,4 +77,6 @@ body {
   @apply  font-semibold text-white text-lg py-2 mx-8 flex group-hover:text-blue-200 lg:mx-3 lg:text-base lg:justify-center lg:text-black lg:group-hover:text-blue-500
 }
  
-
+.text-tabel-gray {
+  @apply text-gray-500
+}

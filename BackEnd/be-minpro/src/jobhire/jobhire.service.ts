@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateJobhireDto } from './dto/create-jobhire.dto';
-import { UpdateJobhireDto } from './dto/update-jobhire.dto';
+import { CreateEmployeeRangeDto, CreateJobCategoryDto } from './dto/create-jobhire.dto';
 import { Sequelize } from 'sequelize-typescript';
-import { job_category } from '../../models/jobhire';
+import { employee_range, job_category } from '../../models/jobhire';
 import handleMessage from 'mhelper/mhelper';
 
 
@@ -11,16 +10,16 @@ export class JobhireService {
   constructor(private readonly sequelize: Sequelize) {}
 
   /* CREATE TABLE JOB_CATEGORY START */
-  async createJobCat(createJobhireDto: CreateJobhireDto) {
+  async createJobCat(createJobCategoryDto: CreateJobCategoryDto) {
     try {
       const handleJobCat = await job_category.findOne({
-        where: { joca_name: createJobhireDto.joca_name },
+        where: { joca_name: createJobCategoryDto.joca_name },
       });
       if (handleJobCat) {
         throw new Error('Category Sudah Ada');
       }
       const result = await job_category.create({
-        joca_name: createJobhireDto.joca_name,
+        joca_name: createJobCategoryDto.joca_name,
       });
       return handleMessage(result, 'Data berhasil dibuat', 200);
     } catch (error) {
@@ -30,16 +29,11 @@ export class JobhireService {
   /* CREATE TABLE JOB_CATEGORY END */
 
   /* CREATE TABLE EMP_RANGE START */
-  async createEmpRange(createJobhireDto: CreateJobhireDto) {
+  async createEmpRange(createEmployeeRangeDto: CreateEmployeeRangeDto) {
     try {
-      const handleJobCat = await job_category.findOne({
-        where: { joca_name: createJobhireDto.joca_name },
-      });
-      if (handleJobCat) {
-        throw new Error('Category Sudah Ada');
-      }
-      const result = await job_category.create({
-        joca_name: createJobhireDto.joca_name,
+      const result = await employee_range.create({
+        emra_range_min: createEmployeeRangeDto.emra_range_min,
+        emra_range_max: createEmployeeRangeDto.emra_range_max,
       });
       return handleMessage(result, 'Data berhasil dibuat', 200);
     } catch (error) {
@@ -58,9 +52,9 @@ export class JobhireService {
     return `This action returns a #${id} jobhire`;
   }
 
-  update(id: number, updateJobhireDto: UpdateJobhireDto) {
-    return `This action updates a #${id} jobhire`;
-  }
+  // update(id: number, updateJobhireDto: UpdateJobhireDto) {
+  //   return `This action updates a #${id} jobhire`;
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} jobhire`;

@@ -3,7 +3,7 @@ import CardJob from "../shared/komponen/cardjob";
 import FilterComp from "../shared/komponen/filterKomponen";
 import ImgSlide from "../shared/komponen/imgSlide";
 import Pagination from "../shared/komponen/pagination";
-import { company } from '../shared/komponen/data'
+import { company } from "../shared/komponen/data";
 import SearchBar from "../shared/komponen/search";
 
 export default function Home() {
@@ -19,16 +19,22 @@ export default function Home() {
   };
 
   return (
-    <div className="mx-5 pt-24">
-      <h1 className=" text-lg">Our Network</h1>
-      <ImgSlide />
-      {/* <SearchBar /> */}
-      <h2 className="py-5 text-lg">100 Lowongan Pekerjaan di Indonesia</h2>
-      <div className="flex flex-wrap">
+    <div className="container">
+      <div className="mx-5 pt-24">
+        <h1 className=" text-lg">Our Network</h1>
+        <ImgSlide />
+        <SearchBar />
+        <h2 className="py-5 text-lg">100 Lowongan Pekerjaan di Indonesia</h2>
+        <div className="flex flex-wrap lg:flex-none">
           <FilterComp />
-        <CardJob dataArray={currentItems} />
+          <CardJob dataArray={currentItems} />
+        </div>
+        <Pagination
+          totalPages={totalPages}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+        ></Pagination>
       </div>
-      <Pagination totalPages={totalPages} currentPage={currentPage} handlePageChange={handlePageChange}></Pagination>
     </div>
   );
 }
