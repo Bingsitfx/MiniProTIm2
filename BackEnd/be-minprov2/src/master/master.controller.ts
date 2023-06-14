@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { MasterService } from './master.service';
 import { CreateMasterDto } from './dto/create-master.dto';
 import { UpdateMasterDto } from './dto/update-master.dto';
@@ -12,9 +20,29 @@ export class MasterController {
     return this.masterService.create(createMasterDto);
   }
 
-  @Get()
-  findAll() {
-    return this.masterService.findAll();
+  @Get('edu')
+  findEducation() {
+    return this.masterService.findEducation();
+  }
+
+  @Get('worktype')
+  findWorktype() {
+    return this.masterService.findWorktype();
+  }
+
+  @Get('jobrole')
+  findJobrole() {
+    return this.masterService.findJobrole();
+  }
+
+  @Get('industry')
+  findIndustry() {
+    return this.masterService.findIndustry();
+  }
+
+  @Get('city')
+  findCity() {
+    return this.masterService.findCity();
   }
 
   @Get(':id')

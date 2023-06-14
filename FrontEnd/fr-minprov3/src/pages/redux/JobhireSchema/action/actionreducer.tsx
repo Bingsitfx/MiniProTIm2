@@ -126,3 +126,17 @@ export const doResponseDeleteClient = (payload: any) => {
     payload,
   };
 };
+
+/*--------------- EMPLOYEE RANGE SECTION ---------------*/
+
+export const doRequestGetEmprange = () => {
+  return {
+    type: ActionTypes.REQ_GET_EMPRANGE,
+  };
+};
+export const doResponseGetEmprange = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_EMPRANGE,
+    payload,
+  };
+};

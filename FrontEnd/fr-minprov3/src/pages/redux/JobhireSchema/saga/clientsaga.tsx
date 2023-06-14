@@ -9,8 +9,8 @@ import {
 
 export function* handleGetAllClient(): any {
   try {
-    const result = yield call(apiMethod.findAllJob);
-    yield put(doResponseGetClient(result.data.result[0]));
+    const result = yield call(apiMethod.findAllClient);
+    yield put(doResponseGetClient(result.data));
   } catch (error) {
     yield put(doResponseGetClient({ message: error, status: 400 }));
   }

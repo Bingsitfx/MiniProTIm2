@@ -27,6 +27,10 @@ const ActionType = {
 
     REQ_DELETE_CLIENT : "REQ_DELETE_CLIENT",
     RES_DELETE_CLIENT : "RES_DELETE_CLIENT",
+
+    //Employee Range
+    REQ_GET_EMPRANGE : "REQ_GET_EMPRANGE",
+    RES_GET_EMPRANGE : "RES_GET_EMPRANGE",
 }
 
 export default ActionType;

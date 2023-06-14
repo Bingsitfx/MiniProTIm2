@@ -5,7 +5,6 @@ const initialState = {
     message: "",
     status: "",
     refresh: "",
-    message2:"",
   }; 
   
   function ClientReducers(state = initialState, action: any) {

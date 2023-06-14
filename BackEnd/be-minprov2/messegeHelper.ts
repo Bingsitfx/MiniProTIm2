@@ -1,8 +1,8 @@
-const messageHelper:any = (result, status, message) => {
-    return {
-      result: result,
-      status: status,
-      message: message,
-    };
+const messageHelper: any = (result, status, message) => {
+  return {
+    result: result,
+    status: status,
+    message: message,
+  };
 };
-export default messageHelper
+export default messageHelper;

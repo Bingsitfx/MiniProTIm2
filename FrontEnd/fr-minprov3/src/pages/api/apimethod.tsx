@@ -1,6 +1,6 @@
 import axios from "../config/endpoint";
 
-
+/*--------------------------- Schema Job Hire ------------------------------*/
 /*-------- CRUD JOB POST --------*/
 const findAllJob =()=>{
     return axios.get("/")
@@ -25,7 +25,7 @@ const deleteJobPost =(data:any)=>{
 /*-------- CRUD CLIENT ---------*/
 
 const findAllClient =()=>{
-    return axios.get("/")
+    return axios.get("/job-hire/clientall")
 }
 
 const createClient =(data:any)=>{
@@ -38,8 +38,31 @@ const updateClient =(data:any)=>{
 
 const deleteClient =(data:any)=>{
     return axios.delete(`/`,data)
+    
 }
 
+/*-------------- EMPLOYEE RANGE --------------*/
+const findAllEmprange =()=>{
+    return axios.get(`/job-hire/emprange`)
+}
+
+/*--------------------------- Schema Master ------------------------------*/
+
+const findEducation =()=>{
+    return axios.get('/master/edu')
+}
+const findWorktype =()=>{
+    return axios.get('/master/worktype')
+}
+const findJobrole =()=>{
+    return axios.get('/master/jobrole')
+}
+const findIndustry =()=>{
+    return axios.get('/master/industry')
+}
+const findCity =()=>{
+    return axios.get('/master/city')
+}
 
 export default {
     findAllJob,
@@ -48,8 +71,16 @@ export default {
     updateJobPost,
     deleteJobPost,
 
+    findAllEmprange,
+
     findAllClient,
     createClient,
     updateClient,
-    deleteClient
+    deleteClient,
+
+    findEducation,
+    findWorktype,
+    findJobrole,
+    findIndustry,
+    findCity,
 }

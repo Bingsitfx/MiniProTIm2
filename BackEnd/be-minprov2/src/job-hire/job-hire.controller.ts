@@ -58,11 +58,11 @@ export function uploadGambar(): ReturnType<typeof FileInterceptor> {
     },
   });
 }
-
 @Controller('job-hire')
 export class JobHireController {
   constructor(private readonly jobHireService: JobHireService) {}
 
+  //JOB POST
   @Post()
   @UseInterceptors(uploadGambar())
   createJopo(@Body() createJopo: any, @UploadedFile() image: Multer.File) {
@@ -78,15 +78,25 @@ export class JobHireController {
     return this.jobHireService.findAllJopo(pagination, search, filter);
   }
 
+  @Get('photo')
+  findJopho() {
+    return this.jobHireService.findJopho();
+  }
+
   @Get('currnum')
   findCurrentNumber() {
     return this.jobHireService.findCurrentNumber();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.jobHireService.findOne(+id);
+  @Get('emprange')
+  findEmpRange() {
+    return this.jobHireService.findAllEmprange();
   }
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.jobHireService.findOne(+id);
+  // }
 
   @Patch(':id')
   @UseInterceptors(uploadGambar())
@@ -101,5 +111,28 @@ export class JobHireController {
   @Delete(':id')
   removeJopo(@Param('id') id: string) {
     return this.jobHireService.removeJopo(+id);
+  }
+
+  // CLIENT
+  @Post('client')
+  createClient(@Body() createClient: any) {
+    return this.jobHireService.createClient(createClient);
+  }
+
+  @Get('client')
+  findAllClient(@Body() show: any) {
+    const pagination = show.pagination;
+    const search = show.search;
+    return this.jobHireService.findAllClient(pagination, search);
+  }
+
+  @Patch('client/:id')
+  updateClient(@Param('id') id: string, @Body() updateJobHireDto: any) {
+    return this.jobHireService.updateClient(+id, updateJobHireDto);
+  }
+
+  @Get('clientall')
+  findClient() {
+    return this.jobHireService.findClient();
   }
 }
