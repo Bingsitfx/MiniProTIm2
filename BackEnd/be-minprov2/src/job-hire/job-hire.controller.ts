@@ -126,9 +126,19 @@ export class JobHireController {
     return this.jobHireService.findAllClient(pagination, search);
   }
 
-  @Patch('client/:id')
+  @Get('allclient')
+  allClientFind() {
+    return this.jobHireService.allClientFind();
+  }
+
+  @Patch('client/update/:id')
   updateClient(@Param('id') id: string, @Body() updateJobHireDto: any) {
     return this.jobHireService.updateClient(+id, updateJobHireDto);
+  }
+
+  @Get('client/find/:id')
+  findOne(@Param('id') id: string) {
+    return this.jobHireService.findOne(+id);
   }
 
   @Get('clientall')

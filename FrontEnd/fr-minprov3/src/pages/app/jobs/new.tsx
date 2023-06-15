@@ -43,7 +43,7 @@ const JobCreate = () => {
       (state: any) => state.ClientReducers
     );
   
-      // console.log('client',client)
+      // console.log('client',client[0])
       // console.log('work',work_type)
       // console.log('jobrole',job_role)
     // console.log('Newedu',education[0]?.edu_code)

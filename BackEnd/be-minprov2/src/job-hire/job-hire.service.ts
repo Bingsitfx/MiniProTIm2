@@ -449,6 +449,18 @@ export class JobHireService {
     }
   }
 
+  async allClientFind() {
+    //FIXED
+    try {
+      const query = `SELECT * FROM job_hire.client_view`;
+
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   async updateClient(id: number, fields: any): Promise<any> {
     //FIXED
     try {
@@ -500,6 +512,17 @@ export class JobHireService {
       return result;
     } catch (error) {
       return messageHelper('Gagal', 400, error.message);
+    }
+  }
+
+  async findOne(id: number) {
+    try {
+      const result = await this.sequelize.query(
+        `SELECT * FROM job_hire.client_view where clit_id = ${id}`,
+      );
+      return messageHelper(result[0], 'Berhasil', 200);
+    } catch (error) {
+      return messageHelper(error.message, 'Gagal', 400);
     }
   }
 }

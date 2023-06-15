@@ -1,47 +1,72 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-
-import Image from "next/image";
-
 import { useForm } from "react-hook-form";
 import Content1 from "../shared/content1";
+import { useDispatch, useSelector } from "react-redux";
+import { doRequestGetCity, doRequestGetIndustry } from "../redux/MasterSchema/action/actionReducer";
+import { doRequestGetClientById, doRequestGetEmprange, doRequestUpdateClient } from "../redux/JobhireSchema/action/actionreducer";
 import { useRouter } from "next/router";
 
-const industry_type = [
-  {
-    id: 1,
-    label: "Telecomunication",
-  },
-  {
-    id: 2,
-    label: "Retail",
-  },
-  {
-    id: 3,
-    label: "Bank",
-  },
-  {
-    id: 4,
-    label: "Oil & Gas",
-  },
-  {
-    id: 5,
-    label: "Ecommerce",
-  },
-  {
-    id: 6,
-    label: "Manufacture",
-  },
-
-];
-
 const EditClient = () => {
+
+  const dispatch = useDispatch()
+
+  let { industry ,refreshIndu } = useSelector(
+    (state: any) => state.IndustryReducers
+  );
+
+  let { emp_range } = useSelector(
+    (state: any) => state.EmprangeReducers
+  );
+
+  let { city } = useSelector(
+    (state: any) => state.CityReducers
+  );
+  
+  let { client_id } = useSelector(
+    (state: any) => state.ClientReducers
+  );
+
+  const router = useRouter();
+  const [loadedData,setLoadedData]:any=useState(null)
+
+  useEffect(() => {
+    dispatch({type:"RESET_STATE"})
+    dispatch(doRequestGetIndustry());
+    dispatch(doRequestGetEmprange());
+    dispatch(doRequestGetCity());
+
+  if(router.isReady){
+    const { clit_id }: any = router.query;
+    dispatch(doRequestGetClientById(clit_id))
+  }
+  }, [refreshIndu,router]);
+
+
+  useEffect(() => {
+    setLoadedData(client_id)
+
+  }, [client_id]);
+
+
+
+  
+  // console.log('aaaa',city)
+  // console.log('emprange',emp_range)
+  // console.log('aaa',industry)
+
   type FormValues = {
     clit_name: string;
     addr_line1: string;
     addr_line2: string;
-    indu_type: string;
+    clit_indu_code: string;
+    clit_about : string;
+    clit_emra_id : number;
+    addr_spatial_location : string;
+    addr_postal_code : string;
+    addr_city_id:number;
+    clit_id:number,
+
   };
 
   const {
@@ -51,25 +76,20 @@ const EditClient = () => {
   } = useForm<FormValues>();
 
   const handleRegistration = async (data: any) => {
-    const formData: any = new FormData();
-    // formData.append("image", selectedImage);
-    // formData.append("name", data.name);
-    // formData.append("description", data.description);
-    // formData.append("category_id", data.category_id);
-    // formData.append("price", data.price);
-    // formData.append("id", data.id);
-    // formData.append("image", data.image[0]);
-    console.log("aa", ...formData);
+    dispatch(doRequestUpdateClient(data))
+    router.push('/client')
     console.log(data);
   };
 
-  const router = useRouter();
-  const { id, clit_name, addr_line1, addr_line2, indu_type }: any =
-    router.query;
+
+  // console.log('TESTNEW',loadedData)
+
+  if(loadedData){
 
   return (
-    <Content1 title="edit client" path="/client" button="Back">
+    <Content1 title="Tambah Client" path="/client" button="Back">
       <div>
+        
         <form onSubmit={handleSubmit(handleRegistration)}>
           <div className="lg:grid lg:grid-cols-2">
             {/* Input Form Start*/}
@@ -77,13 +97,15 @@ const EditClient = () => {
               <div className="container">
                 <div className="flex flex-wrap">
                   <div className="w-full lg:w-2/2">
-                    {/* Title */}
+                    <div>
+                      <input hidden {...register("clit_id")} defaultValue={loadedData.clit_id}></input>
+                    </div>
+                    {/* Client Name */}
                     <div className="pad-input">
                       <h1 className="text-format">Client Name</h1>
                       <TextField
                         id="outlined-basic"
-                        defaultValue={clit_name}
-                        placeholder="Client Name"
+                        defaultValue={loadedData.clit_name}
                         {...register("clit_name")}
                         variant="outlined"
                         className="w-full"
@@ -91,26 +113,26 @@ const EditClient = () => {
                       />
                     </div>
 
-                    {/* Primary Skill */}
+                    {/* Address 1 */}
                     <div className="pad-input">
                       <h1 className="text-format">Address Line 1</h1>
                       <TextField
                         id="outlined-basic"
                         placeholder="Address Line 1"
-                        defaultValue={addr_line1}
+                        defaultValue={loadedData.addr_line1}
                         {...register("addr_line1")}
                         variant="outlined"
                         className="w-full"
                         size="small"
                       />
                     </div>
-                    {/* Secondary Skill */}
+                    {/* Address 2 */}
                     <div className="pad-input">
                       <h1 className="text-format">Address Line 2</h1>
                       <TextField
                         id="outlined-basic"
                         placeholder="Address Line 2"
-                        defaultValue={addr_line2}
+                        defaultValue={loadedData.addr_line2}
                         {...register("addr_line2")}
                         variant="outlined"
                         className="w-full"
@@ -118,25 +140,111 @@ const EditClient = () => {
                       />
                     </div>
 
-                    {/* Industri Type & Specification Role */}
+                    {/* Spatial Location */}
+                    <div className="pad-input">
+                      <h1 className="text-format">Spatial Location</h1>
+                      <TextField
+                        id="outlined-basic"
+                        placeholder="Spatial Location"
+                        defaultValue={loadedData.addr_spatial_location}
+                        {...register("addr_spatial_location")}
+                        variant="outlined"
+                        className="w-full"
+                        size="small"
+                      />
+                    </div>
+
+                    {/* City */}
                     <div className="pad-input ">
-                      <div>
+                        <h1 className="text-format">City</h1>
+                        <TextField
+                          id="outlined"
+                          select
+                          label='Choose City'
+                          className="w-full"
+                          defaultValue={loadedData.city_id}
+                        
+                          {...register("addr_city_id")}
+                          size="small"
+                        >
+                          {city.map((option:any) => (
+                            <MenuItem key={option.city_id} value={option.city_id}>
+                              {option.city_name}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                    </div>
+
+                    {/* Postal Code */}
+                    <div className="pad-input">
+                      <h1 className="text-format">Postal Code</h1>
+                      <TextField
+                        id="outlined-basic"
+                        type="number"
+                        placeholder="Postal Code"
+                        defaultValue={loadedData.addr_postal_code}
+                        {...register("addr_postal_code")}
+                        variant="outlined"
+                        className="w-full"
+                        size="small"
+                      />
+                    </div>
+                    
+
+                    {/* Industri Type  */}
+                    <div className="pad-input ">
                         <h1 className="text-format">Industry Type</h1>
                         <TextField
                           id="outlined"
                           select
+                          label='Choose Type'
                           className="w-full"
-                          defaultValue={indu_type}
-                          {...register("indu_type")}
+                          defaultValue={loadedData.indu_code}
+                          {...register("clit_indu_code")}
                           size="small"
                         >
-                          {industry_type.map((option) => (
-                            <MenuItem key={option.id} value={option.label}>
-                              {option.label}
+                          {industry.map((option:any) => (
+                            <MenuItem key={option.indu_code} value={option.indu_code}>
+                              {option.indu_name}
                             </MenuItem>
                           ))}
                         </TextField>
-                      </div>
+                    </div>
+
+                    {/* Employee Range */}
+
+                    <div className="pad-input ">
+                        <h1 className="text-format">Employee Range</h1>
+                        <TextField
+                          id="outlined"
+                          select
+                          label='Choose Range'
+                          className="w-full"
+                          defaultValue={loadedData.emra_id}
+                          {...register("clit_emra_id")}
+                          size="small"
+                        >
+                          {emp_range.map((option:any) => (
+                            <MenuItem key={option.emra_id} value={option.emra_id}>
+                              {option.emra_range_min} - {option.emra_range_max}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                    </div>
+
+                    {/* About */}
+                    <div className="pad-input">
+                      <h1 className="text-format">About</h1>
+                    
+                      <TextField
+                        id="outlined-multiline-static"
+                        multiline
+                        rows={4}
+                        placeholder="About"
+                        defaultValue={loadedData.clit_about}
+                        className="w-full"
+                        {...register("clit_about")}
+                      />
                     </div>
                   </div>
                 </div>
@@ -166,5 +274,5 @@ const EditClient = () => {
     </Content1>
   );
 };
-
+}
 export default EditClient;

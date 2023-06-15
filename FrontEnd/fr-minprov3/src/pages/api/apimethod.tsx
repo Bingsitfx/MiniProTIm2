@@ -28,12 +28,22 @@ const findAllClient =()=>{
     return axios.get("/job-hire/clientall")
 }
 
+const allClientAll =()=>{
+    return axios.get("/job-hire/allclient")
+}
+
+const clientById = (id:any) => {
+    return axios.get(`job-hire/client/find/${id}`)
+}
+
 const createClient =(data:any)=>{
-    return axios.post("/",data)
+    // console.log('api',data)
+    return axios.post("/job-hire/client",data)
 }
 
 const updateClient =(data:any)=>{
-    return axios.patch(`/`,data)
+    // console.log('API',data)
+    return axios.patch(`/job-hire/client/update/${data.clit_id}`,data)
 }
 
 const deleteClient =(data:any)=>{
@@ -74,6 +84,8 @@ export default {
     findAllEmprange,
 
     findAllClient,
+    allClientAll,
+    clientById,
     createClient,
     updateClient,
     deleteClient,

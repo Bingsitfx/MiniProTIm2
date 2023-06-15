@@ -84,6 +84,19 @@ export const doResponseGetClient = (payload: any) => {
   };
 };
 
+export const doRequestGetClientById = (payload:any) => {
+  return {
+    type: ActionTypes.REQ_GET_CLIENT_BY_ID,
+    payload,
+  };
+};
+export const doResponseGetClientById = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_CLIENT_BY_ID,
+    payload,
+  };
+};
+
 
 export const doRequestAddClient = (payload: any) => {
   return {

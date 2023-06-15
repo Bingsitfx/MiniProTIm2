@@ -1,5 +1,5 @@
 import Content1 from "@/pages/shared/content1";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Pagination from "@/pages/shared/komponen/pagination";
@@ -11,43 +11,58 @@ import Link from "next/link";
 
 import { Menu, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { doRequestGetClient } from "../redux/JobhireSchema/action/actionreducer";
 
-const dummyDataTable = [
-  {
-    id: 1,
-    name: "Semen 3 Roda",
-    indu_name: "Manufacture",
-    address1: "Jl. Baron 23 Kec.Beji",
-    address2: " ",
-    emra_min: "50",
-    emra_max: "100",
-  },
-  {
-    id: 2,
-    name: "Mahaka Internasional",
-    indu_name: "Telecomunication",
-    address1: "Jl. Gatot Subroto Kavling 3A",
-    address2: "SCBD District 8 Treasury Tower",
-    emra_min: "100",
-    emra_max: "500",
-  },
-];
+// const dummyDataTable = [
+//   {
+//     id: 1,
+//     name: "Semen 3 Roda",
+//     indu_name: "Manufacture",
+//     address1: "Jl. Baron 23 Kec.Beji",
+//     address2: " ",
+//     emra_min: "50",
+//     emra_max: "100",
+//   },
+//   {
+//     id: 2,
+//     name: "Mahaka Internasional",
+//     indu_name: "Telecomunication",
+//     address1: "Jl. Gatot Subroto Kavling 3A",
+//     address2: "SCBD District 8 Treasury Tower",
+//     emra_min: "100",
+//     emra_max: "500",
+//   },
+// ];
 
 const Jobs = () => {
+
+  const dispatch = useDispatch()
+
+  let { client ,refresh } = useSelector(
+    (state: any) => state.ClientReducers
+  );
+
+  useEffect(() => {
+    dispatch(doRequestGetClient());
+  }, [refresh]);
+
+  // console.log('client',client)
+
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData]: any = useState([]);
 
   const handleSearchChange = () => {
     setIsSearching(true);
-    const filtered = dummyDataTable.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+    const filtered = client.filter(
+      (item:any) =>
+        item.clit_name.toLowerCase().includes(searchValue.toLowerCase()) ||
         item.indu_name.toLowerCase().includes(searchValue.toLowerCase())
     );
     setFilteredData(filtered);
   };
-  const displayData = isSearching ? filteredData : dummyDataTable;
+  const displayData = isSearching ? filteredData : client;
 
   {
     /* UNTUK PAGING START */
@@ -120,6 +135,12 @@ const Jobs = () => {
                 </div>
               </div>
 
+
+              <div>
+
+
+              </div>
+
               {/* TABEL */}
               <div className=" relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-center text-gray-900">
@@ -130,12 +151,6 @@ const Jobs = () => {
                       </th>
                       <th scope="col" className="px-6 py-3">
                         INDUSTRY NAME
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        ADDRESS LINE 1
-                      </th>
-                      <th scope="col" className="px-6 py-3">
-                        ADDRESS LINE 2
                       </th>
                       <th scope="col" className="px-6 py-3">
                         EMPLOYEE MAX & MIN
@@ -151,13 +166,11 @@ const Jobs = () => {
                           scope="row"
                           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                         >
-                          {dt.name}
+                          {dt.clit_name}
                         </th>
                         <td className="px-6 py-4">{dt.indu_name}</td>
-                        <td className="px-6 py-4">{dt.address1}</td>
-                        <td className="px-6 py-4">{dt.address2}</td>
                         <td className="px-6 py-4">
-                          {dt.emra_min} - {dt.emra_max}
+                          {dt.emra_range_min} - {dt.emra_range_max}
                         </td>
 
                         <td className="px-6 py-4">
@@ -189,13 +202,9 @@ const Jobs = () => {
                                       {({ active }) => (
                                         <Link
                                           href={{
-                                            pathname: "client/edit",
-                                            query: {
-                                              id: dt.id,
-                                              clit_name: dt.name,
-                                              addr_line1: dt.address1,
-                                              addr_line2: dt.address2,
-                                              indu_type: dt.indu_name,
+                                            pathname: `client/edit/`,
+                                            query :{
+                                                clit_id : dt.clit_id
                                             },
                                           }}
                                           className={`${

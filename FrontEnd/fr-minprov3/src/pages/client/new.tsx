@@ -4,7 +4,8 @@ import { useForm } from "react-hook-form";
 import Content1 from "../shared/content1";
 import { useDispatch, useSelector } from "react-redux";
 import { doRequestGetCity, doRequestGetIndustry } from "../redux/MasterSchema/action/actionReducer";
-import { doRequestGetEmprange } from "../redux/JobhireSchema/action/actionreducer";
+import { doRequestAddClient, doRequestGetEmprange } from "../redux/JobhireSchema/action/actionreducer";
+import { useRouter } from "next/router";
 
 const NewClient = () => {
 
@@ -40,7 +41,7 @@ const NewClient = () => {
     addr_line2: string;
     clit_indu_code: string;
     clit_about : string;
-    emra_id : number;
+    clit_emra_id : number;
     addr_spatial_location : string;
     addr_postal_code : string;
     addr_city_id:string;
@@ -53,8 +54,10 @@ const NewClient = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
+  const router = useRouter()
   const handleRegistration = async (data: any) => {
-    console.log(data);
+    dispatch(doRequestAddClient(data));
+    router.push('/client')
   };
   return (
     <Content1 title="Tambah Client" path="/client" button="Back">
@@ -182,7 +185,7 @@ const NewClient = () => {
                           label='Choose Range'
                           className="w-full"
                         
-                          {...register("emra_id")}
+                          {...register("clit_emra_id")}
                           size="small"
                         >
                           {emp_range.map((option:any) => (

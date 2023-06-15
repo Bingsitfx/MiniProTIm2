@@ -19,6 +19,9 @@ const ActionType = {
     REQ_GET_CLIENT : "REQ_GET_CLIENT",
     RES_GET_CLIENT : "RES_GET_CLIENT",
 
+    REQ_GET_CLIENT_BY_ID : "REQ_GET_CLIENT_BY_ID",
+    RES_GET_CLIENT_BY_ID : "RES_GET_CLIENT_BY_ID",
+
     REQ_ADD_CLIENT : "REQ_ADD_CLIENT",
     RES_ADD_CLIENT : "RES_ADD_CLIENT",
 
@@ -31,6 +34,8 @@ const ActionType = {
     //Employee Range
     REQ_GET_EMPRANGE : "REQ_GET_EMPRANGE",
     RES_GET_EMPRANGE : "RES_GET_EMPRANGE",
+
+    RESET_STATE : "RESET_STATE"
 }
 
 export default ActionType;
