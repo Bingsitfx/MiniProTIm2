@@ -16,7 +16,8 @@ import { join } from 'path';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'images'), // Sesuaikan dengan path ke folder gambar
+      rootPath: join(process.cwd(), 'images'),
+      serveRoot: '/images',
     }),
     SequelizeModule.forRootAsync({
       useFactory: () => ({

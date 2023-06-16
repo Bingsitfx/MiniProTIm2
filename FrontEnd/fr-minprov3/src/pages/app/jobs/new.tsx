@@ -3,7 +3,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { Autocomplete, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CKEditor from "../../shared/komponen/editor";
 import imgDefault from "../../../../public/imageTest/img.png";
@@ -11,46 +18,48 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import Content1 from "../../shared/content1";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetClient, doRequestGetCurnumber } from "@/pages/redux/JobhireSchema/action/actionreducer";
+import {
+  doRequestAddJobPost,
+  doRequestGetClient,
+  doRequestGetCurnumber,
+} from "@/pages/redux/JobhireSchema/action/actionreducer";
 import dayjs from "dayjs";
-import { doRequestGetEducation, doRequestGetJobrole, doRequestGetWorktype } from "@/pages/redux/MasterSchema/action/actionReducer";
+import {
+  doRequestGetEducation,
+  doRequestGetJobrole,
+  doRequestGetWorktype,
+} from "@/pages/redux/MasterSchema/action/actionReducer";
+import { Router, useRouter } from "next/router";
 // import {CKEditor} from "@ckeditor/ckeditor5-react";
 // import CKEditor from 'react-ckeditor-component';
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const JobCreate = () => {
-  
-    /*`````````` koneksi ke backend  ``````````````*/
-    const dispatch = useDispatch();
-  
-    let { cur_number, job_post, message, status, refresh } = useSelector(
-      (state: any) => state.JobPostReducers
-    );
-  
-    let { education ,refreshEdu} = useSelector(
-      (state: any) => state.EducationReducers
-    );
-  
-    let { work_type } = useSelector(
-      (state: any) => state.WorktypeReducers
-    );
-  
-    let { job_role } = useSelector(
-      (state: any) => state.JobroleReducers
-    );
-  
-    let { client } = useSelector(
-      (state: any) => state.ClientReducers
-    );
-  
-      // console.log('client',client[0])
-      // console.log('work',work_type)
-      // console.log('jobrole',job_role)
-    // console.log('Newedu',education[0]?.edu_code)
-    // console.log('new',job_post)
-    // console.log('new2',cur_number)
-    
-  
+  /*`````````` koneksi ke backend  ``````````````*/
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  let { cur_number, job_post, message, status, refresh } = useSelector(
+    (state: any) => state.JobPostReducers
+  );
+
+  let { education, refreshEdu } = useSelector(
+    (state: any) => state.EducationReducers
+  );
+
+  let { work_type } = useSelector((state: any) => state.WorktypeReducers);
+
+  let { job_role } = useSelector((state: any) => state.JobroleReducers);
+
+  let { client } = useSelector((state: any) => state.ClientReducers);
+
+  // console.log('client',client[0])
+  // console.log('work',work_type)
+  // console.log('jobrole',job_role)
+  // console.log('Newedu',education[0]?.edu_code)
+  // console.log('new',job_post)
+  // console.log('new2',cur_number)
+
   type FormValues = {
     title: string;
     min_salary: string;
@@ -73,9 +82,10 @@ const JobCreate = () => {
     start_date: string;
     end_date: string;
     test: string;
-    close_hiring:string;
+    close_hiring: string;
+    emp_entity_id: number;
   };
-  
+
   const {
     register,
     setValue,
@@ -83,46 +93,43 @@ const JobCreate = () => {
     formState: { errors },
   } = useForm<FormValues>();
 
- 
   const propsData = {
     options: client,
-    getOptionLabel: (option:any) => option.clit_name,
+    getOptionLabel: (option: any) => option.clit_name,
   };
-  
+
   /*`````````````` fungsi untuk switch publish ,remote, hiring start ````````````````*/
-  
+
   const [isPublishChecked, setIsPublishChecked] = useState(true);
   const [isRemoteChecked, setIsRemoteChecked] = useState(true);
   const [isHiringChecked, setIsHiringChecked] = useState(true);
-  
 
   const handlePublishToggle = () => {
     setIsPublishChecked(!isPublishChecked);
-    
   };
   const handleRemoteToggle = () => {
     setIsRemoteChecked(!isRemoteChecked);
   };
-  
+
   const handleHiringToggle = () => {
     setIsHiringChecked(isHiringChecked);
   };
-  
+
   /*```````````` fungsi untuk switch publish ,remote, hiring end ``````````````*/
   useEffect(() => {
     dispatch(doRequestGetCurnumber());
     dispatch(doRequestGetEducation());
     dispatch(doRequestGetWorktype());
     dispatch(doRequestGetJobrole());
-    dispatch(doRequestGetClient ());
-    setValue('jopo_number',cur_number)
+    dispatch(doRequestGetClient());
+    setValue("jopo_number", cur_number);
   }, [refresh]);
 
   /*````````````` fungsi untuk ganti foto dan hapus foto start ``````````````*/
-  
+
   const [selectedImage, setSelectedImage]: any = useState(null);
   const [isImageSelected, setIsImageSelected]: any = useState(false);
-  
+
   const fileInputRef: any = useRef(null);
 
   const handleImageChange = (event: any) => {
@@ -161,12 +168,15 @@ const JobCreate = () => {
   };
 
   const isEndDateDisabled = !startDate;
-  const minEndDate = startDate ? dayjs(startDate).add(1, "day") : null;
+  const minEndDate = startDate? dayjs(startDate).add(1, "day") : null;
 
   /*``````````````` fungsi handle date end`````````````````` */
 
   const handleRegistration = async (data: any) => {
     const formData: any = new FormData();
+
+    formData.append("jopo_emp_entity_id", data.emp_entity_id);
+    formData.append("jopo_number", data.jopo_number);
     formData.append("jopo_title", data.title);
     formData.append("jopo_start_date", data.start_date);
     formData.append("jopo_end_date", data.end_date);
@@ -181,20 +191,22 @@ const JobCreate = () => {
     formData.append("jopo_edu_code", data.education);
     formData.append("jopo_benefit", data.benefit);
     formData.append("jopo_clit_id", data.client.clit_id);
+    formData.append("jopo_addr_id", data.client.addr_id);
     formData.append("jopo_description", data.description);
-    formData.append("jopho_fileimage",data.image[0]?.name)
-    formData.append("jopho_filesize",data.image[0]?.size)
-    formData.append("jopho_type",data.image[0]?.type)
+    formData.append("image", data.image[0]?.name);
+    let type = data.image[0]?.type;
+    let imageType = type?.split("/")[1];
+    formData.append("image_type", imageType);
+    formData.append("image_size", data.image[0]?.size);
+    formData.append("jopo_status", data.publish? "publish" : "draft");
+    formData.append("jopo_joty_id", data.remote? 1 : 2); //2 onsite 1remote
+    formData.append("jopo_open", data.close_hiring? 1 : 0);
 
-    formData.append("jopo_status", data.publish? "publish":"draft");
-    formData.append("jopo_joty_id", data.remote? 1:0);
-    formData.append("jopo_open", data.close_hiring? 1:0);
-    
-  
+    dispatch(doRequestAddJobPost(formData))
+    // router.push('/app/jobs')
     console.log("aa", ...formData);
-    console.log(data);
+    // console.log(data);
   };
-
 
   const registerOptions = {
     title: { required: "Title is required" },
@@ -223,6 +235,13 @@ const JobCreate = () => {
               <div className="container">
                 <div className="flex flex-wrap">
                   <div className="w-full lg:w-2/2">
+                    <div>
+                      <input
+                        hidden
+                        defaultValue={2}
+                        {...register("emp_entity_id")}
+                      ></input>
+                    </div>
                     {/* Title */}
                     <div className="pad-input">
                       <h1 className="text-format">Title</h1>
@@ -418,8 +437,11 @@ const JobCreate = () => {
                           {...register("specification_role")}
                           size="small"
                         >
-                          {job_role.map((option:any) => (
-                            <MenuItem key={option.joro_id} value={option.joro_id}>
+                          {job_role.map((option: any) => (
+                            <MenuItem
+                              key={option.joro_id}
+                              value={option.joro_id}
+                            >
                               {option.joro_name}
                             </MenuItem>
                           ))}
@@ -433,13 +455,16 @@ const JobCreate = () => {
                         <TextField
                           id="outlined"
                           select
-                          label='Choose Type'
+                          label="Choose Type"
                           className="w-full"
                           {...register("working_type")}
                           size="small"
                         >
-                          {work_type.map((option:any) => (
-                            <MenuItem key={option.woty_code} value={option.woty_code}>
+                          {work_type.map((option: any) => (
+                            <MenuItem
+                              key={option.woty_code}
+                              value={option.woty_code}
+                            >
                               {option.woty_name}
                             </MenuItem>
                           ))}
@@ -454,9 +479,12 @@ const JobCreate = () => {
                           className="w-full"
                           {...register("education")}
                           size="small"
-                          >
-                          {education.map((option:any) => (
-                            <MenuItem key={option.edu_code} value={option.edu_code}>
+                        >
+                          {education.map((option: any) => (
+                            <MenuItem
+                              key={option.edu_code}
+                              value={option.edu_code}
+                            >
                               {option.edu_name}
                             </MenuItem>
                           ))}
@@ -568,6 +596,7 @@ const JobCreate = () => {
                             Remove
                           </button>
                           <input
+                            id="file-upload"
                             type="file"
                             accept="image/*"
                             {...register("image")}
@@ -598,7 +627,7 @@ const JobCreate = () => {
                               type="checkbox"
                               className="sr-only peer"
                               {...register("remote")}
-                              checked={isRemoteChecked }
+                              checked={isRemoteChecked}
                               onChange={handleRemoteToggle}
                             />
                             <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -609,10 +638,9 @@ const JobCreate = () => {
                           <label className="relative inline-flex items-center mb-4 cursor-pointer">
                             <input
                               type="checkbox"
-                              
                               className="sr-only peer"
                               {...register("close_hiring")}
-                              checked={isHiringChecked }
+                              checked={isHiringChecked}
                               onChange={handleHiringToggle}
                             />
                             <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

@@ -3,7 +3,7 @@ import axios from "../config/endpoint";
 /*--------------------------- Schema Job Hire ------------------------------*/
 /*-------- CRUD JOB POST --------*/
 const findAllJob =()=>{
-    return axios.get("/")
+    return axios.get("/job-hire/alljob")
 }
 
 const findCurrentNumber =()=>{
@@ -11,11 +11,12 @@ const findCurrentNumber =()=>{
 }
 
 const createJobPost =(data:any)=>{
-    return axios.post("/",data)
+    console.log('api',...data)
+    return axios.post("/job-hire/create",data ,{headers:{"Content-Type":"multipart/form-data"}})
 }
 
-const updateJobPost =(data:any)=>{
-    return axios.patch(`/`,data)
+const updateJobPost =(data:any)=>{  
+    // return axios.patch(`/${data.get("id")}`,data,{headers:{"Content-Type":"multipart/form-data"}})
 }
 
 const deleteJobPost =(data:any)=>{

@@ -11,7 +11,7 @@ import {
 export function* handleGetAllJobPost(): any {
   try {
     const result = yield call(apiMethod.findAllJob);
-    yield put(doResponseGetJobPost(result.data.result[0]));
+    yield put(doResponseGetJobPost(result.data));
   } catch (error) {
     yield put(doResponseGetJobPost({ message: error, status: 400 }));
   }

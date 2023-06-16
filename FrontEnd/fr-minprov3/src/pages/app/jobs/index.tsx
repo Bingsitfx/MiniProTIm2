@@ -1,5 +1,5 @@
 import Content1 from "@/pages/shared/content1";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Pagination from "@/pages/shared/komponen/pagination";
@@ -10,46 +10,39 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import { Menu, Transition } from "@headlessui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { doRequestGetJobPost } from "@/pages/redux/JobhireSchema/action/actionreducer";
 
-const dummyDataTable = [
-  {
-    id: 1,
-    title: "Full StackDeveloper",
-    start_date: "March 18,2020",
-    end_date: "June 18,2020",
-    salary: "10000000",
-    expe: "5",
-    industry: "Retail",
-    spec_role: "Software Engineer",
-  },
-  {
-    id: 2,
-    title: "Java Fundamental",
-    start_date: "March 18,2020",
-    end_date: "June 18,2020",
-    salary: "10000000",
-    expe: "5",
-    industry: "Information Tech",
-    spec_role: "Engineer",
-  },
-];
 
 const Jobs = () => {
+
+  const dispatch = useDispatch();
+
+/* DISPATCH START */
+let { job_post,refresh } = useSelector((state: any) => state.JobPostReducers);
+
+useEffect(()=>{
+  dispatch(doRequestGetJobPost())
+},[refresh])
+
+/* DISPATCH END */
+
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData]: any = useState([]);
 
   const handleSearchChange = () => {
     setIsSearching(true);
-    const filtered = dummyDataTable.filter(
-      (item) =>
-        item.title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.expe.toLowerCase().includes(searchValue.toLowerCase()) ||
-        item.industry.toLowerCase().includes(searchValue.toLowerCase())
+    const filtered = job_post.filter(
+      (item:any) =>
+        item.jopo_title.toLowerCase().includes(searchValue.toLowerCase()) ||
+        // item.jopo_max_experience.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+        // item.jopo_min_experience.toLowerCase().includes(searchValue.toLowerCase()) ||
+        item.indu_name.toLowerCase().includes(searchValue.toLowerCase())
     );
     setFilteredData(filtered);
   };
-  const displayData = isSearching ? filteredData : dummyDataTable;
+  const displayData = isSearching ? filteredData : job_post;
 
   {
     /* UNTUK PAGING START */
@@ -146,26 +139,24 @@ const Jobs = () => {
                       scope="row"
                       className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                     >
-                      {dt.title}
+                      {dt.jopo_title}
                     </th>
                     <td className="px-6 py-4">
-                      {dt.start_date}
+                      {dt.jopo_start_date}
                       <br></br>
-                      {dt.end_date}
+                      {dt.jopo_end_date}
                     </td>
-                    <td className="px-6 py-4">IDR {dt.salary}</td>
-                    <td className="px-6 py-4">{dt.expe} Tahun</td>
+                    <td className="px-6 py-4">IDR {dt.jopo_max_salary}</td>
+                    <td className="px-6 py-4">{dt.jopo_min_experience} - {dt.jopo_max_experience} Tahun</td>
                     <td className="px-6 py-4">
-                      {dt.industry}
-                      <br></br>
-                      {dt.spec_role}
+                      {dt.indu_name}
                     </td>
                     <td className="px-6 py-4">
                       <label className="relative inline-flex items-center  cursor-pointer">
                         <input
                           type="checkbox"
                           className="sr-only peer"
-                          // checked={isPublishChecked}
+                          checked={dt.jopo_status === 'publish'}
                           // onChange={handlePublishToggle}
                         />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -247,13 +238,16 @@ const Jobs = () => {
             </table>
           </div>
         </div>
-        <footer className="fixed bottom-0 left-1/2 transform -translate-x-1/2">
+        {/* <div className="h-16 bg-transparent">
+
+        </div> */}
+        <div className="lg:fixed lg:bottom-0 lg:left-1/2 lg:transform lg:-translate-x-1/2 py-5">
             <Pagination 
               totalPages={totalPages}
               currentPage={currentPage}
               handlePageChange={handlePageChange}
             ></Pagination>
-          </footer>
+          </div>
       </Content1>
 
     </div>

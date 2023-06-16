@@ -16,57 +16,62 @@ import { JobHireService } from './job-hire.service';
 import { CreateJobHireDto } from './dto/create-job-hire.dto';
 import { UpdateJobHireDto } from './dto/update-job-hire.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage, Multer } from 'multer';
+import { diskStorage } from 'multer';
 import { client, job_post } from 'models/job_hire';
 
-export function uploadGambar(): ReturnType<typeof FileInterceptor> {
-  return FileInterceptor('image', {
-    storage: diskStorage({
-      destination: './images',
-      filename: async (req, file, cb) => {
-        try {
-          const clitId = req.body.jopo_clit_id;
-          const clit = await client.findOne({
-            where: {
-              clit_id: clitId,
-            },
-            attributes: ['clit_name'],
-          });
+// export function uploadGambar(): ReturnType<typeof FileInterceptor> {
+const fileUpload = FileInterceptor('image', {
+  storage: diskStorage({
+    destination: './images',
+    filename: async (req, file, cb) => {
+      try {
+        const clitId = req.body.jopo_clit_id;
+        const clit = await client.findOne({
+          where: {
+            clit_id: clitId,
+          },
+          attributes: ['clit_name'],
+        });
 
-          if (!clit) {
-            throw new Error('Client not found');
-          }
-
-          const fileName = `${clit.clit_name}-${file.originalname}`;
-          cb(null, fileName);
-        } catch (error) {
-          cb(error);
+        if (!clit) {
+          throw new Error('Client not found');
         }
-      },
-    }),
-    fileFilter: (req, file, cb) => {
-      if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-        return cb(
-          new HttpException(
-            'File hanya boleh file gambar!',
-            HttpStatus.FORBIDDEN,
-          ),
-          false,
-        );
+
+        const filename = `${clit.clit_name}-${file.originalname}`;
+        cb(null, filename);
+      } catch (error) {
+        cb(null, error);
       }
-      cb(null, true);
     },
-  });
-}
+  }),
+
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(
+        new HttpException(
+          'File hanya boleh file gambar!',
+          HttpStatus.FORBIDDEN,
+        ),
+        false,
+      );
+    }
+    cb(null, true);
+  },
+});
+
 @Controller('job-hire')
 export class JobHireController {
   constructor(private readonly jobHireService: JobHireService) {}
 
   //JOB POST
-  @Post()
-  @UseInterceptors(uploadGambar())
-  createJopo(@Body() createJopo: any, @UploadedFile() image: Multer.File) {
-    return this.jobHireService.createJopo(createJopo, image);
+  @Post('create')
+  @UseInterceptors(fileUpload)
+  createJopo(
+    @Body() createJopo: any,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    console.log('IMAGE', image.filename);
+    // return this.jobHireService.createJopo(createJopo, image);
   }
 
   @Get()
@@ -76,6 +81,11 @@ export class JobHireController {
     const filter = show.filter;
     // console.log("limit",+show.pagination.limit, "offset", +show.pagination.offset);
     return this.jobHireService.findAllJopo(pagination, search, filter);
+  }
+
+  @Get('alljob')
+  findJopoAll() {
+    return this.jobHireService.findJopoAll();
   }
 
   @Get('photo')
@@ -99,11 +109,11 @@ export class JobHireController {
   // }
 
   @Patch(':id')
-  @UseInterceptors(uploadGambar())
+  @UseInterceptors(fileUpload)
   updateJopo(
     @Param('id') id: string,
     @Body() updateJobHireDto: any,
-    @UploadedFile() images: Multer.File,
+    @UploadedFile() images: Express.Multer.File,
   ) {
     return this.jobHireService.updateJopo(+id, updateJobHireDto, images);
   }
