@@ -6,21 +6,26 @@ const findAllJob =()=>{
     return axios.get("/job-hire/alljob")
 }
 
+const jobPostById = (id:any) => {
+    return axios.get(`/job-hire/find/${id}`)
+}
+
 const findCurrentNumber =()=>{
     return axios.get("/job-hire/currnum")
 }
 
 const createJobPost =(data:any)=>{
-    console.log('api',...data)
+    // console.log('api',...data)
     return axios.post("/job-hire/create",data ,{headers:{"Content-Type":"multipart/form-data"}})
 }
 
 const updateJobPost =(data:any)=>{  
-    // return axios.patch(`/${data.get("id")}`,data,{headers:{"Content-Type":"multipart/form-data"}})
+    // console.log('api update',...data)
+    return axios.patch(`/job-hire/update/${data.get("jopo_entity_id")}`,data,{headers:{"Content-Type":"multipart/form-data"}})
 }
 
 const deleteJobPost =(data:any)=>{
-    return axios.delete(`/`,data)
+    return axios.delete(`/job-hire/delete/${data.id}`,data)
 }
 
 /*-------- CRUD CLIENT ---------*/
@@ -34,7 +39,7 @@ const allClientAll =()=>{
 }
 
 const clientById = (id:any) => {
-    return axios.get(`job-hire/client/find/${id}`)
+    return axios.get(`/job-hire/client/find/${id}`)
 }
 
 const createClient =(data:any)=>{
@@ -81,6 +86,7 @@ export default {
     createJobPost,
     updateJobPost,
     deleteJobPost,
+    jobPostById,
 
     findAllEmprange,
 

@@ -193,7 +193,7 @@ const JobCreate = () => {
     formData.append("jopo_clit_id", data.client.clit_id);
     formData.append("jopo_addr_id", data.client.addr_id);
     formData.append("jopo_description", data.description);
-    formData.append("image", data.image[0]?.name);
+    formData.append("image", data.image[0]);
     let type = data.image[0]?.type;
     let imageType = type?.split("/")[1];
     formData.append("image_type", imageType);
@@ -203,9 +203,9 @@ const JobCreate = () => {
     formData.append("jopo_open", data.close_hiring? 1 : 0);
 
     dispatch(doRequestAddJobPost(formData))
-    // router.push('/app/jobs')
+    router.push('/app/jobs')
     console.log("aa", ...formData);
-    // console.log(data);
+    console.log(data);
   };
 
   const registerOptions = {
@@ -407,25 +407,9 @@ const JobCreate = () => {
                       </p> */}
                     </div>
 
-                    {/* Industri Type & Specification Role */}
+                    {/*  Specification Role */}
                     <div className="pad-input ">
-                      {/* <div>
-                      <h1 className="text-format">Industry Type</h1>
-                      <TextField
-                        id="outlined"
-                        select
-                        className="w-full"
-                        defaultValue={industry_type[0].label}
-                        {...register("industry_type")}
-                        size="small"
-                      >
-                        {industry_type.map((option) => (
-                          <MenuItem key={option.id} value={option.label}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </div> */}
+                     
 
                       <div>
                         <h1 className="text-format">Specification Role</h1>

@@ -5,6 +5,7 @@ import {
   doResponseDeleteJobPost,
   doResponseGetCurnumber,
   doResponseGetJobPost,
+  doResponseGetJobPostById,
   doResponseUpdateJobPost,
 } from "../action/actionreducer";
 
@@ -14,6 +15,16 @@ export function* handleGetAllJobPost(): any {
     yield put(doResponseGetJobPost(result.data));
   } catch (error) {
     yield put(doResponseGetJobPost({ message: error, status: 400 }));
+  }
+}
+
+export function* handleGetJobPostById(action:any): any {
+  try {
+    const result = yield call(apiMethod.jobPostById,action.payload);
+    // console.log('JOPOSAGA',result)
+    yield put(doResponseGetJobPostById(result.data[0]));
+  } catch (error) {
+    yield put(doResponseGetJobPostById({ message: error, status: 400 }));
   }
 }
 
@@ -41,6 +52,7 @@ export function* handleAddJobPost(action: any): any {
 export function* handleUpdateJobPost(action: any): any {
   try {
     const result = yield call(apiMethod.updateJobPost, action.payload);
+    console.log('SAGA',result)
     yield put(doResponseUpdateJobPost(result.data));
   } catch (error) {
     yield put(doResponseUpdateJobPost({ message: error, status: 400 }));

@@ -9,7 +9,6 @@ import {
   HttpException,
   HttpStatus,
   UseInterceptors,
-  UploadedFiles,
   UploadedFile,
 } from '@nestjs/common';
 import { JobHireService } from './job-hire.service';
@@ -20,28 +19,43 @@ import { diskStorage } from 'multer';
 import { client, job_post } from 'models/job_hire';
 
 // export function uploadGambar(): ReturnType<typeof FileInterceptor> {
+// const fileUpload = FileInterceptor('image', {
+//   storage: diskStorage({
+//     destination: './images',
+//     filename: async (req, file, cb) => {
+//       try {
+//         const clitId = req.body.jopo_clit_id;
+//         const clit = await client.findOne({
+//           where: {
+//             clit_id: clitId,
+//           },
+//           attributes: ['clit_name'],
+//         });
+
+//         if (!clit) {
+//           throw new Error('Client not found');
+//         }
+
+//         const filename = `${clit.clit_name}-${file.originalname}`;
+//         cb(null, filename);
+//       } catch (error) {
+//         cb(null, error);
+//       }
+//     },
+//   }),
 const fileUpload = FileInterceptor('image', {
   storage: diskStorage({
     destination: './images',
     filename: async (req, file, cb) => {
-      try {
-        const clitId = req.body.jopo_clit_id;
-        const clit = await client.findOne({
-          where: {
-            clit_id: clitId,
-          },
-          attributes: ['clit_name'],
-        });
-
-        if (!clit) {
-          throw new Error('Client not found');
-        }
-
-        const filename = `${clit.clit_name}-${file.originalname}`;
-        cb(null, filename);
-      } catch (error) {
-        cb(null, error);
-      }
+      const clitId = req.body.jopo_clit_id;
+      const clit = await client.findOne({
+        where: {
+          clit_id: clitId,
+        },
+        attributes: ['clit_name'],
+      });
+      const filename = `${clit.clit_name}-${file.originalname}`;
+      cb(null, filename);
     },
   }),
 
@@ -70,8 +84,9 @@ export class JobHireController {
     @Body() createJopo: any,
     @UploadedFile() image: Express.Multer.File,
   ) {
+    // createJopo.jopho_filename = image.filename;
     console.log('IMAGE', image.filename);
-    // return this.jobHireService.createJopo(createJopo, image);
+    return this.jobHireService.createJopo(createJopo, image);
   }
 
   @Get()
@@ -103,12 +118,12 @@ export class JobHireController {
     return this.jobHireService.findAllEmprange();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.jobHireService.findOne(+id);
-  // }
+  @Get('find/:id')
+  findOneJopo(@Param('id') id: string) {
+    return this.jobHireService.findOneJopo(+id);
+  }
 
-  @Patch(':id')
+  @Patch('update/:id')
   @UseInterceptors(fileUpload)
   updateJopo(
     @Param('id') id: string,
@@ -118,7 +133,7 @@ export class JobHireController {
     return this.jobHireService.updateJopo(+id, updateJobHireDto, images);
   }
 
-  @Delete(':id')
+  @Delete('delete/:id')
   removeJopo(@Param('id') id: string) {
     return this.jobHireService.removeJopo(+id);
   }
@@ -148,7 +163,7 @@ export class JobHireController {
 
   @Get('client/find/:id')
   findOne(@Param('id') id: string) {
-    return this.jobHireService.findOne(+id);
+    return this.jobHireService.findOneClient(+id);
   }
 
   @Get('clientall')

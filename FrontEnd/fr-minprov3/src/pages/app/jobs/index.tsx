@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import DeleteJobPost from "./delete";
 
 import { Menu, Transition } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,31 +18,51 @@ import { doRequestGetJobPost } from "@/pages/redux/JobhireSchema/action/actionre
 const Jobs = () => {
 
   const dispatch = useDispatch();
+  const [isDelete,setIsDelete] = useState(false);
+  const [postById, setPostById ]= useState('');
 
 /* DISPATCH START */
 let { job_post,refresh } = useSelector((state: any) => state.JobPostReducers);
+
 
 useEffect(()=>{
   dispatch(doRequestGetJobPost())
 },[refresh])
 
 /* DISPATCH END */
-
+  const [selectedValue, setSelectedValue] = useState('all');
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData]: any = useState([]);
 
+  const handleChange = (event:any) => {
+    setSelectedValue(event.target.value);
+  };
+
   const handleSearchChange = () => {
     setIsSearching(true);
-    const filtered = job_post.filter(
-      (item:any) =>
+    let filtered = job_post;
+    if (selectedValue !== 'all') {
+      filtered = filtered.filter((item: { jopo_open: string; }) => item.jopo_open.toLowerCase().includes(selectedValue.toLowerCase()));
+    }
+
+    if (searchValue) {
+      filtered = filtered.filter((item: { jopo_title: string; indu_name: string; }) =>
         item.jopo_title.toLowerCase().includes(searchValue.toLowerCase()) ||
-        // item.jopo_max_experience.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-        // item.jopo_min_experience.toLowerCase().includes(searchValue.toLowerCase()) ||
         item.indu_name.toLowerCase().includes(searchValue.toLowerCase())
-    );
+      );
+    }
+
+    // const filtered = job_post.filter(
+    //   (item:any) =>
+    //     item.jopo_title.toLowerCase().includes(searchValue.toLowerCase()) ||
+    //     // item.jopo_max_experience.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
+    //     // item.jopo_min_experience.toLowerCase().includes(searchValue.toLowerCase()) ||
+    //     item.indu_name.toLowerCase().includes(searchValue.toLowerCase())
+    // ); 
     setFilteredData(filtered);
   };
+
   const displayData = isSearching ? filteredData : job_post;
 
   {
@@ -63,6 +84,8 @@ useEffect(()=>{
 
   return (
     <div>
+      {isDelete ? <DeleteJobPost show={isDelete} postById={postById} closeModal={()=> setIsDelete(false) }/> : ''}
+      
       <Content1 title="jobs posting" path="jobs/new" button="Posting Job">
         <div className="container">
           <div className="w-full lg:pb-6">
@@ -88,9 +111,10 @@ useEffect(()=>{
               </div>
 
               <div className="pb-4 lg:pb-0 lg:pl-4">
-                <select className="text-sm rounded-lg ring-1 block w-full p-2.5">
-                  <option value="US">Open</option>
-                  <option value="CA">Closed</option>
+                <select className="text-sm rounded-lg ring-1 block w-full p-2.5" value={selectedValue} onChange={handleChange}>
+                  <option value="all">Semua</option>
+                  <option value="1">Open</option>
+                  <option value="0">Closed</option>
                 </select>
               </div>
 
@@ -193,7 +217,7 @@ useEffect(()=>{
                                       href={{
                                         pathname: "jobs/edit",
                                         query: {
-                                          id: dt.id,
+                                          id: dt.jopo_entity_id,
                                         },
                                       }}
                                       className={`${
@@ -213,8 +237,8 @@ useEffect(()=>{
                                   {({ active }) => (
                                     <button
                                       onClick={() => {
-                                        // setProdCatById(data);
-                                        // setIsDelete(true);
+                                        setPostById(dt.jopo_entity_id);
+                                        setIsDelete(true);
                                       }}
                                       className={`${
                                         active

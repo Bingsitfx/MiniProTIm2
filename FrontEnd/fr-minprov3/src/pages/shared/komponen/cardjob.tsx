@@ -17,31 +17,26 @@ const CardJob = (props: any) => {
         <Link href={{
           pathname: "jobs/jobdetail",
           query: {
-            id: data.id,
-            name: data.namaCompany,
-            loc: data.loc,
-            expe: data.expe,
-            freq: data.freq,
-            lastmod : data.lastmod
+            id: data.jopo_entity_id,
           },
         }}>
           <div className="flex flex-wrap">
-            <div className="w-full hover:opacity-70 transition ease-in-out pb-1">
+            <div className="w-full lg:w-[500px] hover:opacity-70 transition ease-in-out pb-1">
               <div className="bg-white border shadow-lg p-3 block ">
                 <div className="flex">
-                  <Image src={Logo} alt="gambar" height={70} width={70} />
-                  <h1 className="px-2 text-xl font-bold max-w-xs ">
-                    {data.namaCompany}
+                  <img src={`http://localhost:3003/images/${data.jopho_filename}`} alt="gambar" height={100} width={100} />
+                  <h1 className="pl-5 text-xl font-bold max-w-xs ">
+                    {data.jopo_title}
                   </h1>
                 </div>
                 <div className="pt-6">
                   <div className="flex">
                     <EnvironmentOutlined className="pt-1" />
-                    <h3 className="pl-2 text-base font-semibold">Jakarta</h3>
+                    <h3 className="pl-2 text-base font-semibold">{data.city_name}</h3>
                   </div>
                   <div className="flex">
                     <FieldTimeOutlined className="pt-1" />
-                    <h3 className="pl-2 text-base font-semibold">3-5 Tahun</h3>
+                    <h3 className="pl-2 text-base font-semibold">{data.jopo_min_experience} - {data.jopo_max_experience} Tahun</h3>
                   </div>
                   <div className="flex justify-between pt-2">
                     <div className="flex bg-orange-400 rounded-md px-1">

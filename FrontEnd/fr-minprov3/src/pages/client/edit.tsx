@@ -31,7 +31,7 @@ const EditClient = () => {
   const [loadedData,setLoadedData]:any=useState(null)
 
   useEffect(() => {
-    dispatch({type:"RESET_STATE"})
+    dispatch({type:"RESET_STATE"});
     dispatch(doRequestGetIndustry());
     dispatch(doRequestGetEmprange());
     dispatch(doRequestGetCity());
@@ -273,6 +273,6 @@ const EditClient = () => {
       </div>
     </Content1>
   );
-};
+  };
 }
 export default EditClient;

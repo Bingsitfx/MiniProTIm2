@@ -20,7 +20,6 @@ export function* handleGetAllClient(): any {
 export function* handleGetClientById(action:any): any {
   try {
     const result = yield call(apiMethod.clientById,action.payload);
-    // console.log('DARISAGA',result.data.result[0])
     yield put(doResponseGetClientById(result.data.result[0]));
   } catch (error) {
     yield put(doResponseGetClientById({ message: error, status: 400 }));

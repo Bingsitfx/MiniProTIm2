@@ -14,6 +14,19 @@ export const doRequestGetJobPost = () => {
     };
   };
 
+  export const doRequestGetJobPostById = (payload:any) => {
+    return {
+      type: ActionTypes.REQ_GET_JOBPOST_BY_ID,
+      payload,
+    };
+  };
+  export const doResponseGetJobPostById = (payload: any) => {
+    return {
+      type: ActionTypes.RES_GET_JOBPOST_BY_ID,
+      payload,
+    };
+  };
+
   export const doRequestGetCurnumber = () => {
     return {
       type: ActionTypes.REQ_GET_CURNUMBER,

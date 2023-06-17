@@ -226,7 +226,7 @@ export class JobHireService {
       const query = `SELECT * FROM job_hire.job_list_view WHERE jopo_entity_id = ${id}`;
 
       const result = await this.sequelize.query(query);
-      return result;
+      return result[0];
     } catch (error) {
       return error.message;
     }
@@ -319,32 +319,6 @@ export class JobHireService {
       ];
 
       console.log('DATA 2', data2);
-
-      // for (let index = 0; index < images.length; index++) {
-      //   // console.log(images[index]);
-      //   const mimetype = images[index].mimetype;
-      //   // console.log("MIMETYPE:", mimetype);
-      //   const fileExtension = mimetype.split('/')[1];
-      //   data2.push({
-      //     jopho_entity_id:fields.jopho_entity_id,
-      //     jopho_filename:images[index].filename,
-      //     jopho_filesize:images[index].size,
-      //     jopho_filetype:fileExtension
-      //   } )
-      //   console.log('DATA 2',data2);
-      // }
-
-      // const existingFilenames = [];
-      // existingImageNames.forEach(image => {
-      //   console.log("JOPHO FILENAME",image.jopho_filename);
-      //   existingFilenames.push(image.jopho_filename);
-      // });
-      // console.log("EXISTING PATHS",existingFilenames);
-
-      // existingFilenames.forEach(async(imgPath)=>{
-      //   await fsPromises.unlink(`./images/${imgPath}`);
-      //   console.log("CURRENT PATHS",existingFilenames);
-      // })
 
       const query = `CALL job_hire.updatepostingjob('${id}','${JSON.stringify(
         data,
@@ -525,7 +499,7 @@ export class JobHireService {
     }
   }
 
-  async findOne(id: number) {
+  async findOneClient(id: number) {
     try {
       const result = await this.sequelize.query(
         `SELECT * FROM job_hire.client_view where clit_id = ${id}`,
