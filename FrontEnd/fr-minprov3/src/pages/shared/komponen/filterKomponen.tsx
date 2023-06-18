@@ -3,10 +3,24 @@ import AccordionTemplate from "./accordion";
 import ToggleSwitch from "./switch";
 import Button from "./button";
 import RadioButton from "./radioButton";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { doRequestGetWorktype } from "@/pages/redux/MasterSchema/action/actionReducer";
 
-const FilterComp = () => {
+const FilterComp = (props: any) => {
+  const { filterOptions, handleFilterChange } = props;
+
+  const dispatch = useDispatch();
+  let { work_type, refresh } = useSelector(
+    (state: any) => state.WorktypeReducers
+  );
+
+  useEffect(() => {
+    dispatch(doRequestGetWorktype());
+  }, [refresh]);
+
   return (
-    <div className="flex pr-5 pb-5 hidden lg:block">
+    <div className=" pr-5 pb-5 flex">
       <div className="overflow-y-auto h-[32rem] w-[22rem] block items-center border p-5 py-1 ">
         <AccordionTemplate desc="Filter Pencarianmu" />
         <AccordionTemplate
@@ -21,11 +35,15 @@ const FilterComp = () => {
         <AccordionTemplate
           desc="Tipe Pekerjaan"
           Content={
-            <div className="grid grid-rows-1 gap-3 pl-1 py-3">
-              <CheckBox namaCheck="Magang" />
-              <CheckBox namaCheck="Full-time" />
-              <CheckBox namaCheck="Part-time" />
-              <CheckBox namaCheck="Freelance" />
+            <div className="grid grid-rows-1 gap-3 pl-1 py-3 ">
+              {work_type.map((option: any) => (
+                <CheckBox
+                  option={option.woty_name}
+                  key = {option.work_code}
+                  filterOptions={filterOptions}
+                  handleFilterChange={handleFilterChange}
+                />
+              ))}
             </div>
           }
         />
@@ -33,10 +51,11 @@ const FilterComp = () => {
           desc="Pengalaman"
           Content={
             <div className="grid grid-rows-1 gap-3 pl-1 py-3">
-              <CheckBox namaCheck="< 1 Tahun" />
-              <CheckBox namaCheck="1 - 3 Tahun" />
-              <CheckBox namaCheck="5 - 10 Tahun" />
-              <CheckBox namaCheck="> 10 Tahun" />
+              
+              {/* <CheckBox  />
+              <CheckBox  />
+              <CheckBox  />
+              <CheckBox  /> */}
             </div>
           }
         />
@@ -61,7 +80,7 @@ const FilterComp = () => {
           }
         />
       </div>
-      </div>
+    </div>
   );
 };
 export default FilterComp;

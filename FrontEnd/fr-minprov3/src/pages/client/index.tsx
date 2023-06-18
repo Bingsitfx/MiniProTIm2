@@ -14,27 +14,6 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { doRequestGetClient } from "../redux/JobhireSchema/action/actionreducer";
 
-// const dummyDataTable = [
-//   {
-//     id: 1,
-//     name: "Semen 3 Roda",
-//     indu_name: "Manufacture",
-//     address1: "Jl. Baron 23 Kec.Beji",
-//     address2: " ",
-//     emra_min: "50",
-//     emra_max: "100",
-//   },
-//   {
-//     id: 2,
-//     name: "Mahaka Internasional",
-//     indu_name: "Telecomunication",
-//     address1: "Jl. Gatot Subroto Kavling 3A",
-//     address2: "SCBD District 8 Treasury Tower",
-//     emra_min: "100",
-//     emra_max: "500",
-//   },
-// ];
-
 const Jobs = () => {
 
   const dispatch = useDispatch()
@@ -47,7 +26,6 @@ const Jobs = () => {
     dispatch(doRequestGetClient());
   }, [refresh]);
 
-  // console.log('client',client)
 
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -220,7 +198,7 @@ const Jobs = () => {
                                   </div>
 
                                   <div className="px-1 py-1">
-                                    <Menu.Item>
+                                    {/* <Menu.Item>
                                       {({ active }) => (
                                         <button
                                           onClick={() => {
@@ -236,7 +214,7 @@ const Jobs = () => {
                                           Delete
                                         </button>
                                       )}
-                                    </Menu.Item>
+                                    </Menu.Item> */}
                                   </div>
                                 </Menu.Items>
                               </Transition>

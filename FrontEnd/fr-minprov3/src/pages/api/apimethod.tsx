@@ -20,7 +20,7 @@ const createJobPost =(data:any)=>{
 }
 
 const updateJobPost =(data:any)=>{  
-    // console.log('api update',...data)
+    console.log('api update',...data)
     return axios.patch(`/job-hire/update/${data.get("jopo_entity_id")}`,data,{headers:{"Content-Type":"multipart/form-data"}})
 }
 

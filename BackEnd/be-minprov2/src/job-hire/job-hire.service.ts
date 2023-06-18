@@ -31,7 +31,7 @@ export class JobHireService {
         .slice(0, 10)
         .replace(/-/g, '');
 
-      const result = `JOB#${formattedDate}-${formattedJopoId}`;
+      const result = `JOB#${formattedDate}-${formattedJopoId || `0001`}`;
       // console.log(formattedJopoId);
       return result;
     } catch (error) {

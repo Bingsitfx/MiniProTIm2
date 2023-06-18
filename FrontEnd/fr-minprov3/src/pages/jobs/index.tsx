@@ -26,6 +26,20 @@ export default function Home() {
   const [searchLocation, setSearchLocation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData]: any = useState([]);
+  const [filterOptions, setFilterOptions]: any = useState([]);
+  const [loadedData,setLoadedData] = useState(null)
+  // const [refresh,setRefresh] = useState(true)
+
+  const handleFilterChange = (option: any, isChecked: any) => {
+    if (isChecked) {
+      setFilterOptions([...filterOptions, option]);
+    } else {
+      setFilterOptions(filterOptions.filter((item: any) => item !== option));
+    }
+  };
+
+  let filtered = job_post;
+  
 
   const handleChange = (event: any) => {
     setSelectedValue(event.target.value);
@@ -33,7 +47,6 @@ export default function Home() {
 
   const handleSearchChange = () => {
     setIsSearching(true);
-    let filtered = job_post;
     if (selectedValue !== "all") {
       filtered = filtered.filter((item: { joro_name: string }) =>
         item.joro_name.toLowerCase().includes(selectedValue.toLowerCase())
@@ -59,7 +72,24 @@ export default function Home() {
     setFilteredData(filtered);
   };
 
-  const displayData = isSearching ? filteredData : job_post;
+  console.log(job_post)
+  const displayData =  isSearching ? filteredData : job_post
+
+  useEffect(()=>{
+    setFilteredData(job_post)
+  },[job_post])
+  
+  useEffect(() => {
+    // Terapkan filter secara langsung setiap kali filterOptions berubah
+     setIsSearching(true);
+    if (filterOptions.length > 0) {
+      filtered = filtered.filter((item: any) =>
+        filterOptions.includes(item.woty_name)
+      );
+    }
+    setFilteredData(filtered);
+  }, [filterOptions]);
+  
 
   /* ````````````` */
 
@@ -73,6 +103,7 @@ export default function Home() {
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
+
 
   return (
     <div className="container">
@@ -95,7 +126,10 @@ export default function Home() {
         <h2 className="py-5 text-lg">100 Lowongan Pekerjaan di Indonesia</h2>
         <div className=" p-2.5 border-2">
           <div className="flex flex-wrap lg:flex-none">
-            <FilterComp />
+            <FilterComp
+              filterOptions={filterOptions}
+              handleFilterChange={handleFilterChange}
+            />
             <CardJob dataArray={currentItems} />
           </div>
           <Pagination

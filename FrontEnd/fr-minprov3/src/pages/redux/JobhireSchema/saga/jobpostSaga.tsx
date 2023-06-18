@@ -52,7 +52,6 @@ export function* handleAddJobPost(action: any): any {
 export function* handleUpdateJobPost(action: any): any {
   try {
     const result = yield call(apiMethod.updateJobPost, action.payload);
-    console.log('SAGA',result)
     yield put(doResponseUpdateJobPost(result.data));
   } catch (error) {
     yield put(doResponseUpdateJobPost({ message: error, status: 400 }));

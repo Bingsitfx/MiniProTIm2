@@ -122,9 +122,10 @@ const JobCreate = () => {
     dispatch(doRequestGetWorktype());
     dispatch(doRequestGetJobrole());
     dispatch(doRequestGetClient());
-    setValue("jopo_number", cur_number);
+    // setValue("jopo_number", cur_number);
   }, [refresh]);
 
+ 
   /*````````````` fungsi untuk ganti foto dan hapus foto start ``````````````*/
 
   const [selectedImage, setSelectedImage]: any = useState(null);
@@ -174,9 +175,8 @@ const JobCreate = () => {
 
   const handleRegistration = async (data: any) => {
     const formData: any = new FormData();
-
     formData.append("jopo_emp_entity_id", data.emp_entity_id);
-    formData.append("jopo_number", data.jopo_number);
+    formData.append("jopo_number", cur_number);
     formData.append("jopo_title", data.title);
     formData.append("jopo_start_date", data.start_date);
     formData.append("jopo_end_date", data.end_date);
@@ -516,7 +516,6 @@ const JobCreate = () => {
                                   {params.InputProps.startAdornment}
                                 </>
                               ),
-                              type: "search",
                             }}
                             {...register("test", registerOptions.client)}
                           />
