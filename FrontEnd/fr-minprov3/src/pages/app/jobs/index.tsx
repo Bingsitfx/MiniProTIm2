@@ -30,6 +30,10 @@ useEffect(()=>{
 },[refresh])
 
 /* DISPATCH END */
+
+
+/* FILTER START */
+
   const [selectedValue, setSelectedValue] = useState('all');
   const [searchValue, setSearchValue] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -53,21 +57,16 @@ useEffect(()=>{
       );
     }
 
-    // const filtered = job_post.filter(
-    //   (item:any) =>
-    //     item.jopo_title.toLowerCase().includes(searchValue.toLowerCase()) ||
-    //     // item.jopo_max_experience.toString().toLowerCase().includes(searchValue.toLowerCase()) ||
-    //     // item.jopo_min_experience.toLowerCase().includes(searchValue.toLowerCase()) ||
-    //     item.indu_name.toLowerCase().includes(searchValue.toLowerCase())
-    // ); 
     setFilteredData(filtered);
   };
 
   const displayData = isSearching ? filteredData : job_post;
 
-  {
-    /* UNTUK PAGING START */
-  }
+  /* FILTER START */
+
+
+  /* UNTUK PAGING START */
+
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const totalPages = Math.ceil(displayData?.length / itemsPerPage);
@@ -78,9 +77,9 @@ useEffect(()=>{
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
-  {
-    /* UNTUK PAGING START END*/
-  }
+  
+  /* UNTUK PAGING START END*/
+
 
   return (
     <div>

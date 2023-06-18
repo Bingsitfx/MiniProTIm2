@@ -6,7 +6,7 @@ import RadioButton from "./radioButton";
 
 const FilterComp = () => {
   return (
-    <div className="flex pr-5 pb-5">
+    <div className="flex pr-5 pb-5 hidden lg:block">
       <div className="overflow-y-auto h-[32rem] w-[22rem] block items-center border p-5 py-1 ">
         <AccordionTemplate desc="Filter Pencarianmu" />
         <AccordionTemplate

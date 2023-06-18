@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 
 const port = process.env.PORT;
 // async function bootstrap() {
@@ -22,11 +23,15 @@ const port = process.env.PORT;
 //   });
 // }
 // bootstrap();
+const corsOption: CorsOptions = {
+  origin: ['http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+};
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors(corsOption);
   await app.listen(port, () => {
     console.log(`Server berjalan di port ${port}`);
   });

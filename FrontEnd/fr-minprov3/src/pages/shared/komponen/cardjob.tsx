@@ -21,7 +21,7 @@ const CardJob = (props: any) => {
           },
         }}>
           <div className="flex flex-wrap">
-            <div className="w-full lg:w-[500px] hover:opacity-70 transition ease-in-out pb-1">
+            <div className="w-[450px] lg:w-[500px] hover:opacity-70 transition ease-in-out pb-1">
               <div className="bg-white border shadow-lg p-3 block ">
                 <div className="flex">
                   <img src={`http://localhost:3003/images/${data.jopho_filename}`} alt="gambar" height={100} width={100} />
