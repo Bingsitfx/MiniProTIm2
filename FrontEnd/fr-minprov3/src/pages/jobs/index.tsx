@@ -72,7 +72,7 @@ export default function Home() {
     setFilteredData(filtered);
   };
 
-  console.log(job_post)
+
   const displayData =  isSearching ? filteredData : job_post
 
   useEffect(()=>{
@@ -107,10 +107,12 @@ export default function Home() {
 
   return (
     <div className="container">
-      <div className="mx-5 pt-24">
+      <div className=" pt-24">
         <h1 className=" text-lg">Our Network</h1>
-        <div className="mb-4 border-2  p-2.5">
-          <ImgSlide />
+        <div className="w-full bg-transparent">
+          <div className="lg:w-3/4 mx-auto py-2 w-11/12">
+            <ImgSlide />
+          </div>
         </div>
         <div className="border-2 b p-2.5">
           <SearchBar

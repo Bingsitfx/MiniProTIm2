@@ -27,7 +27,7 @@ const SearchBar = (props: any) => {
   return (
     <div className="container">
       <div className="w-full lg:pb-6">
-        <div className="pt-6 lg:flex lg:flex-wrap items-center lg:justify-center">
+        <div className="pt-6 lg:grid lg:grid-flow-col lg:justify-items-stretch items-center justify-center">
           <div className="pb-2 lg:pb-0 lg:pl-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -36,7 +36,7 @@ const SearchBar = (props: any) => {
               <input
                 type="text"
                 id="simple-search"
-                className=" text-sm rounded-lg block w-full pl-10 p-2.5 ring-1 lg:w-[30rem] "
+                className=" text-sm rounded-lg block w-full pl-10 p-2.5 ring-1 lg:w-[500px] "
                 placeholder="Jabatan, Kata Kunci, Perusahaan"
                 value={searchValue}
                 onChange={setSearchValue}
@@ -52,7 +52,7 @@ const SearchBar = (props: any) => {
               <input
                 type="text"
                 id="simple-search"
-                className=" text-sm rounded-lg block w-full pl-10 p-2.5 ring-1 lg:w-[25rem] "
+                className=" text-sm rounded-lg block w-full pl-10 p-2.5 ring-1 lg:w-[300px]   "
                 placeholder="Location"
                 value={searchLocation}
                 onChange={setSearchLocation}
@@ -61,7 +61,7 @@ const SearchBar = (props: any) => {
           </div>
 
           <div className="pb-4 lg:pb-0 lg:pl-4">
-            <select className="text-sm rounded-lg ring-1 block w-full lg:w-[15rem] p-2.5" value={selectedValue} onChange={handleChange}>
+            <select className="text-sm rounded-lg ring-1 block w-full lg:w-[250px]   p-2.5" value={selectedValue} onChange={handleChange}>
                 <option value='all'>All</option>
               {job_role.map((option: any) => (
                 <option value={option.joro_name}>{option.joro_name}</option>
@@ -71,7 +71,7 @@ const SearchBar = (props: any) => {
 
           <div className="pb-2 lg:pb-0 lg:pl-4">
             <button
-              className="w-full text-center text-white order-0  px-4 py-2  border rounded-md bg-blue-400 text-sm font-medium focus:ring-blue-500  uppercase hover:bg-blue-500 lg:w-[10rem]"
+              className="w-full text-center text-white order-0  px-4 py-2  border rounded-md bg-blue-400 text-sm font-medium focus:ring-blue-500  uppercase hover:bg-blue-500 "
               onClick={buttonClick}
             >
               SEARCH

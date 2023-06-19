@@ -5,6 +5,8 @@ import Layout2 from "./shared/layout2";
 import { useRouter } from "next/router";
 import { Provider } from "react-redux";
 import store from "./redux/storeGlobal";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
