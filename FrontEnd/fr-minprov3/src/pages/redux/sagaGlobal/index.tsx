@@ -2,7 +2,7 @@ import ActionTypeJobHire from "../../redux/JobhireSchema/action/actiontype";
 import ActionTypeMaster from "../../redux/MasterSchema/action/actionType";
 
 import { takeEvery, all} from "redux-saga/effects";
-import { handleAddJobPost, handleDeleteJobPost, handleGetAllJobPost, handleGetCurnumber, handleGetJobPostById, handleUpdateJobPost } from "../JobhireSchema/saga/jobpostSaga";
+import { handleAddJobPost, handleDeleteJobPost, handleGetAllJobPost, handleGetCurnumber, handleGetJobPostById, handleGetSearchJobPost, handleUpdateJobPost, handleUpdateStatus } from "../JobhireSchema/saga/jobpostSaga";
 import { handleAddClient, handleDeleteClient, handleGetAllClient, handleGetClientById, handleUpdateClient } from "../JobhireSchema/saga/clientsaga";
 import { handleGetEducation } from "../MasterSchema/saga/educationSaga";
 import { handleGetWorktype } from "../MasterSchema/saga/worktypeSaga";
@@ -10,6 +10,7 @@ import { handleGetJobrole } from "../MasterSchema/saga/jobroleSaga";
 import { handleGetIndustry } from "../MasterSchema/saga/industrySaga";
 import { handleGetEmprange } from "../JobhireSchema/saga/emprangeSaga";
 import { handleGetCity } from "../MasterSchema/saga/citySaga";
+import { handleGetPhoto } from "../JobhireSchema/saga/photosaga";
 
 function* watchAll() {
     yield all([
@@ -19,8 +20,11 @@ function* watchAll() {
       takeEvery(ActionTypeJobHire.REQ_UPDATE_JOBPOST, handleUpdateJobPost),
       takeEvery(ActionTypeJobHire.REQ_DELETE_JOBPOST, handleDeleteJobPost),
       takeEvery(ActionTypeJobHire.REQ_GET_JOBPOST_BY_ID, handleGetJobPostById),
-
+      takeEvery(ActionTypeJobHire.REQ_UPDATE_STATUS, handleUpdateStatus),
+      takeEvery(ActionTypeJobHire.REQ_SEARCH_JOBPOST, handleGetSearchJobPost),
+      
       takeEvery(ActionTypeJobHire.REQ_GET_EMPRANGE, handleGetEmprange),
+      takeEvery(ActionTypeJobHire.REQ_GET_JOBPHOTO, handleGetPhoto),
   
       takeEvery(ActionTypeJobHire.REQ_GET_CLIENT, handleGetAllClient),
       takeEvery(ActionTypeJobHire.REQ_GET_CLIENT_BY_ID, handleGetClientById),

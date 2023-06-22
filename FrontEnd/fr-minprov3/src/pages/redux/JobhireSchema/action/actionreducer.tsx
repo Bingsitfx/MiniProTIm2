@@ -14,6 +14,7 @@ export const doRequestGetJobPost = () => {
     };
   };
 
+
   export const doRequestGetJobPostById = (payload:any) => {
     return {
       type: ActionTypes.REQ_GET_JOBPOST_BY_ID,
@@ -39,6 +40,17 @@ export const doRequestGetJobPost = () => {
     };
   };
 
+  export const doRequestGetPhoto = () => {
+    return {
+      type: ActionTypes.REQ_GET_JOBPHOTO,
+    };
+  };
+  export const doResponseGetPhoto = (payload: any) => {
+    return {
+      type: ActionTypes.RES_GET_JOBPHOTO,
+      payload,
+    };
+  };
   
   export const doRequestAddJobPost = (payload: any) => {
     return {
@@ -78,6 +90,34 @@ export const doRequestGetJobPost = () => {
   export const doResponseDeleteJobPost = (payload: any) => {
     return {
       type: ActionTypes.RES_DELETE_JOBPOST,
+      payload,
+    };
+  };
+
+  export const doRequestUpdateStatus = (payload: any) => {
+    return {
+      type: ActionTypes.REQ_UPDATE_STATUS,
+      payload,
+    };
+  };
+  
+  export const doResponseUpdateStatus = (payload: any) => {
+    return {
+      type: ActionTypes.RES_UPDATE_STATUS,
+      payload,
+    };
+  };
+
+  export const doRequestSearchJobPost = (payload:any) => {
+    return {
+      type: ActionTypes.REQ_SEARCH_JOBPOST,
+      payload,
+    };
+  };
+  
+  export const doResponseSearchJobPost = (payload: any) => {
+    return {
+      type: ActionTypes.RES_SEARCH_JOBPOST,
       payload,
     };
   };

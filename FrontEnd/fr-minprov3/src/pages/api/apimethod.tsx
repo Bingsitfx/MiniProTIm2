@@ -6,6 +6,10 @@ const findAllJob =()=>{
     return axios.get("/job-hire/alljob")
 }
 
+const findJobPhoto =()=>{
+    return axios.get("/job-hire/photo")
+}
+
 const jobPostById = (id:any) => {
     return axios.get(`/job-hire/find/${id}`)
 }
@@ -27,6 +31,28 @@ const updateJobPost =(data:any)=>{
 const deleteJobPost =(data:any)=>{
     return axios.delete(`/job-hire/delete/${data.id}`,data)
 }
+
+const updateStatus =(data:any)=>{  
+    // console.log('api update',data)
+    return axios.patch(`/job-hire/status`,data)
+}
+
+const searchPostJob =(data:any)=>{
+    return axios.get(`/job-hire/search`, {
+        params: {
+          key: data.search.keyword,
+          loc: data.search.location,
+          job : data.search.job,
+          type: data.search.type,
+          jobType: data.search.jobType.join(","),
+          expe : data.search.expe.join(","),
+          terupdate : data.search.terupdate,
+          newest : data.search.newest,
+        },
+      })
+}
+
+
 
 /*-------- CRUD CLIENT ---------*/
 
@@ -87,6 +113,9 @@ export default {
     updateJobPost,
     deleteJobPost,
     jobPostById,
+    updateStatus,
+    findJobPhoto,
+    searchPostJob,
 
     findAllEmprange,
 

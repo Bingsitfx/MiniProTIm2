@@ -11,6 +11,7 @@ import JobroleReducers from "../MasterSchema/reducer/jobroleReducer";
 import WorktypeReducers from "../MasterSchema/reducer/worktypeReducer";
 import EmprangeReducers from "../JobhireSchema/reducer/EmprangeReducer";
 import CityReducers from "../MasterSchema/reducer/cityReducer";
+import JobPhotoReducers from "../JobhireSchema/reducer/JobPhotoReducer";
 
 
 const logger = createLogger();
@@ -24,7 +25,8 @@ const reducer = combineReducers({
     JobroleReducers,
     IndustryReducers,
     EmprangeReducers,
-    CityReducers
+    CityReducers,
+    JobPhotoReducers,
 });
 
 const store = configureStore({

@@ -124,7 +124,7 @@ export class JobHireService {
       // console.log("PAGINATION", pagination);
       // console.log("SEARCH", search);
       // console.log("FILTER", filter);
-      let query = `SELECT * FROM job_hire.job_list_view`;
+      let query = `SELECT * FROM job_hire.job_list_view `;
 
       //SEARCH
       if (search.keyword || search.location) {
@@ -135,7 +135,7 @@ export class JobHireService {
         if (search.keyword && search.location) {
           query += ` AND`;
         }
-        if (search.location) {
+        if (search.location && search.location != '') {
           query += ` city_name ILIKE '%${search.location}%'`;
         }
       } else {
@@ -203,6 +203,7 @@ export class JobHireService {
       //PAGINATION
       query += ` LIMIT ${+pagination.limit} OFFSET ${+pagination.offset}`;
       console.log(query);
+
       const result = await this.sequelize.query(query);
       return result;
     } catch (error) {
@@ -210,11 +211,132 @@ export class JobHireService {
     }
   }
 
+  //SEARCH API FIXXX
+
+  async searchJobPost(
+    key: any,
+    loc: any,
+    job: any,
+    type: any,
+    jobType: any,
+    expe: any,
+    terupdate: any,
+    newest: any,
+  ) {
+    try {
+      let query = `SELECT * FROM job_hire.job_list_view WHERE 1=1`;
+      const queryParams = [];
+
+      if (key) {
+        query += ` AND (jopo_title ILIKE $${
+          queryParams.length + 1
+        } OR clit_name ILIKE $${queryParams.length + 1})`;
+        queryParams.push(`%${key}%`);
+      }
+
+      if (loc) {
+        query += ` AND city_name ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${loc}%`);
+      }
+
+      if (job) {
+        query += ` AND joro_name ILIKE $${queryParams.length + 1}`;
+        queryParams.push(`%${job}%`);
+      }
+
+      if (type) {
+        query += ` AND jopo_joty_id = $${queryParams.length + 1}`;
+        queryParams.push(type);
+      }
+
+      if (jobType) {
+        query += ` AND (`;
+        const dataJobType = jobType.split(',');
+
+        for (let index = 0; index < dataJobType.length; index++) {
+          if (index > 0) {
+            query += ` OR`;
+          }
+          query += ` jopo_work_code = $${queryParams.length + 1}`;
+          queryParams.push(dataJobType[index]);
+        }
+
+        query += `)`;
+      }
+
+      if (expe) {
+        query += ` AND (`;
+        const dataJobType = expe.split(',');
+        const hasil = [];
+        for (let i = 0; i < dataJobType.length; i++) {
+          const [min, max] = dataJobType[i].split('-').map(Number);
+          hasil.push({ min, max });
+        }
+        for (let index = 0; index < dataJobType.length; index++) {
+          if (index > 0) {
+            query += ` OR`;
+          }
+          const minParam = queryParams.length + 1;
+          const maxParam = queryParams.length + 2;
+          // console.log('MIN', hasil[index].min);
+          query += ` jopo_min_experience BETWEEN $${minParam} AND $${maxParam}`;
+          queryParams.push(hasil[index].min);
+          queryParams.push(hasil[index].max);
+        }
+
+        query += `)`;
+      }
+
+      if (terupdate === '24 Jam Terakhir') {
+        const currentDate = new Date();
+        const gmtOffset = 7 * 60 * 60 * 1000;
+        currentDate.setTime(currentDate.getTime() + gmtOffset);
+        currentDate.setHours(currentDate.getHours() - 24);
+        query += ` AND jopo_modified_date >= $${queryParams.length + 1}`;
+        queryParams.push(currentDate);
+
+        console.log('WAKTU JAM', currentDate);
+      }
+      if (terupdate === 'Seminggu Terakhir') {
+        const currentDate = new Date();
+        const gmtOffset = 7 * 60 * 60 * 1000;
+        currentDate.setTime(currentDate.getTime() + gmtOffset);
+        currentDate.setDate(currentDate.getDate() - 7);
+        query += ` AND jopo_modified_date >= $${queryParams.length + 1}`;
+        queryParams.push(currentDate);
+        console.log('WAKTU WEEK', currentDate);
+      }
+      if (terupdate === 'Sebulan Terakhir') {
+        const currentDate = new Date();
+        const gmtOffset = 7 * 60 * 60 * 1000;
+        currentDate.setTime(currentDate.getTime() + gmtOffset);
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        query += ` AND jopo_modified_date >= $${queryParams.length + 1}`;
+        queryParams.push(currentDate);
+        console.log('WAKTU MONTH', currentDate);
+      }
+
+      query += ` AND jopo_status = 'publish'`;
+
+      if (newest === '1') {
+        query += ` ORDER BY jopo_modified_date DESC`;
+      }
+
+      console.log(query);
+
+      const result = await this.sequelize.query(query, { bind: queryParams });
+
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   async findJopoAll() {
     try {
-      const query = `SELECT * FROM job_hire.job_list_view`;
-      const resutl = await this.sequelize.query(query);
-      return resutl[0];
+      const query = `SELECT * FROM job_hire.job_list_view WHERE jopo_status != 'remove'`;
+      const result = await this.sequelize.query(query);
+      return result[0];
     } catch (error) {
       return error.message;
     }
@@ -374,6 +496,22 @@ export class JobHireService {
       }
     });
     return transaction;
+  }
+
+  async updateStatus(fields: any) {
+    try {
+      console.log(fields);
+      const result = await job_post.update(
+        {
+          jopo_status: fields.status,
+        },
+        { where: { jopo_entity_id: fields.id } },
+      );
+
+      return messageHelper(result, 201, 'Status Berhasil diUpdate');
+    } catch (error) {
+      return messageHelper(error.message, 400, 'Status Gagal diUpdate');
+    }
   }
 
   // CLIENT

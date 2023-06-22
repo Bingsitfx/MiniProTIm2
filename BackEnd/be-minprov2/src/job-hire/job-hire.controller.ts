@@ -10,10 +10,9 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { JobHireService } from './job-hire.service';
-import { CreateJobHireDto } from './dto/create-job-hire.dto';
-import { UpdateJobHireDto } from './dto/update-job-hire.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { client, job_post } from 'models/job_hire';
@@ -98,6 +97,46 @@ export class JobHireController {
     return this.jobHireService.findAllJopo(pagination, search, filter);
   }
 
+  // @Get('search/:key?/:loc?')
+  // searchJobPost(@Param('key') key: string, @Param('loc') loc: string) {
+  //   // console.log('sSDASD', key, loc);
+  //   return this.jobHireService.searchJobPost(key || '', loc || '');
+  // }
+
+  @Get('search')
+  searchJobPost(
+    @Query('key') key?: string,
+    @Query('loc') loc?: string,
+    @Query('job') job?: string,
+    @Query('type') type?: any,
+    @Query('jobType') jobtype?: any,
+    @Query('expe') expe?: any,
+    @Query('terupdate') terupdate?: any,
+    @Query('newest') newest?: any,
+  ) {
+    console.log(
+      'DATATA',
+      key,
+      loc,
+      job,
+      type,
+      jobtype,
+      expe,
+      terupdate,
+      newest,
+    );
+    return this.jobHireService.searchJobPost(
+      key || '',
+      loc || '',
+      job || '',
+      type || '',
+      jobtype || '',
+      expe || '',
+      terupdate || '',
+      newest || '',
+    );
+  }
+
   @Get('alljob')
   findJopoAll() {
     return this.jobHireService.findJopoAll();
@@ -136,6 +175,11 @@ export class JobHireController {
   @Delete('delete/:id')
   removeJopo(@Param('id') id: string) {
     return this.jobHireService.removeJopo(+id);
+  }
+
+  @Patch('status')
+  updateStatus(@Body() status: any) {
+    return this.jobHireService.updateStatus(status);
   }
 
   // CLIENT

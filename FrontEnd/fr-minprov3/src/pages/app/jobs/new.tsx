@@ -30,11 +30,12 @@ import {
   doRequestGetWorktype,
 } from "@/pages/redux/MasterSchema/action/actionReducer";
 import { Router, useRouter } from "next/router";
-// import {CKEditor} from "@ckeditor/ckeditor5-react";
-// import CKEditor from 'react-ckeditor-component';
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { PlusOutlined } from "@ant-design/icons";
+import { Modal, Upload } from "antd";
+import type { RcFile, UploadProps } from "antd/es/upload";
+import type { UploadFile } from "antd/es/upload/interface";
 
-const JobCreate = () => {
+const JobCreate: React.FC = () => {
   /*`````````` koneksi ke backend  ``````````````*/
   const dispatch = useDispatch();
   const router = useRouter();
@@ -52,13 +53,6 @@ const JobCreate = () => {
   let { job_role } = useSelector((state: any) => state.JobroleReducers);
 
   let { client } = useSelector((state: any) => state.ClientReducers);
-
-  // console.log('client',client[0])
-  // console.log('work',work_type)
-  // console.log('jobrole',job_role)
-  // console.log('Newedu',education[0]?.edu_code)
-  // console.log('new',job_post)
-  // console.log('new2',cur_number)
 
   type FormValues = {
     title: string;
@@ -107,12 +101,13 @@ const JobCreate = () => {
   const handlePublishToggle = () => {
     setIsPublishChecked(!isPublishChecked);
   };
+
   const handleRemoteToggle = () => {
     setIsRemoteChecked(!isRemoteChecked);
   };
 
   const handleHiringToggle = () => {
-    setIsHiringChecked(isHiringChecked);
+    setIsHiringChecked(!isHiringChecked);
   };
 
   /*```````````` fungsi untuk switch publish ,remote, hiring end ``````````````*/
@@ -125,7 +120,6 @@ const JobCreate = () => {
     // setValue("jopo_number", cur_number);
   }, [refresh]);
 
- 
   /*````````````` fungsi untuk ganti foto dan hapus foto start ``````````````*/
 
   const [selectedImage, setSelectedImage]: any = useState(null);
@@ -146,6 +140,13 @@ const JobCreate = () => {
   };
   /*```````````` fungsi untuk ganti foto dan hapus foto end ````````````*/
 
+   /* Button Cancel start */
+   const handleCancel = () =>{
+    router.push('/app/jobs')
+  }
+
+   /* Button Cancel end*/
+
   /*````````````````` fungsi handle date start `````````````````````*/
 
   const [startDate, setStartDate] = useState(null);
@@ -156,7 +157,7 @@ const JobCreate = () => {
     setEndDate(null);
     if (date) {
       const formattedDate: any = format(date.$d, "dd-MM-yyyy");
-      setValue("start_date", formattedDate); // Set the value of "StartPeriod" field in the form
+      setValue("start_date", formattedDate);
     }
   };
 
@@ -164,12 +165,12 @@ const JobCreate = () => {
     setEndDate(date);
     if (date) {
       const formattedDate: any = format(date.$d, "dd-MM-yyyy");
-      setValue("end_date", formattedDate); // Set the value of "StartPeriod" field in the form
+      setValue("end_date", formattedDate);
     }
   };
 
   const isEndDateDisabled = !startDate;
-  const minEndDate = startDate? dayjs(startDate).add(1, "day") : null;
+  const minEndDate = startDate ? dayjs(startDate).add(1, "day") : null;
 
   /*``````````````` fungsi handle date end`````````````````` */
 
@@ -198,12 +199,12 @@ const JobCreate = () => {
     let imageType = type?.split("/")[1];
     formData.append("image_type", imageType);
     formData.append("image_size", data.image[0]?.size);
-    formData.append("jopo_status", data.publish? "publish" : "draft");
-    formData.append("jopo_joty_id", data.remote? 1 : 2); //2 onsite 1remote
-    formData.append("jopo_open", data.close_hiring? 1 : 0);
+    formData.append("jopo_status", data.publish ? "publish" : "draft");
+    formData.append("jopo_joty_id", data.remote ? 1 : 2); //2 onsite 1remote
+    formData.append("jopo_open", data.close_hiring ? 1 : 0);
 
-    dispatch(doRequestAddJobPost(formData))
-    router.push('/app/jobs')
+    dispatch(doRequestAddJobPost(formData));
+    router.push("/app/jobs");
     console.log("aa", ...formData);
     console.log(data);
   };
@@ -224,7 +225,7 @@ const JobCreate = () => {
     start_date: { required: "Start Date is required" },
     end_date: { required: "End Date is required" },
   };
-
+  
   return (
     <Content1 title="Posting Job" path="/app/jobs" button="Back">
       <div>
@@ -409,8 +410,6 @@ const JobCreate = () => {
 
                     {/*  Specification Role */}
                     <div className="pad-input ">
-                     
-
                       <div>
                         <h1 className="text-format">Specification Role</h1>
                         <TextField
@@ -517,7 +516,7 @@ const JobCreate = () => {
                                 </>
                               ),
                             }}
-                            {...register("test", registerOptions.client)}
+                            // {...register("test", registerOptions.client)}
                           />
                         )}
                       />
@@ -562,6 +561,7 @@ const JobCreate = () => {
                     </div>
                     <div className="w-full pl-[33px] justify-center lg:pl-0">
                       <div className="pb-10">
+
                         <Image
                           src={selectedImage || imgDefault}
                           alt="gambar"
@@ -646,7 +646,7 @@ const JobCreate = () => {
                     <button type="submit" className="button-foot">
                       Save
                     </button>
-                    <button type="button" className="button-foot">
+                    <button type="button" className="button-foot" onClick={handleCancel}>
                       Cancel
                     </button>
                   </div>

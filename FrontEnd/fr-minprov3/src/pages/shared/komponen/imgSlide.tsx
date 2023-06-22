@@ -106,7 +106,7 @@
 // };
 
 
-import { doRequestGetJobPost } from "@/pages/redux/JobhireSchema/action/actionreducer";
+import {  doRequestGetPhoto } from "@/pages/redux/JobhireSchema/action/actionreducer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -114,12 +114,11 @@ import Slider from "react-slick";
 
 
 const ImgSlide=()=>{
-  const { job_post, refresh } = useSelector((state:any) => state.JobPostReducers,);
+  const { job_photo, refresh } = useSelector((state:any) => state.JobPhotoReducers,);
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(doRequestGetJobPost())
-    // console.log('photo',job_photo);
+    dispatch(doRequestGetPhoto())
   },[refresh])
 
   const settings = {
@@ -129,14 +128,14 @@ const ImgSlide=()=>{
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
+    slidesToShow: 4,
     slidesToScroll: 1,
   };
 
   return (
     <div>
       <Slider {...settings}>
-        {(job_post || []).map((photo:any) => (
+        {(job_photo || []).map((photo:any) => (
           <div
           className="p-2"
           

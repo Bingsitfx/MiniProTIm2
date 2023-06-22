@@ -1,12 +1,15 @@
 import { call, put } from "redux-saga/effects";
 import apiMethod from "../../../api/apimethod";
 import {
+  doRequestSearchJobPost,
   doResponseAddJobPost,
   doResponseDeleteJobPost,
   doResponseGetCurnumber,
   doResponseGetJobPost,
   doResponseGetJobPostById,
+  doResponseSearchJobPost,
   doResponseUpdateJobPost,
+  doResponseUpdateStatus,
 } from "../action/actionreducer";
 
 export function* handleGetAllJobPost(): any {
@@ -67,3 +70,23 @@ export function* handleDeleteJobPost(action: any): any {
     yield put(doResponseDeleteJobPost({ message: error, status: 400 }));
   }
 }
+
+export function* handleUpdateStatus(action: any): any {
+  try {
+    const result = yield call(apiMethod.updateStatus, action.payload);
+    yield put(doResponseUpdateStatus(result.data));
+  } catch (error) {
+    yield put(doResponseUpdateStatus({ message: error, status: 400 }));
+  }
+}
+
+export function* handleGetSearchJobPost(action:any): any {
+  try {
+    const result = yield call(apiMethod.searchPostJob,action.payload);
+    // console.log('SAGA',result)
+    yield put(doResponseSearchJobPost(result.data));
+  } catch (error) {
+    yield put(doResponseSearchJobPost({ message: error, status: 400 }));
+  }
+}
+

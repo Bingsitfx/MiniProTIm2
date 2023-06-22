@@ -12,7 +12,7 @@ import DeleteJobPost from "./delete";
 
 import { Menu, Transition } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetJobPost } from "@/pages/redux/JobhireSchema/action/actionreducer";
+import { doRequestGetJobPost, doRequestUpdateStatus } from "@/pages/redux/JobhireSchema/action/actionreducer";
 
 
 const Jobs = () => {
@@ -80,6 +80,15 @@ useEffect(()=>{
   
   /* UNTUK PAGING START END*/
 
+
+  const handlePublishChange = (event:any,data:any)=>{
+    // console.log('IDIDID',data,'EVENT',event.target.checked)
+    const status =event.target.checked? 'publish' : 'draft'
+
+    const union = {id:data , status:status}
+    console.log(union)
+      dispatch(doRequestUpdateStatus(union))
+  }
 
   return (
     <div>
@@ -179,8 +188,8 @@ useEffect(()=>{
                         <input
                           type="checkbox"
                           className="sr-only peer"
-                          checked={dt.jopo_status === 'publish'}
-                          // onChange={handlePublishToggle}
+                          defaultChecked={dt.jopo_status === 'publish'}
+                          onChange={(event) => handlePublishChange(event, dt.jopo_entity_id)}
                         />
                         <div className="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                       </label>

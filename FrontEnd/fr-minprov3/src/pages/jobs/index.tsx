@@ -6,12 +6,18 @@ import Pagination from "../shared/komponen/pagination";
 import { company } from "../shared/komponen/data";
 import SearchBar from "../shared/komponen/search";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetJobPost } from "../redux/JobhireSchema/action/actionreducer";
+import {
+  doRequestGetJobPost,
+  doRequestSearchJobPost,
+} from "../redux/JobhireSchema/action/actionreducer";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  let { job_post, refresh } = useSelector(
+  
+  let { job_post, search_jobpost, refresh } = useSelector(
     (state: any) => state.JobPostReducers
   );
 
@@ -21,75 +27,308 @@ export default function Home() {
 
   /* ````````````` */
 
-  const [selectedValue, setSelectedValue] = useState("all");
+/* -------FILTER BY SEARCH-------- */
+
+  const [selectedValue, setSelectedValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [searchLocation, setSearchLocation] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filteredData, setFilteredData]: any = useState([]);
-  const [filterOptions, setFilterOptions]: any = useState([]);
-  const [loadedData,setLoadedData] = useState(null)
-  // const [refresh,setRefresh] = useState(true)
-
-  const handleFilterChange = (option: any, isChecked: any) => {
-    if (isChecked) {
-      setFilterOptions([...filterOptions, option]);
-    } else {
-      setFilterOptions(filterOptions.filter((item: any) => item !== option));
-    }
-  };
-
-  let filtered = job_post;
-  
 
   const handleChange = (event: any) => {
     setSelectedValue(event.target.value);
   };
 
+
   const handleSearchChange = () => {
     setIsSearching(true);
-    if (selectedValue !== "all") {
-      filtered = filtered.filter((item: { joro_name: string }) =>
-        item.joro_name.toLowerCase().includes(selectedValue.toLowerCase())
-      );
+    const gabung = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: "",
+        jobType: [],
+        expe : [],
+        terupdate : "",
+        newest : "",
+      },
+    };
+
+    dispatch(doRequestSearchJobPost(gabung));
+    setIsToggleChecked(false);
+    // setCheckboxValues([]);
+   
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox: any) => {
+      checkbox.checked = false;
+    });
+
+    const radiobutton = document.querySelectorAll('input[type="radio"]');
+    radiobutton.forEach((radio: any) => {
+      radio.checked = false;
+    });
+
+    // setFilteredData(search_jobpost);
+    handleQuery2();
+  };
+
+   /* -------FILTER BY WORK TYPE-------- */
+
+  const [checkboxValues, setCheckboxValues] = useState<string[]>([]);
+  let updatedValues: any;
+  const handleCheckboxChange = (event: any) => {
+    setIsSearching(true);
+    const { checked, value } = event.target;
+
+    if (checked) {
+      updatedValues = [...checkboxValues, value];
+      setCheckboxValues(updatedValues);
+    } else {
+      updatedValues = checkboxValues.filter((val) => val !== value);
+      setCheckboxValues(updatedValues);
     }
 
-    if (searchValue) {
-      filtered = filtered.filter(
-        (item: { jopo_title: string; clit_name: string }) =>
-          item.jopo_title.toLowerCase().includes(searchValue.toLowerCase()) ||
-          item.clit_name.toLowerCase().includes(searchValue.toLowerCase())
-      );
+    const dataJobType = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: isToggleChecked ? 2 : "",
+        jobType: updatedValues,
+        expe : checkboxValuesExpe,
+        terupdate : selectedOption,
+        newest : buttonClick ? 1 : 0,
+      },
+    };
+    console.log("JOBTYPE", dataJobType);
+
+    dispatch(doRequestSearchJobPost(dataJobType));
+    // const encodedJobTypes = updatedValues
+    //   .map((type:any) => encodeURIComponent(type))
+    //   .join("%2C");
+
+    // console.log(encodedJobTypes);
+    // setFilteredData(search_jobpost);
+  };
+
+  /* -------FILTER BY JOB TYPE (REMOTE or ONSITE)-------- */
+
+  const [isToggleChecked, setIsToggleChecked] = useState(false);
+
+  const handleToggle = () => {
+    setIsSearching(true);
+    setIsToggleChecked(!isToggleChecked);
+    if (isToggleChecked) {
+      const dataOnSite = {
+        search: {
+          keyword: searchValue.trim(),
+          location: searchLocation.trim(),
+          job: selectedValue,
+          type: "",
+          jobType: checkboxValues,
+          expe : checkboxValuesExpe,
+          terupdate : selectedOption,
+          newest : buttonClick ? 1 : 0,
+        },
+      };
+      dispatch(doRequestSearchJobPost(dataOnSite));
+      handleQuery1();
+    } else {
+      const dataRemote = {
+        search: {
+          keyword: searchValue.trim(),
+          location: searchLocation.trim(),
+          job: selectedValue,
+          type: 2,
+          jobType: checkboxValues,
+          expe : checkboxValuesExpe,
+          terupdate : selectedOption,
+          newest : buttonClick ? 1 : 0,
+        },
+      };
+      dispatch(doRequestSearchJobPost(dataRemote));
+      // setFilteredData(search_jobpost);
+      handleQuery1();
+    }
+  };
+
+  /* -------FILTER BY WORK EXPE-------- */  
+
+  const [checkboxValuesExpe, setCheckboxValuesExpe] = useState<string[]>([]);
+  let updatedValuesExpe: any;
+  const handleCheckboxChangeExpe = (event: any) => {
+    setIsSearching(true);
+    const { checked, value } = event.target;
+
+    if (checked) {
+      updatedValuesExpe = [...checkboxValuesExpe, value];
+      setCheckboxValuesExpe(updatedValuesExpe);
+    } else {
+      updatedValuesExpe = checkboxValuesExpe.filter((val) => val !== value);
+      setCheckboxValuesExpe(updatedValuesExpe);
     }
 
-    if (searchLocation) {
-      filtered = filtered.filter(
-        (item: { city_name: string; prov_name: string }) =>
-          item.city_name.toLowerCase().includes(searchLocation.toLowerCase()) ||
-          item.prov_name.toLowerCase().includes(searchLocation.toLowerCase())
-      );
-    }
+    const dataExpe = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: isToggleChecked ? 2 : "",
+        jobType: checkboxValues,
+        expe : updatedValuesExpe,
+        terupdate : selectedOption,
+        newest : buttonClick ? 1 : 0,
+      },
+    };
+    // console.log("EXPE", dataExpe);
 
-    setFilteredData(filtered);
+    dispatch(doRequestSearchJobPost(dataExpe));
+    // const encodedJobTypes = updatedValues
+    //   .map((type:any) => encodeURIComponent(type))
+    //   .join("%2C");
+
+    // console.log(encodedJobTypes);
+    // setFilteredData(search_jobpost);
   };
 
 
-  const displayData =  isSearching ? filteredData : job_post
+  /* -------FILTER BY TERUPDATE-------- */  
 
-  useEffect(()=>{
-    setFilteredData(job_post)
-  },[job_post])
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleOptionChange = (e:any) => {
+    setIsSearching(true);
+    const selectedOption = e.target.value;
+    setSelectedOption(selectedOption);
+    const dataTerUpdate = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: isToggleChecked ? 2 : "",
+        jobType: checkboxValues,
+        expe : checkboxValuesExpe,
+        terupdate : selectedOption,
+        newest : buttonClick ? 1 : 0,
+      },
+    };
+
+    // console.log(dataTerUpdate)
+    dispatch(doRequestSearchJobPost(dataTerUpdate));
+    // setFilteredData(search_jobpost);
+  };
+
+/* FILTER NEWEST */
+
+const [buttonClick,setButtonClick]  = useState(false)
+const handleNewestButton = ()=>{
+  setButtonClick(true)
+  setIsSearching(true);
+    const dataNewest = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: isToggleChecked ? 2 : "",
+        jobType: checkboxValues,
+        expe : checkboxValuesExpe,
+        terupdate : selectedOption,
+        newest : 1,
+      },
+    };
+    // console.log(dataNewest)
+    dispatch(doRequestSearchJobPost(dataNewest));
+  }
+  console.log('NILAI BUTTON',buttonClick)
+  /* FILTER MATCH */
+  
+  const handleMatchButton = ()=>{
+    setButtonClick(false)
+    setIsSearching(true);
+    const dataMatch = {
+      search: {
+        keyword: searchValue.trim(),
+        location: searchLocation.trim(),
+        job: selectedValue,
+        type: isToggleChecked ? 2 : "",
+        jobType: checkboxValues,
+        expe : checkboxValuesExpe,
+        terupdate : selectedOption,
+        newest : 0,
+      },
+    };
+    console.log(dataMatch)
+    dispatch(doRequestSearchJobPost(dataMatch));
+  }
+
+  
+  /* ------------------------------------------------------------*/
+  
+  const displayData = isSearching ? filteredData : job_post; //untuk memunculkan data hasil filter
   
   useEffect(() => {
-    // Terapkan filter secara langsung setiap kali filterOptions berubah
-     setIsSearching(true);
-    if (filterOptions.length > 0) {
-      filtered = filtered.filter((item: any) =>
-        filterOptions.includes(item.woty_name)
-      );
+    setFilteredData(search_jobpost);
+  }, [search_jobpost]);
+
+
+  const handleQuery1 = () => {
+    let queryParams: Record<string, string> = {};
+    if (searchValue.trim() !== "") {
+      queryParams.keyword = searchValue.trim();
     }
-    setFilteredData(filtered);
-  }, [filterOptions]);
-  
+
+    if (searchLocation.trim() !== "") {
+      queryParams.location = searchLocation.trim();
+    }
+
+    if (selectedValue !== "") {
+      queryParams.job = selectedValue;
+    }
+
+    if (!isToggleChecked) {
+      queryParams.type = "remote"; 
+    } else {
+      delete queryParams.type;
+    }
+
+    const query = new URLSearchParams(queryParams).toString();
+
+    router.push(`?${query}`);
+  };
+
+  const handleQuery2 = () => {
+    let queryParams: Record<string, string> = {};
+    if (searchValue.trim() !== "") {
+      queryParams.keyword = searchValue.trim();
+    }
+
+    if (searchLocation.trim() !== "") {
+      queryParams.location = searchLocation.trim();
+    }
+
+    if (selectedValue !== "") {
+      queryParams.job = selectedValue;
+    }
+
+    const query = new URLSearchParams(queryParams).toString();
+
+    router.push(`?${query}`);
+  };
+
+  /* UNTUK MERESET ADDRESS */
+  useEffect(() => {
+    const { query } = router;
+
+    // Memeriksa apakah ada parameter dalam URL
+    const hasQueryParams = Object.keys(query).length > 0;
+
+    // Mengganti URL jika tidak ada parameter
+    if (!hasQueryParams) {
+      router.replace("/jobs");
+    }
+  }, []);
 
   /* ````````````` */
 
@@ -103,7 +342,6 @@ export default function Home() {
   const handlePageChange = (page: any) => {
     setCurrentPage(page);
   };
-
 
   return (
     <div className="container">
@@ -123,14 +361,20 @@ export default function Home() {
             setSearchLocation={(e: any) => setSearchLocation(e.target.value)}
             selectedValue={selectedValue}
             handleChange={handleChange}
+            
           />
         </div>
         <h2 className="py-5 text-lg">100 Lowongan Pekerjaan di Indonesia</h2>
         <div className=" p-2.5 border-2">
           <div className="flex flex-wrap lg:flex-none">
             <FilterComp
-              filterOptions={filterOptions}
-              handleFilterChange={handleFilterChange}
+              handleToggle={handleToggle}
+              valueCheck={isToggleChecked}
+              handleCheckboxChange={handleCheckboxChange}
+              handleCheckboxChangeExpe = {handleCheckboxChangeExpe}
+              handleOptionChange={handleOptionChange}
+              handleNewestButton={handleNewestButton}
+              handleMatchButton={handleMatchButton}
             />
             <CardJob dataArray={currentItems} />
           </div>

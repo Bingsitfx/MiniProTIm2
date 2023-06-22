@@ -124,6 +124,15 @@ const JobEdit = () => {
   };
 
   /*```````````` fungsi untuk switch publish ,remote, hiring end ``````````````*/
+
+
+ /* Button Cancel start */
+  const handleCancel = () =>{
+    router.push('/app/jobs')
+  }
+
+   /* Button Cancel end*/
+
   const [loadedData,setLoadedData]:any=useState(null)
 
   useEffect(() => {
@@ -674,7 +683,7 @@ const JobEdit = () => {
                               type="checkbox"
                               className="sr-only peer"
                               {...register("close_hiring")}
-                              defaultChecked={loadedData.jopo_open === "1" ? true:false}
+                              defaultChecked={loadedData.jopo_open === "0" ? true:false}
                               // checked={isHiringChecked}
                               onChange={handleHiringToggle}
                             />
@@ -698,7 +707,7 @@ const JobEdit = () => {
                     <button type="submit" className="button-foot">
                       Save
                     </button>
-                    <button type="button" className="button-foot">
+                    <button type="button" className="button-foot" onClick={handleCancel}>
                       Cancel
                     </button>
                   </div>

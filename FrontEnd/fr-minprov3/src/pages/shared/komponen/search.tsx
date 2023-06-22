@@ -62,7 +62,7 @@ const SearchBar = (props: any) => {
 
           <div className="pb-4 lg:pb-0 lg:pl-4">
             <select className="text-sm rounded-lg ring-1 block w-full lg:w-[250px]   p-2.5" value={selectedValue} onChange={handleChange}>
-                <option value='all'>All</option>
+                <option value=''>All</option>
               {job_role.map((option: any) => (
                 <option value={option.joro_name}>{option.joro_name}</option>
               ))}

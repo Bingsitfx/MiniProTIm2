@@ -6,6 +6,9 @@ const ToggleSwitch = (props:any) => {
 
   const handleToggle = () => {
     setIsChecked(!isChecked);
+    const status =isChecked? '1' : '2'
+
+    console.log('SADASD',status)
   };
 
   return (
