@@ -14,8 +14,8 @@ const SideBar = forwardRef(({}, ref: LegacyRef<HTMLDivElement>) => {
     { to: "#", path: "#", icon: <GroupIcon />, name: "Talent" },
     { to: "#", path: "#", icon: <GroupIcon />, name: "Curriculum" },
     { to: "#", path: "#", icon: <GroupIcon />, name: "Assignment" },
-    { to: "/jobs", path: "/jobs", icon: <GroupIcon />, name: "Posting Hiring" },
-    { to: "/client", path: "/client", icon: <GroupIcon />, name: "Client" },
+    { to: "/app/jobs", path: "/app/jobs", icon: <GroupIcon />, name: "Posting Hiring" },
+    { to: "/client", path: "/client", icon: <GroupIcon />, name: "Posting Client" },
   ];
 
   return (

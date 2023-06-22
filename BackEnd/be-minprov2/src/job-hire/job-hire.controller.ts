@@ -88,14 +88,14 @@ export class JobHireController {
     return this.jobHireService.createJopo(createJopo, image);
   }
 
-  @Get()
-  findAll(@Body() show: any) {
-    const pagination = show.pagination;
-    const search = show.search;
-    const filter = show.filter;
-    // console.log("limit",+show.pagination.limit, "offset", +show.pagination.offset);
-    return this.jobHireService.findAllJopo(pagination, search, filter);
-  }
+  // @Get()
+  // findAll(@Body() show: any) {
+  //   const pagination = show.pagination;
+  //   const search = show.search;
+  //   const filter = show.filter;
+  //   // console.log("limit",+show.pagination.limit, "offset", +show.pagination.offset);
+  //   return this.jobHireService.findAllJopo(pagination, search, filter);
+  // }
 
   // @Get('search/:key?/:loc?')
   // searchJobPost(@Param('key') key: string, @Param('loc') loc: string) {
@@ -114,17 +114,17 @@ export class JobHireController {
     @Query('terupdate') terupdate?: any,
     @Query('newest') newest?: any,
   ) {
-    console.log(
-      'DATATA',
-      key,
-      loc,
-      job,
-      type,
-      jobtype,
-      expe,
-      terupdate,
-      newest,
-    );
+    // console.log(
+    //   'DATATA',
+    //   key,
+    //   loc,
+    //   job,
+    //   type,
+    //   jobtype,
+    //   expe,
+    //   terupdate,
+    //   newest,
+    // );
     return this.jobHireService.searchJobPost(
       key || '',
       loc || '',

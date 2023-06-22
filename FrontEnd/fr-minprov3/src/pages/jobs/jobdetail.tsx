@@ -12,31 +12,51 @@ import { Chip } from "@material-tailwind/react";
 import SimiliarJob from "../shared/komponen/similiarJob";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetJobPostById } from "../redux/JobhireSchema/action/actionreducer";
+import { doRequestGetJobPost, doRequestGetJobPostById } from "../redux/JobhireSchema/action/actionreducer";
+import CardJob from "../shared/komponen/cardjob";
 
 const JobDetail = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [loadedData, setLoadedData]: any = useState(null);
 
-  let { job_post_id, refresh } = useSelector(
+  let { job_post_id } = useSelector(
+    (state: any) => state.JobPostReducers
+  );
+  
+  let { job_post,refresh } = useSelector(
     (state: any) => state.JobPostReducers
   );
 
+  const filtered = job_post?.filter(
+    (item:any) =>
+      item.joro_name.toLowerCase().includes(job_post_id.joro_name?.toLowerCase()) &&
+      item.jopo_entity_id !== job_post_id.jopo_entity_id
+  );
+
+  console.log('HASIL',filtered)
+
+  const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = filtered?.slice(startIndex, endIndex);
+  
   useEffect(() => {
     dispatch({ type: "RESET_STATE" });
     if (router.isReady) {
       const { id }: any = router.query;
       dispatch(doRequestGetJobPostById(id));
+      dispatch(doRequestGetJobPost())
     }
   }, [router]);
-
+  
   useEffect(() => {
     setLoadedData(job_post_id);
   }, [job_post_id]);
+  
+  console.log('DAATATATAT',job_post);
 
-  //   console.log('Loaded',loadedData)
-  //   console.log('Job_Post',job_post_id)
 
 
   if (loadedData) {
@@ -285,15 +305,13 @@ const JobDetail = () => {
           </section>
           {/* Section Tentang Perusahaan Start    */}
         </div>
+
         <div className="container">
           <div className="xl:pl-48 lg:pl-10 md:pl-0 py-6 md:pt-28">
             <h1 className="text-lg font-semibold pb-3">
               Similiar jobs for you
             </h1>
-            <SimiliarJob />
-            <SimiliarJob />
-            <SimiliarJob />
-            <SimiliarJob />
+            <CardJob dataArray={currentItems}></CardJob>
           </div>
         </div>
       </div>

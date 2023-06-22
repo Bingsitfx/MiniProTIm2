@@ -95,7 +95,7 @@ const JobCreate: React.FC = () => {
   /*`````````````` fungsi untuk switch publish ,remote, hiring start ````````````````*/
 
   const [isPublishChecked, setIsPublishChecked] = useState(true);
-  const [isRemoteChecked, setIsRemoteChecked] = useState(true);
+  const [isRemoteChecked, setIsRemoteChecked] = useState(false);
   const [isHiringChecked, setIsHiringChecked] = useState(true);
 
   const handlePublishToggle = () => {
@@ -140,12 +140,12 @@ const JobCreate: React.FC = () => {
   };
   /*```````````` fungsi untuk ganti foto dan hapus foto end ````````````*/
 
-   /* Button Cancel start */
-   const handleCancel = () =>{
-    router.push('/app/jobs')
-  }
+  /* Button Cancel start */
+  const handleCancel = () => {
+    router.push("/app/jobs");
+  };
 
-   /* Button Cancel end*/
+  /* Button Cancel end*/
 
   /*````````````````` fungsi handle date start `````````````````````*/
 
@@ -153,6 +153,7 @@ const JobCreate: React.FC = () => {
   const [endDate, setEndDate] = useState(null);
 
   const handleStartDateChange = (date: any) => {
+    register(('start_date'),registerOptions.start_date);
     setStartDate(date);
     setEndDate(null);
     if (date) {
@@ -203,14 +204,16 @@ const JobCreate: React.FC = () => {
     formData.append("jopo_joty_id", data.remote ? 1 : 2); //2 onsite 1remote
     formData.append("jopo_open", data.close_hiring ? 1 : 0);
 
-    dispatch(doRequestAddJobPost(formData));
-    router.push("/app/jobs");
+    // dispatch(doRequestAddJobPost(formData));
+    // router.push("/app/jobs");
     console.log("aa", ...formData);
     console.log(data);
   };
 
   const registerOptions = {
     title: { required: "Title is required" },
+    start_date: { required: "Start Date is required" },
+    end_date: { required: "End Date is required" },
     min_salary: { required: "Min Salary is required" },
     max_salary: { required: "Max Salary is required" },
     min_experience: { required: "Min Experience is required" },
@@ -218,14 +221,14 @@ const JobCreate: React.FC = () => {
     primary_skill: { required: "Primary Skill is required" },
     secondary_skill: { required: "Secondary Skill is required" },
     specification_role: { required: "Specification Role is required" },
+    working_type: { required: "Working is required" },
     education: { required: "Education is required" },
     benefit: { required: "Benefit is required" },
     client: { required: "Client is required" },
     location: { required: "Location is required" },
-    start_date: { required: "Start Date is required" },
-    end_date: { required: "End Date is required" },
+    image: { required: "Image is required" },
   };
-  
+
   return (
     <Content1 title="Posting Job" path="/app/jobs" button="Back">
       <div>
@@ -249,15 +252,17 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="Title"
-                        {...register("title")}
+                        
+                        {...register("title", registerOptions.title)}
                         variant="outlined"
                         className="w-full"
                         size="small"
                       />
-                      {/* <p className="px-2 text-red-800">
+                      <p className="px-2 text-red-800">
                         {errors?.title && errors.title.message}
-                      </p> */}
+                      </p>
                     </div>
+
                     {/* Date */}
                     <div className="pad-input">
                       <h1 className="text-format">Periode Posting</h1>
@@ -274,7 +279,7 @@ const JobCreate: React.FC = () => {
                             className="w-full"
                             onChange={handleStartDateChange}
                           />
-
+                          
                           <DatePicker
                             slotProps={{
                               actionBar: {
@@ -299,7 +304,10 @@ const JobCreate: React.FC = () => {
                           id="outlined-basic"
                           type="number"
                           placeholder="Min Salary"
-                          {...register("min_salary")}
+                          {...register(
+                            "min_salary",
+                            registerOptions.min_salary
+                          )}
                           variant="outlined"
                           className="w-full"
                           size="small"
@@ -307,9 +315,9 @@ const JobCreate: React.FC = () => {
                             min: 1,
                           }}
                         />
-                        {/* <p className="px-2 text-red-800">
+                        <p className="px-2 text-red-800">
                           {errors?.min_salary && errors.min_salary.message}
-                        </p> */}
+                        </p>
                       </div>
                       <div>
                         <h1 className="text-format">Max Salary</h1>
@@ -317,7 +325,10 @@ const JobCreate: React.FC = () => {
                           id="outlined-basic"
                           type="number"
                           placeholder="Max Salary"
-                          {...register("max_salary")}
+                          {...register(
+                            "max_salary",
+                            registerOptions.max_salary
+                          )}
                           variant="outlined"
                           className="w-full"
                           size="small"
@@ -325,9 +336,9 @@ const JobCreate: React.FC = () => {
                             min: 1,
                           }}
                         />
-                        {/* <p className="px-2 text-red-800">
+                        <p className="px-2 text-red-800">
                           {errors?.max_salary && errors.max_salary.message}
-                        </p> */}
+                        </p>
                       </div>
                     </div>
 
@@ -339,20 +350,23 @@ const JobCreate: React.FC = () => {
                           id="outlined-basic"
                           type="number"
                           placeholder="Min"
-                          {...register("min_experience")}
+                          {...register(
+                            "min_experience",
+                            registerOptions.min_experience
+                          )}
                           size="small"
                           className="w-full"
                           InputLabelProps={{
                             shrink: true,
                           }}
                           inputProps={{
-                            min: 1,
+                            min: 0,
                           }}
                         />
-                        {/* <p className="px-2 text-red-800">
+                        <p className="px-2 text-red-800">
                           {errors?.min_experience &&
                             errors.min_experience.message}
-                        </p> */}
+                        </p>
                       </div>
                       <div>
                         <h1 className="text-format">Max Eperience</h1>
@@ -360,20 +374,23 @@ const JobCreate: React.FC = () => {
                           id="outlined-basic"
                           type="number"
                           placeholder="Max"
-                          {...register("max_experience")}
+                          {...register(
+                            "max_experience",
+                            registerOptions.max_experience
+                          )}
                           size="small"
                           className="w-full"
                           InputLabelProps={{
                             shrink: true,
                           }}
                           inputProps={{
-                            min: 1,
+                            min: 0,
                           }}
                         />
-                        {/* <p className="px-2 text-red-800">
+                        <p className="px-2 text-red-800">
                           {errors?.max_experience &&
                             errors.max_experience.message}
-                        </p> */}
+                        </p>
                       </div>
                     </div>
                     {/* Primary Skill */}
@@ -382,14 +399,17 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="Java, Springboot, Oracle, Pl/Sql"
-                        {...register("primary_skill")}
+                        {...register(
+                          "primary_skill",
+                          registerOptions.primary_skill
+                        )}
                         variant="outlined"
                         className="w-full"
                         size="small"
                       />
-                      {/* <p className="px-2 text-red-800">
+                      <p className="px-2 text-red-800">
                         {errors?.primary_skill && errors.primary_skill.message}
-                      </p> */}
+                      </p>
                     </div>
                     {/* Secondary Skill */}
                     <div className="pad-input">
@@ -397,15 +417,18 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="SDLC,HTML/CSS,Javascript"
-                        {...register("secondary_skill")}
+                        {...register(
+                          "secondary_skill",
+                          registerOptions.secondary_skill
+                        )}
                         variant="outlined"
                         className="w-full"
                         size="small"
                       />
-                      {/* <p className="px-2 text-red-800">
+                      <p className="px-2 text-red-800">
                         {errors?.secondary_skill &&
                           errors.secondary_skill.message}
-                      </p> */}
+                      </p>
                     </div>
 
                     {/*  Specification Role */}
@@ -417,7 +440,10 @@ const JobCreate: React.FC = () => {
                           select
                           label="Choose Role"
                           className="w-full"
-                          {...register("specification_role")}
+                          {...register(
+                            "specification_role",
+                            registerOptions.specification_role
+                          )}
                           size="small"
                         >
                           {job_role.map((option: any) => (
@@ -429,6 +455,10 @@ const JobCreate: React.FC = () => {
                             </MenuItem>
                           ))}
                         </TextField>
+                        <p className="px-2 text-red-800">
+                          {errors?.specification_role &&
+                            errors.specification_role.message}
+                        </p>
                       </div>
                     </div>
                     {/* Working Type & Education */}
@@ -440,7 +470,10 @@ const JobCreate: React.FC = () => {
                           select
                           label="Choose Type"
                           className="w-full"
-                          {...register("working_type")}
+                          {...register(
+                            "working_type",
+                            registerOptions.working_type
+                          )}
                           size="small"
                         >
                           {work_type.map((option: any) => (
@@ -452,7 +485,11 @@ const JobCreate: React.FC = () => {
                             </MenuItem>
                           ))}
                         </TextField>
+                        <p className="px-2 text-red-800">
+                          {errors?.working_type && errors.working_type.message}
+                        </p>
                       </div>
+
                       <div>
                         <h1 className="text-format">Education</h1>
                         <TextField
@@ -460,7 +497,7 @@ const JobCreate: React.FC = () => {
                           select
                           label="Choose Education"
                           className="w-full"
-                          {...register("education")}
+                          {...register(("education"),registerOptions.education)}
                           size="small"
                         >
                           {education.map((option: any) => (
@@ -472,6 +509,9 @@ const JobCreate: React.FC = () => {
                             </MenuItem>
                           ))}
                         </TextField>
+                        <p className="px-2 text-red-800">
+                          {errors?.education && errors.education.message}
+                        </p>
                       </div>
                     </div>
 
@@ -481,14 +521,14 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="THR,BPJS,Bonus"
-                        {...register("benefit")}
+                        {...register(("benefit"),registerOptions.benefit)}
                         variant="outlined"
                         className="w-full"
                         size="small"
                       />
-                      {/* <p className="px-2 text-red-800">
+                      <p className="px-2 text-red-800">
                         {errors?.benefit && errors.benefit.message}
-                      </p> */}
+                      </p>
                     </div>
 
                     {/* Search Client */}
@@ -516,13 +556,13 @@ const JobCreate: React.FC = () => {
                                 </>
                               ),
                             }}
-                            // {...register("test", registerOptions.client)}
+                            {...register("test", registerOptions.client)}
                           />
                         )}
                       />
-                      {/* <p className="px-2 text-red-800">
+                      <p className="px-2 text-red-800">
                         {errors?.client && errors.client.message}
-                      </p> */}
+                      </p>
                     </div>
                     {/* Description */}
                     <div className="pad-input">
@@ -561,7 +601,6 @@ const JobCreate: React.FC = () => {
                     </div>
                     <div className="w-full pl-[33px] justify-center lg:pl-0">
                       <div className="pb-10">
-
                         <Image
                           src={selectedImage || imgDefault}
                           alt="gambar"
@@ -571,22 +610,18 @@ const JobCreate: React.FC = () => {
                         ></Image>
 
                         <div className="flex items-center">
-                          <button
-                            className="px-2 py-[1.5px] w-24 text-center border border-black bg-gray-400 bg-opacity-20 mr-5 hover:bg-gray-300"
-                            onClick={handleRemoveImage}
-                            type="button"
-                          >
-                            Remove
-                          </button>
                           <input
                             id="file-upload"
                             type="file"
                             accept="image/*"
-                            {...register("image")}
+                            {...register(("image"),registerOptions.image)}
                             // onChange={handleImageChange}
                             // ref={fileInputRef}
                           ></input>
                         </div>
+                        <p className="px-2 text-red-800">
+                        {errors?.image && errors.image.message}
+                      </p>
                       </div>
                       {/* Switch Publish & Remote */}
                       <div className="items-center">
@@ -646,7 +681,11 @@ const JobCreate: React.FC = () => {
                     <button type="submit" className="button-foot">
                       Save
                     </button>
-                    <button type="button" className="button-foot" onClick={handleCancel}>
+                    <button
+                      type="button"
+                      className="button-foot"
+                      onClick={handleCancel}
+                    >
                       Cancel
                     </button>
                   </div>

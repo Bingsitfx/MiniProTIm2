@@ -25,6 +25,7 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
 /* ketika discrolll sedikit dari absolute jadi fixed*/
 .navbar-fixed {
   @apply fixed z-[9999] bg-white bg-opacity-80;
@@ -85,3 +86,12 @@ body {
 .input_style {
   @apply pl-3 text-base w-full border border-gray-400 rounded-md h-10  focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
 }
+
+.thick-divider {
+@apply border-t border-gray-300
+}
+
+.gap-nav {
+  @apply pb-4 lg:pb-0 hover:text-blue-200 lg:hover:text-blue-500
+}
+

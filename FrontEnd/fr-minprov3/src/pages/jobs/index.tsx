@@ -259,15 +259,14 @@ const handleNewestButton = ()=>{
         newest : 0,
       },
     };
-    console.log(dataMatch)
+    console.log(dataMatch)  
     dispatch(doRequestSearchJobPost(dataMatch));
   }
 
-  
   /* ------------------------------------------------------------*/
-  
+
   const displayData = isSearching ? filteredData : job_post; //untuk memunculkan data hasil filter
-  
+
   useEffect(() => {
     setFilteredData(search_jobpost);
   }, [search_jobpost]);

@@ -8,8 +8,11 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import Link from "next/link";
+// import path from "path";
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 const CardJob = (props: any) => {
+  const router = useRouter()
   /* KONVERT JAM  */
 
   const getTimeAgoString = (startDate: any) => {
@@ -28,39 +31,54 @@ const CardJob = (props: any) => {
       return "Baru saja diperbarui";
     }
   };
-
+  
+  const path = router.pathname.split('/')
+  
   if (props.dataArray?.length === 0) {
-    return (
-      <div className="pt-10 text-center justify-center w-full lg:w-1/2 h-fit">
-        <h1 className="font-base">
-          <span className="font-bold text-lg">
-            {" "}
-            Maaf, tidak ada lowongan ditemukan{" "}
-          </span>
-          <br></br> Cek typo atau coba kata kunci lain. Kamu juga bisa lihat
-          rekomendasi pekerjaan untukmu
-        </h1>
-      </div>
-    );
+
+    if(path[2] == 'jobdetail'){
+      
+      return (
+        <div className="pt-10 text-center justify-center w-full lg:w-1/2 h-fit">
+            <ErrorOutlineOutlinedIcon className="h-24 w-24"/>
+          <h1 className="font-bold text-lg">
+            NOT FOUND
+          </h1>
+        </div>
+      );
+    } else {
+      return (
+        <div className="pt-10 text-center justify-center w-full lg:w-1/2 h-fit">
+          <ErrorOutlineOutlinedIcon className="h-24 w-24"/>
+          <h1 className="font-base">
+            <span className="font-bold text-lg">
+              {" "}
+              Maaf, tidak ada lowongan yang sama{" "}
+            </span>
+            <br></br> Cek typo atau coba kata kunci lain.
+          </h1>
+        </div>
+      );
+    }
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 ">
+    <div className={`${path[2]=='jobdetail'? `grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1`:`grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2`}`}>
       {(props.dataArray || []).map((data: any) => {
         const startDate = new Date(data.jopo_modified_date);
         const timeAgoString = getTimeAgoString(startDate);
 
-        if (data.jopo_status === "publish" && data.jopo_open === "1") {
+        if (data.jopo_status === "publish" && data.jopo_open === "1" ) {
           return (
             <Link
               href={{
-                pathname: "jobs/jobdetail",
+                pathname: `/jobs/jobdetail`,
                 query: {
                   id: data.jopo_entity_id,
                 },
               }}
             >
-              <div className="flex flex-wrap">
+              <div className="flex-wrap flex ">
                 <div className="w-[450px] lg:w-[500px] hover:opacity-70 transition ease-in-out pb-1">
                   <div className="bg-white border shadow-lg p-3 block ">
                     <div className="flex">

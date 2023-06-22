@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import React from "react";
+import { DownOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { Dropdown, Space } from "antd";
 
 const NavBar = () => {
   {
@@ -40,6 +44,199 @@ const NavBar = () => {
     };
   }, []);
 
+  /* ---------------------------------------------------------------------------------------- */
+  //COBA KODE
+  const programs: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "Programs",
+      children: [
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "1",
+          label: "Bootcamp Regular", //Program>SubMenu
+          children: [
+            {
+              key: "1-1",
+              label: "NodeJS Fullstack",
+            },
+            {
+              key: "1-2",
+              label: "Java Fullstack",
+            },
+            {
+              key: "1-3",
+              label: ".NET Fullstack",
+            },
+            {
+              key: "1-4",
+              label: "Golang Fullstack",
+            },
+            {
+              type: "divider",
+              className: "thick-divider",
+            },
+            {
+              key: "1-5",
+              label: "Android Mobile",
+            },
+            {
+              key: "1-6",
+              label: "Flutter",
+            },
+          ],
+        },
+        {
+          key: "2",
+          label: "Bootcamp Online", //Program>SubMenu
+          children: [
+            {
+              key: "2-1",
+              label: "NodeJS Fullstack",
+            },
+            {
+              key: "2-2",
+              label: "Golang Fullstack",
+            },
+            {
+              type: "divider",
+              className: "thick-divider" // menggunakan tipe 'divider'
+            },
+            {
+              key: "2-3",
+              label: "Android Mobile",
+            },
+            {
+              key: "2-4",
+              label: "Flutter",
+            },
+          ],
+        },
+        {
+          key: "3",
+          label: "Bootcamp Corporate", //Program>SubMenu
+          children: [
+            {
+              key: "3-1",
+              label: ".Net Technology",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+
+  const online_course: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "Online Course",
+      children: [
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "1",
+          label: "Programming", //Program>SubMenu
+        },
+        {
+          key: "2",
+          label: "Development", //Program>SubMenu
+        },
+        {
+          key: "3",
+          label: "Mobile", //Program>SubMenu
+        },
+        {
+          key: "4",
+          label: "UI/UX Design", //Program>SubMenu
+        },
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "5",
+          label: "Machine Learning", //Program>SubMenu
+        },
+        {
+          key: "6",
+          label: "Data Scientist", //Program>SubMenu
+        },
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "7",
+          label: "Database", //Program>SubMenu
+        },
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "8",
+          label: "Digital Marketing", //Program>SubMenu
+        },
+      ],
+    },
+  ];
+
+  const hiring: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "Hiring",
+      children: [
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "1",
+          label: "Our Graduates", //Program>SubMenu
+        },
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "2",
+          label: <a href="/jobs">Professional Hiring</a>, //Program>SubMenu
+        },
+      ],
+    },
+  ];
+
+  const about: MenuProps["items"] = [
+    {
+      key: "1",
+      type: "group",
+      label: "About",
+      children: [
+        {
+          type: "divider",
+          className: "thick-divider",
+        },
+        {
+          key: "1",
+          label: "Alumni Testimoni", //Program>SubMenu
+        },
+        {
+          key: "2",
+          label: "About Us", //Program>SubMenu
+        },
+      ],
+    },
+  ];
+
+  /* ---------------------------------------------------------------------------------------- */
   return (
     <div>
       <header
@@ -95,39 +292,63 @@ const NavBar = () => {
               >
                 <ul className="block pt-20 lg:pt-0">
                   <div className="mx-2 divide-y-[1px] lg:divide-none lg:flex">
-                    <div className="lg:flex lg:order-last">
+                    <div className="pb-2 lg:pb-0 lg:flex lg:order-last">
                       <li className="group lg:pl-10 ">
-                        <button className="text-nav2 ">
-                          Sign In
-                        </button>
+                        <button className="text-nav2 ">Sign In</button>
                       </li>
                       <li className="group">
-                        <button className="text-nav2">
-                          Sign Up
-                        </button>
+                        <button className="text-nav2">Sign Up</button>
                       </li>
                     </div>
-                    <div className="lg:flex">
-                      <li className="group">
-                        <a href="#" className="text-nav">
-                          Program
+
+                    <div className="text-white lg:text-base pt-3 pl-8 lg:pl-0 lg:pt-0 text-lg lg:flex lg:items-center lg:gap-12 font-semibold lg:text-black">
+                      <Dropdown
+                        menu={{ items: programs }}
+                        placement="bottomCenter"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space className="gap-nav">
+                            Programs
+                            <DownOutlined />
+                          </Space>
                         </a>
-                      </li>
-                      <li className="group">
-                        <a href="#" className="text-nav">
-                          Online Course
+                      </Dropdown>
+
+                      <Dropdown
+                        menu={{ items: online_course ,}}
+                        placement="bottomCenter"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space className="gap-nav">
+                            Online Course
+                            <DownOutlined />
+                          </Space>
                         </a>
-                      </li>
-                      <li className="group">
-                        <a href="/jobs" className="text-nav">
-                          Job Hiring
+                      </Dropdown>
+
+                      <Dropdown
+                        menu={{ items: hiring }}
+                        placement="bottomCenter"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space className="gap-nav">
+                            Job Hiring
+                            <DownOutlined />
+                          </Space>
                         </a>
-                      </li>
-                      <li className="group">
-                        <a href="#" className="text-nav">
-                          About
+                      </Dropdown>
+
+                      <Dropdown
+                        menu={{ items: about }}
+                        placement="bottomCenter"
+                      >
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space className="gap-nav">
+                            About
+                            <DownOutlined />
+                          </Space>
                         </a>
-                      </li>
+                      </Dropdown>
                     </div>
                   </div>
                 </ul>
