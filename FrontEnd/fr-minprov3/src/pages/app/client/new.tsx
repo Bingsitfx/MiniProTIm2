@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Content1 from "../shared/content1";
+import Content1 from "../../shared/content1";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetCity, doRequestGetIndustry } from "../redux/MasterSchema/action/actionReducer";
-import { doRequestAddClient, doRequestGetEmprange } from "../redux/JobhireSchema/action/actionreducer";
+import { doRequestGetCity, doRequestGetIndustry } from "../../redux/MasterSchema/action/actionReducer";
+import { doRequestAddClient, doRequestGetEmprange } from "../../redux/JobhireSchema/action/actionreducer";
 import { useRouter } from "next/router";
 
 const NewClient = () => {
@@ -57,10 +57,10 @@ const NewClient = () => {
   const router = useRouter()
   const handleRegistration = async (data: any) => {
     dispatch(doRequestAddClient(data));
-    router.push('/client')
+    router.push('/app/client')
   };
   return (
-    <Content1 title="Tambah Client" path="/client" button="Back">
+    <Content1 title="Tambah Client" path="/app/client" button="Back">
       <div>
         <form onSubmit={handleSubmit(handleRegistration)}>
           <div className="lg:grid lg:grid-cols-2">

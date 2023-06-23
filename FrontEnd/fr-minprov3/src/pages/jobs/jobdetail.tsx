@@ -81,8 +81,7 @@ const JobDetail = () => {
     /* KONVERT JAM  */
     const startDate = new Date(loadedData.jopo_modified_date);
     const currentDate = new Date();
-    const gmtOffset = 7 * 60 * 60 * 1000;
-    currentDate.setTime(currentDate.getTime() + gmtOffset);
+
     const timeDiff = currentDate.getTime() - startDate.getTime();
     const diffInDays = Math.floor(timeDiff / (1000 * 3600 * 24));
     const diffInHours = Math.floor(timeDiff / (1000 * 3600));
@@ -98,6 +97,7 @@ const JobDetail = () => {
     }
 
 
+    
     return (
       <div className="container grid lg:grid-cols-2">
         <div>
@@ -228,9 +228,10 @@ const JobDetail = () => {
                   <h1 className="text-lg mb-5 md:text-xl lg:text-2xl">
                     Description
                   </h1>
-                  <p className="font-medium text-sm max-w-2xl mb-16 md:text-lg">
+                  {/* <p className="font-medium text-sm max-w-2xl mb-16 md:text-lg">
                     {loadedData.jopo_description}
-                  </p>
+                  </p> */}
+                  <div className="font-base text-sm max-w-2xl mb-10 md:text-lg" dangerouslySetInnerHTML={{ __html: loadedData.jopo_description }} />
 
                   <h1 className="text-lg mb-5 md:text-xl lg:text-2xl">
                     Primary Skills

@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetClient } from "../redux/JobhireSchema/action/actionreducer";
+import { doRequestGetClient } from "../../redux/JobhireSchema/action/actionreducer";
 
 const Jobs = () => {
 

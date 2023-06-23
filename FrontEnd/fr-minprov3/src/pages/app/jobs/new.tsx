@@ -34,6 +34,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
+import ReactEditor from "@/pages/shared/komponen/react-quill";
 
 const JobCreate: React.FC = () => {
   /*`````````` koneksi ke backend  ``````````````*/
@@ -203,11 +204,11 @@ const JobCreate: React.FC = () => {
     formData.append("jopo_status", data.publish ? "publish" : "draft");
     formData.append("jopo_joty_id", data.remote ? 1 : 2); //2 onsite 1remote
     formData.append("jopo_open", data.close_hiring ? 1 : 0);
-
-    // dispatch(doRequestAddJobPost(formData));
-    // router.push("/app/jobs");
+    
+    dispatch(doRequestAddJobPost(formData));
+    router.push("/app/jobs");
     console.log("aa", ...formData);
-    console.log(data);
+    // console.log(data);
   };
 
   const registerOptions = {
@@ -565,17 +566,19 @@ const JobCreate: React.FC = () => {
                       </p>
                     </div>
                     {/* Description */}
+
                     <div className="pad-input">
                       <h1 className="text-format">Description</h1>
                       {/* <CKEditor /> */}
-                      <TextField
+                      <ReactEditor register={register} setValue={setValue} inputName={'description'}/>
+                      {/* <TextField
                         id="outlined-multiline-static"
                         multiline
                         rows={4}
                         placeholder="Description"
                         className="w-full"
                         {...register("description")}
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>

@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Autocomplete, MenuItem, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
-import Content1 from "../shared/content1";
+import Content1 from "../../shared/content1";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetCity, doRequestGetIndustry } from "../redux/MasterSchema/action/actionReducer";
-import { doRequestGetClientById, doRequestGetEmprange, doRequestUpdateClient } from "../redux/JobhireSchema/action/actionreducer";
+import { doRequestGetCity, doRequestGetIndustry } from "../../redux/MasterSchema/action/actionReducer";
+import { doRequestGetClientById, doRequestGetEmprange, doRequestUpdateClient } from "../../redux/JobhireSchema/action/actionreducer";
 import { useRouter } from "next/router";
 
 const EditClient = () => {

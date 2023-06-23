@@ -10,21 +10,23 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  if (router.pathname.startsWith("/jobs") || router.pathname.startsWith("/")) {
+  
+  if (router.pathname.startsWith("/app") ) {
     return (
       <Provider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </Provider>
-    );
-  }
-
-  return (
-    <Provider store={store}>
       <Layout2>
         <Component {...pageProps} />
       </Layout2>
     </Provider>
   );
+}
+if (router.pathname.startsWith("/jobs") || router.pathname.startsWith("/") ) {
+  return (
+    <Provider store={store}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Provider>
+  );
+}
 }

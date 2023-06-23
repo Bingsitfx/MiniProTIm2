@@ -17,8 +17,6 @@ const CardJob = (props: any) => {
 
   const getTimeAgoString = (startDate: any) => {
     const currentDate = new Date();
-    const gmtOffset = 7 * 60 * 60 * 1000;
-    currentDate.setTime(currentDate.getTime() + gmtOffset);
     const timeDiff = currentDate.getTime() - startDate.getTime();
     const diffInDays = Math.floor(timeDiff / (1000 * 3600 * 24));
     const diffInHours = Math.floor(timeDiff / (1000 * 3600));

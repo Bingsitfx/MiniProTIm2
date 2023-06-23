@@ -1,14 +1,12 @@
-import { useState } from "react";
-import CardJob from "./shared/komponen/cardjob";
-import { company } from "./shared/komponen/data";
-import JobDetail from "./jobs/jobdetail";
+import React from 'react'
+import ReactEditor from './shared/komponen/react-quill'
 
-
-export default function Home() {
-
+const Home = () => {
   return (
-    <div >
-        
-    </div>
-  );
+    <>
+      <ReactEditor></ReactEditor>
+    </>
+  )
 }
+
+export default Home

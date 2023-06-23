@@ -33,6 +33,7 @@ import {
   doRequestGetWorktype,
 } from "@/pages/redux/MasterSchema/action/actionReducer";
 import { Router, useRouter } from "next/router";
+import ReactEditor from "@/pages/shared/komponen/react-quill";
 // import {CKEditor} from "@ckeditor/ckeditor5-react";
 // import CKEditor from 'react-ckeditor-component';
 // import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -585,8 +586,9 @@ const JobEdit = () => {
                     {/* Description */}
                     <div className="pad-input">
                       <h1 className="text-format">Description</h1>
+                      <ReactEditor register={register} setValue={setValue} inputName={'description'} defaultValue={loadedData.jopo_description}/>
                       {/* <CKEditor /> */}
-                      <TextField
+                      {/* <TextField
                         id="outlined-multiline-static"
                         multiline
                         rows={4}
@@ -594,7 +596,7 @@ const JobEdit = () => {
                         defaultValue={loadedData.jopo_description}
                         className="w-full"
                         {...register("description")}
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
