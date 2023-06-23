@@ -214,7 +214,6 @@ const JobDetail = () => {
                           isPressed ? "bg-gray-300" : "bg-blue-500  hover:bg-blue-500"
                         } shadow-md rounded-lg border border-blue-200 md:px-12 md:py-1 flex items-center`}
                       >
-                         {/* <CheckCircleIcon /> */}
                         Apply
                       </button>
                     </div>

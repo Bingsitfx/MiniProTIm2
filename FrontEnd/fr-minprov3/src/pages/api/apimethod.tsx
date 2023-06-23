@@ -52,6 +52,16 @@ const searchPostJob =(data:any)=>{
       })
 }
 
+/*-------- TALENT APPLY ---------*/
+
+const findProCandidate =()=>{
+    return axios.get("/job-hire/talent")
+}
+
+const updateCandidate =(data:any)=>{
+    console.log("API DATA UPDATE", data);
+    return axios.patch(`/job-hire/talent/${data.id}`,data)
+}
 
 
 /*-------- CRUD CLIENT ---------*/
@@ -131,4 +141,8 @@ export default {
     findJobrole,
     findIndustry,
     findCity,
+
+    findProCandidate,
+    updateCandidate
+
 }

@@ -214,4 +214,20 @@ export class JobHireController {
   findClient() {
     return this.jobHireService.findClient();
   }
+
+  // TALENT
+  @Post('talent')
+  createTalent(@Body() createTalent: any) {
+    return this.jobHireService.createTalent(createTalent);
+  }
+
+  @Get('talent')
+  findProCandidate() {
+    return this.jobHireService.findProCandidate();
+  }
+
+  @Patch('talent/:id')
+  updateTalent(@Param('id') id: string, @Body() updateTalent: any) {
+    return this.jobHireService.updateTalent(+id, updateTalent);
+  }
 }

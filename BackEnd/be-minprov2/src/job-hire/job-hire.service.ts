@@ -1,5 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { client, job_photo, job_post, job_post_desc } from 'models/job_hire';
+import {
+  client,
+  job_photo,
+  job_post,
+  job_post_desc,
+  talent_apply,
+  talent_apply_progress,
+} from 'models/job_hire';
 import { Sequelize } from 'sequelize-typescript';
 import messageHelper from 'messegeHelper';
 import { promises as fsPromises } from 'fs';
@@ -647,4 +654,97 @@ export class JobHireService {
       return messageHelper(error.message, 'Gagal', 400);
     }
   }
+
+  //TALENT APPLY
+  async createTalent(fields: any): Promise<any> {
+    try {
+      const data: any[] = [
+        {
+          taap_user_entity_id: fields.user_entity_id,
+          taap_entity_id: fields.entity_id,
+        },
+      ];
+      console.log('DATA', data);
+
+      const query = `CALL job_hire.createtalent('${JSON.stringify(data)}')`;
+      const result = await this.sequelize.query(query);
+
+      return messageHelper(result, 200, 'Berhasil daftar');
+    } catch (error) {
+      return messageHelper(error.message, 400, 'Tidak bisa daftar');
+    }
+  }
+
+  async findProCandidate() {
+    try {
+      const query = `SELECT * FROM job_hire.pro_candidate_view`;
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async updateTalent(id: number, fields: any): Promise<any> {
+    try {
+      const result = await this.sequelize.transaction(async (t) => {
+        const resultTaap = await talent_apply.update(
+          { taap_status: fields.taap_status },
+          {
+            where: { taap_user_entity_id: id },
+            transaction: t,
+          },
+        );
+
+        const resultTapr = await talent_apply_progress.update(
+          { tapr_progress_name: fields.tapr_progress_name },
+          {
+            where: { tapr_taap_user_entity_id: id },
+            transaction: t,
+          },
+        );
+
+        if (fields.taap_scoring || fields.tapr_comment) {
+          const resultTaapScore = await talent_apply.update(
+            { taap_scoring: fields.taap_scoring },
+            {
+              where: { taap_user_entity_id: id },
+              transaction: t,
+            },
+          );
+
+          const resultTaprComment = await talent_apply_progress.update(
+            { tapr_comment: fields.tapr_comment },
+            {
+              where: { tapr_taap_user_entity_id: id },
+              transaction: t,
+            },
+          );
+
+          return messageHelper(
+            {
+              resultTaap,
+              resultTapr,
+              resultTaapScore,
+              resultTaprComment,
+            },
+            200,
+            'Berhasil Update',
+          );
+        } else {
+          return messageHelper(
+            { resultTaap, resultTapr },
+            200,
+            'Berhasil Update',
+          );
+        }
+      });
+
+      return result;
+    } catch (error) {
+      throw error.message;
+    }
+  }
+
+  // TALENT
 }
