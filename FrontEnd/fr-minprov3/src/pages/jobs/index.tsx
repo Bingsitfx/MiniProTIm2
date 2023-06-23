@@ -363,9 +363,9 @@ const handleNewestButton = ()=>{
             
           />
         </div>
-        <h2 className="py-5 text-lg">100 Lowongan Pekerjaan di Indonesia</h2>
-        <div className=" p-2.5 border-2">
-          <div className="flex flex-wrap lg:flex-none">
+        <h2 className="py-5 text-lg ">100 Lowongan Pekerjaan di Indonesia</h2>
+        <div className=" p-2.5 ">
+          <div className="flex flex-wrap lg:flex-none lg:justify-center">
             <FilterComp
               handleToggle={handleToggle}
               valueCheck={isToggleChecked}

@@ -139,6 +139,7 @@ const JobCreate: React.FC = () => {
     setIsImageSelected(false);
     // fileInputRef.current.value = null;
   };
+
   /*```````````` fungsi untuk ganti foto dan hapus foto end ````````````*/
 
   /* Button Cancel start */
@@ -202,8 +203,8 @@ const JobCreate: React.FC = () => {
     formData.append("image_type", imageType);
     formData.append("image_size", data.image[0]?.size);
     formData.append("jopo_status", data.publish ? "publish" : "draft");
-    formData.append("jopo_joty_id", data.remote ? 1 : 2); //2 onsite 1remote
-    formData.append("jopo_open", data.close_hiring ? 1 : 0);
+    formData.append("jopo_joty_id", data.remote ? 2 : 1);
+    formData.append("jopo_open", data.close_hiring ? 0 : 1);
     
     dispatch(doRequestAddJobPost(formData));
     router.push("/app/jobs");
@@ -609,7 +610,7 @@ const JobCreate: React.FC = () => {
                           alt="gambar"
                           height={300}
                           width={300}
-                          className="pb-6"
+                          className="pb-6 rounded-full"
                         ></Image>
 
                         <div className="flex items-center">

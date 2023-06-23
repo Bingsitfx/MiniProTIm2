@@ -239,8 +239,8 @@ const JobEdit = () => {
     formData.append("image_type", imageType);
     formData.append("image_size", data.image[0]?.size);
     formData.append("jopo_status", data.publish? "publish" : "draft");
-    formData.append("jopo_joty_id", data.remote? 1 : 2); //2 onsite 1remote
-    formData.append("jopo_open", data.close_hiring? 1 : 0);
+    formData.append("jopo_joty_id", data.remote? 2 : 1); //2 onsite 1remote
+    formData.append("jopo_open", data.close_hiring? 0 : 1);
 
     dispatch(doRequestUpdateJobPost(formData))
     router.push('/app/jobs')
@@ -250,6 +250,8 @@ const JobEdit = () => {
 
   const registerOptions = {
     title: { required: "Title is required" },
+    start_date: { required: "Start Date is required" },
+    end_date: { required: "End Date is required" },
     min_salary: { required: "Min Salary is required" },
     max_salary: { required: "Max Salary is required" },
     min_experience: { required: "Min Experience is required" },
@@ -257,12 +259,12 @@ const JobEdit = () => {
     primary_skill: { required: "Primary Skill is required" },
     secondary_skill: { required: "Secondary Skill is required" },
     specification_role: { required: "Specification Role is required" },
+    working_type: { required: "Working is required" },
     education: { required: "Education is required" },
     benefit: { required: "Benefit is required" },
     client: { required: "Client is required" },
     location: { required: "Location is required" },
-    start_date: { required: "Start Date is required" },
-    end_date: { required: "End Date is required" },
+    image: { required: "Image is required" },
   };
 
   if(loadedData){
@@ -627,17 +629,17 @@ const JobEdit = () => {
                           alt="gambar"
                           height={300}
                           width={300}
-                          className="pb-6"
+                          className="pb-6 rounded-full"
                         ></Image>
 
                         <div className="flex items-center">
-                          <button
+                          {/* <button
                             className="px-2 py-[1.5px] w-24 text-center border border-black bg-gray-400 bg-opacity-20 mr-5 hover:bg-gray-300"
                             onClick={handleRemoveImage}
                             type="button"
                           >
                             Remove
-                          </button>
+                          </button> */}
                           <input
                             id="file-upload"
                             type="file"

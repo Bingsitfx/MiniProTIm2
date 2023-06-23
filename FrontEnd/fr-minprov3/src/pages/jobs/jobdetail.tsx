@@ -7,12 +7,16 @@ import {
   BuildingOfficeIcon,
   ChevronRightIcon,
   ClockIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Chip } from "@material-tailwind/react";
 import SimiliarJob from "../shared/komponen/similiarJob";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { doRequestGetJobPost, doRequestGetJobPostById } from "../redux/JobhireSchema/action/actionreducer";
+import {
+  doRequestGetJobPost,
+  doRequestGetJobPostById,
+} from "../redux/JobhireSchema/action/actionreducer";
 import CardJob from "../shared/komponen/cardjob";
 
 const JobDetail = () => {
@@ -20,44 +24,51 @@ const JobDetail = () => {
   const dispatch = useDispatch();
   const [loadedData, setLoadedData]: any = useState(null);
 
-  let { job_post_id } = useSelector(
-    (state: any) => state.JobPostReducers
-  );
-  
-  let { job_post,refresh } = useSelector(
+  let { job_post_id } = useSelector((state: any) => state.JobPostReducers);
+
+  let { job_post, refresh } = useSelector(
     (state: any) => state.JobPostReducers
   );
 
   const filtered = job_post?.filter(
-    (item:any) =>
-      item.joro_name.toLowerCase().includes(job_post_id.joro_name?.toLowerCase()) &&
+    (item: any) =>
+      item.joro_name
+        .toLowerCase()
+        .includes(job_post_id.joro_name?.toLowerCase()) &&
       item.jopo_entity_id !== job_post_id.jopo_entity_id
   );
 
-  console.log('HASIL',filtered)
+  console.log("HASIL", filtered);
 
   const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(5);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentItems = filtered?.slice(startIndex, endIndex);
-  
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filtered?.slice(startIndex, endIndex);
+
   useEffect(() => {
     dispatch({ type: "RESET_STATE" });
     if (router.isReady) {
       const { id }: any = router.query;
       dispatch(doRequestGetJobPostById(id));
-      dispatch(doRequestGetJobPost())
+      dispatch(doRequestGetJobPost());
     }
   }, [router]);
-  
+
   useEffect(() => {
     setLoadedData(job_post_id);
   }, [job_post_id]);
-  
-  console.log('DAATATATAT',job_post);
 
+  /* HANDLE BUTTON APPLY */
+  const [isPressed, setIsPressed] = useState(false);
 
+  const handleClick = () => {
+    setIsPressed(true);
+
+    
+    alert('BUTTON DI TEKAN')
+    // Lakukan tindakan atau fungsi lain yang diinginkan saat tombol ditekan
+  };
 
   if (loadedData) {
     /* UNTUK FORMAT UANG */
@@ -96,8 +107,6 @@ const JobDetail = () => {
       timeAgoString = "Baru saja dibuat";
     }
 
-
-    
     return (
       <div className="container grid lg:grid-cols-2">
         <div>
@@ -198,7 +207,14 @@ const JobDetail = () => {
                   </div>
                   <div className="grid grid-cols-2 pt-5 max-w-lg">
                     <div className="flex items-center">
-                      <button className=" text-sm font-bold text-white px-8 py-1 bg-blue-700 shadow-md rounded-lg border border-blue-200 md:px-12 md:py-1 hover:bg-blue-500 ">
+                      <button
+                        onClick={handleClick}
+                        disabled={isPressed}
+                        className={`text-sm font-bold text-white p-1.5 w-28 justify-center  ${
+                          isPressed ? "bg-gray-300" : "bg-blue-500  hover:bg-blue-500"
+                        } shadow-md rounded-lg border border-blue-200 md:px-12 md:py-1 flex items-center`}
+                      >
+                         {/* <CheckCircleIcon /> */}
                         Apply
                       </button>
                     </div>
@@ -231,7 +247,12 @@ const JobDetail = () => {
                   {/* <p className="font-medium text-sm max-w-2xl mb-16 md:text-lg">
                     {loadedData.jopo_description}
                   </p> */}
-                  <div className="font-base text-sm max-w-2xl mb-10 md:text-lg" dangerouslySetInnerHTML={{ __html: loadedData.jopo_description }} />
+                  <div
+                    className="font-base text-sm max-w-2xl mb-10 md:text-lg"
+                    dangerouslySetInnerHTML={{
+                      __html: loadedData.jopo_description,
+                    }}
+                  />
 
                   <h1 className="text-lg mb-5 md:text-xl lg:text-2xl">
                     Primary Skills
