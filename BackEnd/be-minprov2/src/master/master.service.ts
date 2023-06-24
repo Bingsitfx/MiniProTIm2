@@ -61,6 +61,16 @@ export class MasterService {
     }
   }
 
+  async findRouteAction() {
+    try {
+      const query = `SELECT * FROM master.route_actions WHERE roac_module_name = 'Job Hire'`;
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} master`;
   }

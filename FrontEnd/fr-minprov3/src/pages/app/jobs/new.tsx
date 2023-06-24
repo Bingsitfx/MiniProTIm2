@@ -105,7 +105,7 @@ const JobCreate: React.FC = () => {
 
   const [isPublishChecked, setIsPublishChecked] = useState(true);
   const [isRemoteChecked, setIsRemoteChecked] = useState(false);
-  const [isHiringChecked, setIsHiringChecked] = useState(true);
+  const [isHiringChecked, setIsHiringChecked] = useState(false);
 
   const handlePublishToggle = () => {
     setIsPublishChecked(!isPublishChecked);
@@ -674,27 +674,6 @@ const JobCreate: React.FC = () => {
                             src={previewImage}
                           />
                         </Modal>
-                        {/* <Image
-                          src={selectedImage || imgDefault}
-                          alt="gambar"
-                          height={300}
-                          width={300}
-                          className="pb-6 rounded-full"
-                        ></Image>
-
-                        <div className="flex items-center">
-                          <input
-                            id="file-upload"
-                            type="file"
-                            accept="image/*"
-                            {...register(("image"),registerOptions.image)}
-                            // onChange={handleImageChange}
-                            // ref={fileInputRef}
-                          ></input>
-                        </div>
-                        <p className="px-2 text-red-800">
-                        {errors?.image && errors.image.message}
-                      </p> */}
                       </div>
 
                       {/* Switch Publish & Remote */}

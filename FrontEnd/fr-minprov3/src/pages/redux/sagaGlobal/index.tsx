@@ -11,6 +11,8 @@ import { handleGetIndustry } from "../MasterSchema/saga/industrySaga";
 import { handleGetEmprange } from "../JobhireSchema/saga/emprangeSaga";
 import { handleGetCity } from "../MasterSchema/saga/citySaga";
 import { handleGetPhoto } from "../JobhireSchema/saga/photosaga";
+import { handleGetProCandidate, handleUpdateCandidate } from "../JobhireSchema/saga/talentsaga";
+import { handleGetRoac } from "../MasterSchema/saga/routeactionSaga";
 
 function* watchAll() {
     yield all([
@@ -25,7 +27,11 @@ function* watchAll() {
       
       takeEvery(ActionTypeJobHire.REQ_GET_EMPRANGE, handleGetEmprange),
       takeEvery(ActionTypeJobHire.REQ_GET_JOBPHOTO, handleGetPhoto),
-  
+
+      takeEvery(ActionTypeJobHire.REQ_GET_CANDIDATE, handleGetProCandidate),
+      takeEvery(ActionTypeJobHire.REQ_UPDATE_CANDIDATE, handleUpdateCandidate),
+
+      
       takeEvery(ActionTypeJobHire.REQ_GET_CLIENT, handleGetAllClient),
       takeEvery(ActionTypeJobHire.REQ_GET_CLIENT_BY_ID, handleGetClientById),
       takeEvery(ActionTypeJobHire.REQ_ADD_CLIENT, handleAddClient),
@@ -37,7 +43,9 @@ function* watchAll() {
       takeEvery(ActionTypeMaster.REQ_GET_JOBROLE, handleGetJobrole),
       takeEvery(ActionTypeMaster.REQ_GET_INDUSTRY, handleGetIndustry),
       takeEvery(ActionTypeMaster.REQ_GET_CITY, handleGetCity),
-    
+      
+      takeEvery(ActionTypeMaster.REQ_GET_ROAC, handleGetRoac),
+      
 
     ]);
   }

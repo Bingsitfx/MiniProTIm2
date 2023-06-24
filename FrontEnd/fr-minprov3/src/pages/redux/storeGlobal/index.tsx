@@ -12,6 +12,8 @@ import WorktypeReducers from "../MasterSchema/reducer/worktypeReducer";
 import EmprangeReducers from "../JobhireSchema/reducer/EmprangeReducer";
 import CityReducers from "../MasterSchema/reducer/cityReducer";
 import JobPhotoReducers from "../JobhireSchema/reducer/JobPhotoReducer";
+import TalentReducers from "../JobhireSchema/reducer/TalentReducer";
+import RouteactionReducers from "../MasterSchema/reducer/routeactionReducer";
 
 
 const logger = createLogger();
@@ -20,6 +22,7 @@ const saga = createSagaMiddleware();
 const reducer = combineReducers({
     JobPostReducers,
     ClientReducers,
+    TalentReducers,
     EducationReducers,
     WorktypeReducers,
     JobroleReducers,
@@ -27,6 +30,8 @@ const reducer = combineReducers({
     EmprangeReducers,
     CityReducers,
     JobPhotoReducers,
+    RouteactionReducers,
+
 });
 
 const store = configureStore({

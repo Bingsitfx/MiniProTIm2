@@ -20,6 +20,11 @@ export class MasterController {
     return this.masterService.create(createMasterDto);
   }
 
+  @Get('roac')
+  findRouteAction() {
+    return this.masterService.findRouteAction();
+  }
+
   @Get('edu')
   findEducation() {
     return this.masterService.findEducation();

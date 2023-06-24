@@ -745,6 +745,4 @@ export class JobHireService {
       throw error.message;
     }
   }
-
-  // TALENT
 }

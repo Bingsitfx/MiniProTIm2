@@ -206,3 +206,31 @@ export const doResponseGetEmprange = (payload: any) => {
     payload,
   };
 };
+
+/*------------ TALENT APPLY SECTION -------------*/
+
+export const doRequestGetCandidate = () => {
+  return {
+    type: ActionTypes.REQ_GET_CANDIDATE
+  };
+};
+export const doResponseGetCandidate = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_CANDIDATE,
+    payload
+  };
+};
+  
+export const doRequestUpdateCandidate = (payload: any) => {
+  return {
+    type: ActionTypes.REQ_UPDATE_CANDIDATE,
+    payload,
+  };
+};
+
+export const doResponseUpdateCandidate = (payload: any) => {
+  return {
+    type: ActionTypes.RES_UPDATE_CANDIDATE,
+    payload,
+  };
+};

@@ -116,6 +116,10 @@ const findCity =()=>{
     return axios.get('/master/city')
 }
 
+const findRouteaction =()=>{
+    return axios.get('/master/roac')
+}
+
 export default {
     findAllJob,
     findCurrentNumber,
@@ -126,6 +130,7 @@ export default {
     updateStatus,
     findJobPhoto,
     searchPostJob,
+    
 
     findAllEmprange,
 
@@ -141,6 +146,7 @@ export default {
     findJobrole,
     findIndustry,
     findCity,
+    findRouteaction,
 
     findProCandidate,
     updateCandidate
