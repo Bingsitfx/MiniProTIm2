@@ -36,6 +36,14 @@ import type { RcFile, UploadProps } from "antd/es/upload";
 import type { UploadFile } from "antd/es/upload/interface";
 import ReactEditor from "@/pages/shared/komponen/react-quill";
 
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+
 const JobCreate: React.FC = () => {
   /*`````````` koneksi ke backend  ``````````````*/
   const dispatch = useDispatch();
@@ -143,7 +151,7 @@ const JobCreate: React.FC = () => {
   /*```````````` fungsi untuk ganti foto dan hapus foto end ````````````*/
 
   /* Button Cancel start */
-  const handleCancel = () => {
+  const handleCancelButton = () => {
     router.push("/app/jobs");
   };
 
@@ -155,7 +163,7 @@ const JobCreate: React.FC = () => {
   const [endDate, setEndDate] = useState(null);
 
   const handleStartDateChange = (date: any) => {
-    register(('start_date'),registerOptions.start_date);
+    register("start_date", registerOptions.start_date);
     setStartDate(date);
     setEndDate(null);
     if (date) {
@@ -177,6 +185,41 @@ const JobCreate: React.FC = () => {
 
   /*``````````````` fungsi handle date end`````````````````` */
 
+  /* ------------------------------ COBA UPLOAD ---------------------------*/
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList]:any = useState<UploadFile[]>([])
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+  setFileList(newFileList);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
+    );
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
+  console.log('IMAGE',fileList)
+
+  /* ----------------------------------------------------------------------*/
+
   const handleRegistration = async (data: any) => {
     const formData: any = new FormData();
     formData.append("jopo_emp_entity_id", data.emp_entity_id);
@@ -197,7 +240,7 @@ const JobCreate: React.FC = () => {
     formData.append("jopo_clit_id", data.client.clit_id);
     formData.append("jopo_addr_id", data.client.addr_id);
     formData.append("jopo_description", data.description);
-    formData.append("image", data.image[0]);
+    formData.append("image", data.image[0].originFileObj);
     let type = data.image[0]?.type;
     let imageType = type?.split("/")[1];
     formData.append("image_type", imageType);
@@ -205,11 +248,11 @@ const JobCreate: React.FC = () => {
     formData.append("jopo_status", data.publish ? "publish" : "draft");
     formData.append("jopo_joty_id", data.remote ? 2 : 1);
     formData.append("jopo_open", data.close_hiring ? 0 : 1);
-    
+
     dispatch(doRequestAddJobPost(formData));
     router.push("/app/jobs");
     console.log("aa", ...formData);
-    // console.log(data);
+    console.log(data);
   };
 
   const registerOptions = {
@@ -254,7 +297,6 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="Title"
-                        
                         {...register("title", registerOptions.title)}
                         variant="outlined"
                         className="w-full"
@@ -281,7 +323,7 @@ const JobCreate: React.FC = () => {
                             className="w-full"
                             onChange={handleStartDateChange}
                           />
-                          
+
                           <DatePicker
                             slotProps={{
                               actionBar: {
@@ -499,7 +541,7 @@ const JobCreate: React.FC = () => {
                           select
                           label="Choose Education"
                           className="w-full"
-                          {...register(("education"),registerOptions.education)}
+                          {...register("education", registerOptions.education)}
                           size="small"
                         >
                           {education.map((option: any) => (
@@ -523,7 +565,7 @@ const JobCreate: React.FC = () => {
                       <TextField
                         id="outlined-basic"
                         placeholder="THR,BPJS,Bonus"
-                        {...register(("benefit"),registerOptions.benefit)}
+                        {...register("benefit", registerOptions.benefit)}
                         variant="outlined"
                         className="w-full"
                         size="small"
@@ -571,7 +613,11 @@ const JobCreate: React.FC = () => {
                     <div className="pad-input">
                       <h1 className="text-format">Description</h1>
                       {/* <CKEditor /> */}
-                      <ReactEditor register={register} setValue={setValue} inputName={'description'}/>
+                      <ReactEditor
+                        register={register}
+                        setValue={setValue}
+                        inputName={"description"}
+                      />
                       {/* <TextField
                         id="outlined-multiline-static"
                         multiline
@@ -603,9 +649,32 @@ const JobCreate: React.FC = () => {
                         size="small"
                       />
                     </div>
-                    <div className="w-full pl-[33px] justify-center lg:pl-0">
+                    <div className="w-full pl-[33px]  lg:pl-0">
                       <div className="pb-10">
-                        <Image
+                        <Upload
+                          listType="picture-circle"
+                          onPreview={handlePreview}
+                          fileList={fileList}
+                          onChange={(value) => {
+                            handleChange(value)
+                            setValue('image',fileList)
+                          }}
+                        >
+                          {fileList.length >= 1 ? null : uploadButton}
+                        </Upload>
+                        <Modal
+                          open={previewOpen}
+                          title={previewTitle}
+                          footer={null}
+                          onCancel={handleCancel}
+                        >
+                          <img
+                            alt="example"
+                            style={{ width: "100%" }}
+                            src={previewImage}
+                          />
+                        </Modal>
+                        {/* <Image
                           src={selectedImage || imgDefault}
                           alt="gambar"
                           height={300}
@@ -625,8 +694,9 @@ const JobCreate: React.FC = () => {
                         </div>
                         <p className="px-2 text-red-800">
                         {errors?.image && errors.image.message}
-                      </p>
+                      </p> */}
                       </div>
+
                       {/* Switch Publish & Remote */}
                       <div className="items-center">
                         <div className="flex">
@@ -688,7 +758,7 @@ const JobCreate: React.FC = () => {
                     <button
                       type="button"
                       className="button-foot"
-                      onClick={handleCancel}
+                      onClick={handleCancelButton}
                     >
                       Cancel
                     </button>
