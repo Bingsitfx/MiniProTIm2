@@ -34,9 +34,19 @@ import {
 } from "@/pages/redux/MasterSchema/action/actionReducer";
 import { Router, useRouter } from "next/router";
 import ReactEditor from "@/pages/shared/komponen/react-quill";
-// import {CKEditor} from "@ckeditor/ckeditor5-react";
-// import CKEditor from 'react-ckeditor-component';
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { PlusOutlined } from "@ant-design/icons";
+import { Modal, Upload } from "antd";
+import type { RcFile, UploadProps } from "antd/es/upload";
+import type { UploadFile } from "antd/es/upload/interface";
+
+
+const getBase64 = (file: RcFile): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 const JobEdit = () => {
   /*`````````` koneksi ke backend  ``````````````*/
@@ -55,14 +65,6 @@ const JobEdit = () => {
   let { job_role } = useSelector((state: any) => state.JobroleReducers);
 
   let { client } = useSelector((state: any) => state.ClientReducers);
-
-  // console.log('client',client[0])
-  // console.log('JOB',job_post_id)
-  // console.log('work',work_type)
-  // console.log('jobrole',job_role)
-  // console.log('Newedu',education[0]?.edu_code)
-  // console.log('new',job_post)
-  // console.log('new2',cur_number)
 
   type FormValues = {
     title: string;
@@ -128,7 +130,7 @@ const JobEdit = () => {
 
 
  /* Button Cancel start */
-  const handleCancel = () =>{
+  const handleCancelButton = () =>{
     router.push('/app/jobs')
   }
 
@@ -161,28 +163,41 @@ const JobEdit = () => {
 
   }, [job_post_id]);
 
-  // console.log("NEWDATA",loadedData)
-  // console.log("JOBPOST",job_post_id)
 
-  /*````````````` fungsi untuk ganti foto dan hapus foto start ``````````````*/
+  /* ------------------------------ UPLOAD ---------------------------*/
 
-  const [selectedImage, setSelectedImage]: any = useState(null);
-  const [isImageSelected, setIsImageSelected]: any = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList, setFileList]:any = useState<UploadFile[]>([])
 
-  const fileInputRef: any = useRef(null);
+  const handleCancel = () => setPreviewOpen(false);
 
-  const handleImageChange = (event: any) => {
-    const file = event.target.files[0];
-    setSelectedImage(file);
-    setIsImageSelected(true);
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+  setFileList(newFileList);
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as RcFile);
+    }
+
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url!.substring(file.url!.lastIndexOf("/") + 1)
+    );
   };
 
-  const handleRemoveImage = () => {
-    setSelectedImage(null);
-    setIsImageSelected(false);
-    // fileInputRef.current.value = null;
-  };
-  /*```````````` fungsi untuk ganti foto dan hapus foto end ````````````*/
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
+  console.log('IMAGE',fileList)
+
+  /* ----------------------------------------------------------------------*/
 
   /*````````````````` fungsi handle date  `````````````````````*/
 
@@ -624,31 +639,29 @@ const JobEdit = () => {
                     </div>
                     <div className="w-full pl-[33px] justify-center lg:pl-0">
                       <div className="pb-10">
-                        <Image
-                          src={selectedImage || imgDefault}
-                          alt="gambar"
-                          height={300}
-                          width={300}
-                          className="pb-6 rounded-full"
-                        ></Image>
-
-                        <div className="flex items-center">
-                          {/* <button
-                            className="px-2 py-[1.5px] w-24 text-center border border-black bg-gray-400 bg-opacity-20 mr-5 hover:bg-gray-300"
-                            onClick={handleRemoveImage}
-                            type="button"
-                          >
-                            Remove
-                          </button> */}
-                          <input
-                            id="file-upload"
-                            type="file"
-                            accept="image/*"
-                            {...register("image")}
-                            // onChange={handleImageChange}
-                            // ref={fileInputRef}
-                          ></input>
-                        </div>
+                      <Upload
+                          listType="picture-circle"
+                          onPreview={handlePreview}
+                          fileList={fileList}
+                          onChange={(value) => {
+                            handleChange(value)
+                            setValue('image',fileList)
+                          }}
+                        >
+                          {fileList.length >= 1 ? null : uploadButton}
+                        </Upload>
+                        <Modal
+                          open={previewOpen}
+                          title={previewTitle}
+                          footer={null}
+                          onCancel={handleCancel}
+                        >
+                          <img
+                            alt="example"
+                            style={{ width: "100%" }}
+                            src={previewImage}
+                          />
+                        </Modal>
                       </div>
                       {/* Switch Publish & Remote */}
                       <div className="items-center">
@@ -711,7 +724,7 @@ const JobEdit = () => {
                     <button type="submit" className="button-foot">
                       Save
                     </button>
-                    <button type="button" className="button-foot" onClick={handleCancel}>
+                    <button type="button" className="button-foot" onClick={handleCancelButton}>
                       Cancel
                     </button>
                   </div>
