@@ -241,8 +241,14 @@ export class JobHireController {
     return this.jobHireService.CandidateContract();
   }
 
-  @Patch('talent/:id')
-  updateTalent(@Param('id') id: string, @Body() updateTalent: any) {
-    return this.jobHireService.updateTalent(+id, updateTalent);
+  @Get('talent/failed')
+  CandidateFailed() {
+    return this.jobHireService.CandidateFailed();
+  }
+
+  @Patch('talent/update')
+  updateTalent(@Body() updateTalent: any) {
+    console.log(updateTalent);
+    return this.jobHireService.updateTalent(updateTalent);
   }
 }

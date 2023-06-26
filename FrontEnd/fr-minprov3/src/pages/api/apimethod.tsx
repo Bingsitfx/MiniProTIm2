@@ -63,11 +63,14 @@ const findProCandidateInterview =()=>{
 const findProCandidateContract =()=>{
     return axios.get("/job-hire/talent/contract")
 }
+const findProCandidateFailed =()=>{
+    return axios.get("/job-hire/talent/failed")
+}
 
 
-const updateCandidate =(data:any)=>{
-    console.log("API DATA UPDATE", data);
-    return axios.patch(`/job-hire/talent/${data.id}`,data)
+const updateTalentStatus =(data:any)=>{
+    // console.log('API UPDATE',data)
+    return axios.patch('/job-hire/talent/update',data)
 }
 
 
@@ -158,6 +161,7 @@ export default {
     findProCandidateApply,
     findProCandidateInterview,
     findProCandidateContract,
-    updateCandidate
+    findProCandidateFailed,
+    updateTalentStatus
 
 }

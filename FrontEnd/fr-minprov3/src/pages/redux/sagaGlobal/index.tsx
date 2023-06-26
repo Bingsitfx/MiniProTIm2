@@ -11,7 +11,7 @@ import { handleGetIndustry } from "../MasterSchema/saga/industrySaga";
 import { handleGetEmprange } from "../JobhireSchema/saga/emprangeSaga";
 import { handleGetCity } from "../MasterSchema/saga/citySaga";
 import { handleGetPhoto } from "../JobhireSchema/saga/photosaga";
-import { handleGetProCandidateApply, handleGetProCandidateContract, handleGetProCandidateInterview, handleUpdateCandidate } from "../JobhireSchema/saga/talentsaga";
+import { handleGetProCandidateApply, handleGetProCandidateContract, handleGetProCandidateFailed, handleGetProCandidateInterview, handleUpdateCandidate } from "../JobhireSchema/saga/talentsaga";
 import { handleGetRoac } from "../MasterSchema/saga/routeactionSaga";
 
 function* watchAll() {
@@ -31,6 +31,7 @@ function* watchAll() {
       takeEvery(ActionTypeJobHire.REQ_GET_CANDIDATE_APPLY, handleGetProCandidateApply),
       takeEvery(ActionTypeJobHire.REQ_GET_CANDIDATE_INTERVIEW, handleGetProCandidateInterview),
       takeEvery(ActionTypeJobHire.REQ_GET_CANDIDATE_CONTRACT, handleGetProCandidateContract),
+      takeEvery(ActionTypeJobHire.REQ_GET_CANDIDATE_FAILED, handleGetProCandidateFailed),
       takeEvery(ActionTypeJobHire.REQ_UPDATE_CANDIDATE, handleUpdateCandidate),
 
       

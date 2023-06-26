@@ -688,7 +688,7 @@ export class JobHireService {
 
   async CandidateApply() {
     try {
-      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'apply'`;
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE tapr_progress_name = 'apply'`;
 
       const result = await this.sequelize.query(query);
       return result[0];
@@ -699,7 +699,7 @@ export class JobHireService {
 
   async CandidateInterview() {
     try {
-      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'interview'`;
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE tapr_progress_name = 'interview'`;
 
       const result = await this.sequelize.query(query);
       return result[0];
@@ -710,7 +710,7 @@ export class JobHireService {
 
   async CandidateContract() {
     try {
-      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'contract'`;
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE tapr_progress_name = 'contract'`;
 
       const result = await this.sequelize.query(query);
       return result[0];
@@ -719,13 +719,24 @@ export class JobHireService {
     }
   }
 
-  async updateTalent(id: number, fields: any): Promise<any> {
+  async CandidateFailed() {
+    try {
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE tapr_progress_name = 'cancelled'`;
+
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async updateTalent(fields: any): Promise<any> {
     try {
       const result = await this.sequelize.transaction(async (t) => {
         const resultTaap = await talent_apply.update(
           { taap_status: fields.taap_status },
           {
-            where: { taap_user_entity_id: id },
+            where: { taap_user_entity_id: fields.user_entity_id },
             transaction: t,
           },
         );
@@ -733,7 +744,7 @@ export class JobHireService {
         const resultTapr = await talent_apply_progress.update(
           { tapr_progress_name: fields.tapr_progress_name },
           {
-            where: { tapr_taap_user_entity_id: id },
+            where: { tapr_taap_user_entity_id: fields.user_entity_id },
             transaction: t,
           },
         );
@@ -742,7 +753,7 @@ export class JobHireService {
           const resultTaapScore = await talent_apply.update(
             { taap_scoring: fields.taap_scoring },
             {
-              where: { taap_user_entity_id: id },
+              where: { taap_user_entity_id: fields.user_entity_id },
               transaction: t,
             },
           );
@@ -750,7 +761,7 @@ export class JobHireService {
           const resultTaprComment = await talent_apply_progress.update(
             { tapr_comment: fields.tapr_comment },
             {
-              where: { tapr_taap_user_entity_id: id },
+              where: { tapr_taap_user_entity_id: fields.user_entity_id },
               transaction: t,
             },
           );

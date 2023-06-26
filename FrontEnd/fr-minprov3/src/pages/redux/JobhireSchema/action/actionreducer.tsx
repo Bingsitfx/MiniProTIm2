@@ -247,6 +247,19 @@ export const doResponseGetCandidateContract = (payload: any) => {
     payload
   };
 };
+
+//failed
+export const doRequestGetCandidateFailed= () => {
+  return {
+    type: ActionTypes.REQ_GET_CANDIDATE_FAILED,
+  };
+};
+export const doResponseGetCandidateFailed = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_CANDIDATE_FAILED,
+    payload
+  };
+};
   
 export const doRequestUpdateCandidate = (payload: any) => {
   return {
