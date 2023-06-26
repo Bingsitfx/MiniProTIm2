@@ -1,185 +1,248 @@
-import React, { useState, SyntheticEvent, useEffect, Fragment } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
-// import TabPanel from "./tabsComponent/tabPanel";
-// import a11yProps from "./tabsComponent/a11yProps";
-import ApplyTable from "./table/rows/apply";
-import { MyPage } from "@/components/types";
-import Content from "@/components/shared/content";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TabScrollButton,
-  Typography,
-} from "@mui/material";
+import React, { Fragment, useEffect, useState } from "react";
+import { Tabs } from "antd";
+import type { TabsProps } from "antd";
+import { Menu, Transition } from "@headlessui/react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+import { format } from "date-fns";
+import { doRequestGetCandidateApply, doRequestGetCandidateContract, doRequestGetCandidateInterview } from "@/pages/redux/JobhireSchema/action/actionreducer";
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+const App: React.FC = () => {
+  const [status, setStatus] = useState("1");
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
+  const onChange = (key: string) => {
+    setStatus(key);
+  };
+
+  let { candidates_apply,candidates_interview,candidates_contract ,refresh } = useSelector(
+    (state: any) => state.TalentReducers
   );
-}
+ 
+  console.log('APPLY',candidates_apply)
+  console.log('INTERVIEW',candidates_interview)
+  console.log('CONTRACT',candidates_contract)
 
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
 
-const Candidat: MyPage = (props: any) => {
-  const [value, setValue] = useState(1);
-  const [selectMonth, setSelectMonth] = useState("");
-  const [selectYear, setSelectYear] = useState("")
+    useEffect(()=>{
+      setStatus(status);
+      if (status === "1") {
 
-  const handleChange = (event: SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  const handleChangeMonth = (event: SelectChangeEvent) => {
-    setSelectMonth(event.target.value as string);
-  };
+       dispatch(doRequestGetCandidateApply())
   
-  const handleChangeYear = (event: SelectChangeEvent) => {
-    setSelectYear(event.target.value as string);
-  };
+      } else if (status === "2") {
+  
+        dispatch(doRequestGetCandidateInterview())
+      
+        // dispatch(filteringAction());
+      } else if (status === "3") {
+ 
+        dispatch(doRequestGetCandidateContract())
+      
+      }
+    },[refresh,status])
 
-  const dataTahun = [
-    { id: 1, tahun: "2017" },
-    { id: 2, tahun: "2018" },
-    { id: 3, tahun: "2019" },
-    { id: 4, tahun: "2020" },
-    { id: 5, tahun: "2021" },
-    { id: 6, tahun: "2022" },
-    { id: 7, tahun: "2023" },
-    { id: 8, tahun: "2024" },
-    { id: 9, tahun: "2025" },
-    { id: 10, tahun: "2026" },
-    { id: 11, tahun: "2027" },
-  ];
+  
 
-  const dataBulan = [
-    { id: 1, bulan: "Januari" },
-    { id: 2, bulan: "Februari" },
-    { id: 3, bulan: "Maret" },
-    { id: 4, bulan: "April" },
-    { id: 5, bulan: "Mei" },
-    { id: 6, bulan: "Juni" },
-    { id: 7, bulan: "Juli" },
-    { id: 8, bulan: "Agustus" },
-    { id: 9, bulan: "September" },
-    { id: 10, bulan: "Oktober" },
-    { id: 11, bulan: "November" },
-    { id: 12, bulan: "Desember" },
+  
+  // useEffect(()=>{
+    
+  //   // console.log("HASIL", untukDispatch);
+  // },[refresh])
+
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(doRequestGetCandidate());
+  // }, [refresh]);
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: <p className="font-semibold">Apply</p>,
+      children: [
+        <>
+          {(candidates_apply || []).map((dt: any) => (
+            <div className="w-full h-[5rem] p-3 justify-between flex items-center border-b-2 ">
+              <div>
+                <h1 className="font-semibold">{dt.full_name}</h1>
+                <h1 className="font-light italic">{dt.pmail_address}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.usdu_school}</h1>
+                <h1 className="font-light italic">{dt.usdu_field_study}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.usdu_graduate_year}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">Apply Job</h1>
+                <h2 className="font-light italic">{dt.jopo_title}</h2>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.clit_name}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">
+                  Applied On -{" "}
+                  {format(new Date(dt.taap_modified_date), "dd MMMM yyyy")}
+                </h1>
+              </div>
+
+              <div className="">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      <MoreVertIcon
+                        className="ml-2 -mr-1 h-5 w-5 text-gray-700 hover:text-gray-400 sm:flex"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-7 -mt-[4rem] mr-2 w-24 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="px-1 py-1 ">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              href={{
+                                pathname: "#",
+                              }}
+                              className={`${
+                                active
+                                  ? "bg-blue-400 text-white"
+                                  : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            >
+                              Ready Test
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              </div>
+            </div>
+          ))}
+        </>,
+      ],
+    },
+    {
+      key: "2",
+      label: <p className="font-semibold">Interview</p>,
+      children: [
+        <>
+          {(candidates_interview || []).map((dt: any) => (
+            <div className="w-full h-[5rem] p-3 justify-between flex items-center border-b-2 ">
+              <div>
+                <h1 className="font-semibold">{dt.full_name}</h1>
+                <h1 className="font-light italic">{dt.pmail_address}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.usdu_school}</h1>
+                <h1 className="font-light italic">{dt.usdu_field_study}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.usdu_graduate_year}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">Apply Job</h1>
+                <h2 className="font-light italic">{dt.jopo_title}</h2>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">{dt.clit_name}</h1>
+              </div>
+
+              <div>
+                <h1 className="font-semibold">
+                  Applied On -{" "}
+                  {format(new Date(dt.taap_modified_date), "dd MMMM yyyy")}
+                </h1>
+              </div>
+
+              <div className="">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex w-full justify-center rounded-md px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      <MoreVertIcon
+                        className="ml-2 -mr-1 h-5 w-5 text-gray-700 hover:text-gray-400 sm:flex"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-7 -mt-[4rem] mr-2 w-24 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="px-1 py-1 ">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              href={{
+                                pathname: "#",
+                              }}
+                              className={`${
+                                active
+                                  ? "bg-blue-400 text-white"
+                                  : "text-gray-900"
+                              } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                            >
+                              Ready Test
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
+              </div>
+            </div>
+          ))}
+        </>,
+      ],
+    },
+    {
+      key: "3",
+      label: <p className="font-semibold">Contract</p>,
+      children: `Content of Tab Pane 3`,
+    },
   ];
-  useEffect(() => {
-    setValue(0);
-  }, []);
 
   return (
-    <>
-      <Content title="Candidate" />
-      <Box sx={{ width: "auto" }}>
-        <Tabs
-          scrollButtons="auto"
-          variant="scrollable"
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-          centered
-          // sx={{width: '100%'}}
-        >
-          <Tab sx={{ fontSize: 14 }} label="Apply" {...a11yProps(0)} />
-          <Tab sx={{ fontSize: 14 }} label="Filtering Test" {...a11yProps(1)} />
-          <Tab sx={{ fontSize: 14 }} label="Contract" {...a11yProps(2)} />
-          <Tab sx={{ fontSize: 14 }} label="Disqualified" {...a11yProps(3)} />
-          <Tab sx={{ fontSize: 14 }} label="Not Responding" {...a11yProps(4)} />
-          <Box sx={{ display: "flex" }}>
-            <FormControl className="w-36 mt-2">
-              <InputLabel id="demo-simple-select-label">
-                Filter By Month
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                variant="outlined"
-                value={selectMonth}
-                label="Filter By Month"
-                onChange={handleChangeMonth}
-                //  data = {filterBulan}
-              >
-                {/* <MenuItem value='null'>None</MenuItem> */}
-                {dataBulan.map((bulan, i) => (
-                  <MenuItem value={bulan.id}>{bulan.bulan}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl className="w-36 mt-2 ml-5">
-              <InputLabel id="demo-simple-select-label">
-                Filter By Year
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                variant="outlined"
-                value={selectYear}
-                label="Filter By Month"
-                onChange={handleChangeYear}
-                //  data = {filterBulan}
-              >
-                {/* <MenuItem value='null'>None</MenuItem> */}
-                {dataTahun.map((tahun, i) => (
-                  <MenuItem value={tahun.tahun}>{tahun.tahun}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </Tabs>
-
-        <Fragment>
-          <TabPanel value={value} index={0}>
-            <ApplyTable status="apply" selectedMonth={selectMonth} selectYear={selectYear}/>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <ApplyTable status="filtering test" selectedMonth={selectMonth} selectYear={selectYear}/>
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <ApplyTable status="contract" selectedMonth={selectMonth} selectYear={selectYear}/>
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <ApplyTable status="disqualified" selectedMonth={selectMonth} selectYear={selectYear}/>
-          </TabPanel>
-          <TabPanel value={value} index={4} >
-            <ApplyTable status="notresponding" selectedMonth={selectMonth} selectYear={selectYear}/>
-          </TabPanel>
-        </Fragment>
-      </Box>
-    </>
+    <div className="w-full justify-center">
+      <Tabs
+        className="text-center border-2 px-2 bg-gray-100"
+        defaultActiveKey="1"
+        items={items}
+        onChange={onChange}
+      />
+    </div>
   );
 };
 
-Candidat.Layout = "Admin";
-export default Candidat;
+export default App;

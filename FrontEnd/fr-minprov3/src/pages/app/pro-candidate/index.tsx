@@ -68,7 +68,6 @@ export default function Candidates() {
       setNextRoute('');
     }
   };
-
   const filteredData =
     selectRoute != '' ? 
     candidates?.filter(
@@ -134,7 +133,8 @@ export default function Candidates() {
                 </td>
                 <td className="py-3 text-gray-900">
                   <Typography variant="h6" color="blue-gray">
-                    {dt.user_first_name} {dt.user_last_name}
+                    TEST
+                    {/* {dt.user_first_name} {dt.user_last_name} */}
                   </Typography>
                 </td>
                 <td className="py-3 text-gray-900">
@@ -143,31 +143,36 @@ export default function Candidates() {
                     color="blue-gray"
                     className="opacity-70"
                   >
-                    {dt.pmail_address}
+                    A
+                    {/* {dt.pmail_address} */}
                   </Typography>
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="opacity-70 italic"
                   >
-                    {dt.uspo_ponty_code}{dt.uspo_number}
+                    A
+                    {/* {dt.uspo_ponty_code}{dt.uspo_number} */}
                   </Typography>
                 </td>
                 <td className="py-3 text-gray-900">
                   <Typography variant="small" color="blue-gray">
-                    {dt.jopo_title}
+                    A
+                    {/* {dt.jopo_title} */}
                   </Typography>
                 </td>
                 <td className="py-3 text-gray-900">
                   <Typography variant="small" color="blue-gray">
-                    Mendaftar pada {dt.taap_modified_date.substring(0, 10)}
+                    A
+                    {/* Mendaftar pada {dt.taap_modified_date.substring(0, 10)} */}
                   </Typography>
                   <Typography
                     variant="small"
                     color="blue-gray"
                     className="opacity-70"
                   >
-                    Status: {dt.taap_status}
+                    A
+                    {/* Status: {dt.taap_status} */}
                   </Typography>
                 </td>
                 {selectRoute==='Interview'||selectRoute==='Succeed'||selectRoute==='Failed'?

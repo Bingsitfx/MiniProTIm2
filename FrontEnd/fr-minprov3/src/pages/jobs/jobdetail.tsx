@@ -64,10 +64,9 @@ const JobDetail = () => {
 
   const handleClick = () => {
     setIsPressed(true);
+  const dataUserJob = {}
 
-    
-    alert('BUTTON DI TEKAN')
-    // Lakukan tindakan atau fungsi lain yang diinginkan saat tombol ditekan
+  
   };
 
   if (loadedData) {
@@ -214,7 +213,8 @@ const JobDetail = () => {
                           isPressed ? "bg-gray-300" : "bg-blue-500  hover:bg-blue-500"
                         } shadow-md rounded-lg border border-blue-200 md:px-12 md:py-1 flex items-center`}
                       >
-                        Apply
+                        {isPressed? <div>Appllied</div>:<div>Apply</div>}
+                        
                       </button>
                     </div>
                     <div>

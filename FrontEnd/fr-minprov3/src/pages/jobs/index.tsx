@@ -313,7 +313,9 @@ const handleNewestButton = ()=>{
 
     const query = new URLSearchParams(queryParams).toString();
 
-    router.push(`?${query}`);
+      router.push(`?${query}`);
+ 
+
   };
 
   /* UNTUK MERESET ADDRESS */
@@ -365,7 +367,7 @@ const handleNewestButton = ()=>{
         </div>
         <h2 className="py-5 text-lg ">100 Lowongan Pekerjaan di Indonesia</h2>
         <div className=" p-2.5 ">
-          <div className="flex flex-wrap lg:flex-none lg:justify-center">
+          <div className="flex flex-wrap lg:flex-none ">
             <FilterComp
               handleToggle={handleToggle}
               valueCheck={isToggleChecked}

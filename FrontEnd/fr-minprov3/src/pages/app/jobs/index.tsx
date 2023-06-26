@@ -62,8 +62,17 @@ useEffect(()=>{
 
   const displayData = isSearching ? filteredData : job_post;
 
-  /* FILTER START */
+  /* FILTER END */
 
+  
+    const handlePublishChange = (event:any,data:any)=>{
+      // console.log('IDIDID',data,'EVENT',event.target.checked)
+      const status =event.target.checked? 'publish' : 'draft'
+  
+      const union = {id:data , status:status}
+      console.log(union)
+        dispatch(doRequestUpdateStatus(union))
+    }
 
   /* UNTUK PAGING START */
 
@@ -80,15 +89,6 @@ useEffect(()=>{
   
   /* UNTUK PAGING START END*/
 
-
-  const handlePublishChange = (event:any,data:any)=>{
-    // console.log('IDIDID',data,'EVENT',event.target.checked)
-    const status =event.target.checked? 'publish' : 'draft'
-
-    const union = {id:data , status:status}
-    console.log(union)
-      dispatch(doRequestUpdateStatus(union))
-  }
 
   return (
     <div>

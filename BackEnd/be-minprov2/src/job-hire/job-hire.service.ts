@@ -29,6 +29,8 @@ export class JobHireService {
         limit: 1,
       });
 
+      console.log('NUMBER', currentNumber);
+
       const formattedJopoId = currentNumber
         ? currentNumber.get('formatted_jopo_id')
         : null;
@@ -664,7 +666,6 @@ export class JobHireService {
           taap_entity_id: fields.entity_id,
         },
       ];
-      console.log('DATA', data);
 
       const query = `CALL job_hire.createtalent('${JSON.stringify(data)}')`;
       const result = await this.sequelize.query(query);
@@ -678,6 +679,39 @@ export class JobHireService {
   async findProCandidate() {
     try {
       const query = `SELECT * FROM job_hire.pro_candidate_view`;
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async CandidateApply() {
+    try {
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'apply'`;
+
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async CandidateInterview() {
+    try {
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'interview'`;
+
+      const result = await this.sequelize.query(query);
+      return result[0];
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  async CandidateContract() {
+    try {
+      const query = `SELECT * FROM job_hire.pro_candidate_view WHERE taap_status = 'contract'`;
+
       const result = await this.sequelize.query(query);
       return result[0];
     } catch (error) {

@@ -226,6 +226,21 @@ export class JobHireController {
     return this.jobHireService.findProCandidate();
   }
 
+  @Get('talent/apply')
+  CandidateApply() {
+    return this.jobHireService.CandidateApply();
+  }
+
+  @Get('talent/interview')
+  CandidateInterview() {
+    return this.jobHireService.CandidateInterview();
+  }
+
+  @Get('talent/contract')
+  CandidateContract() {
+    return this.jobHireService.CandidateContract();
+  }
+
   @Patch('talent/:id')
   updateTalent(@Param('id') id: string, @Body() updateTalent: any) {
     return this.jobHireService.updateTalent(+id, updateTalent);

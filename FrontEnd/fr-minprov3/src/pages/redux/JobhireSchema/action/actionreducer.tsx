@@ -209,14 +209,41 @@ export const doResponseGetEmprange = (payload: any) => {
 
 /*------------ TALENT APPLY SECTION -------------*/
 
-export const doRequestGetCandidate = () => {
+//apply
+export const doRequestGetCandidateApply = () => {
   return {
-    type: ActionTypes.REQ_GET_CANDIDATE
+    type: ActionTypes.REQ_GET_CANDIDATE_APPLY,
   };
 };
-export const doResponseGetCandidate = (payload: any) => {
+export const doResponseGetCandidateApply = (payload: any) => {
   return {
-    type: ActionTypes.RES_GET_CANDIDATE,
+    type: ActionTypes.RES_GET_CANDIDATE_APPLY,
+    payload
+  };
+};
+
+//interview
+export const doRequestGetCandidateInterview = () => {
+  return {
+    type: ActionTypes.REQ_GET_CANDIDATE_INTERVIEW,
+  };
+};
+export const doResponseGetCandidateInterview = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_CANDIDATE_INTERVIEW,
+    payload
+  };
+};
+
+//contract
+export const doRequestGetCandidateContract= () => {
+  return {
+    type: ActionTypes.REQ_GET_CANDIDATE_CONTRACT,
+  };
+};
+export const doResponseGetCandidateContract = (payload: any) => {
+  return {
+    type: ActionTypes.RES_GET_CANDIDATE_CONTRACT,
     payload
   };
 };

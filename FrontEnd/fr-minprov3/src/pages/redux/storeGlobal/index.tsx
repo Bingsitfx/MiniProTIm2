@@ -31,6 +31,7 @@ const reducer = combineReducers({
     CityReducers,
     JobPhotoReducers,
     RouteactionReducers,
+    
 
 });
 

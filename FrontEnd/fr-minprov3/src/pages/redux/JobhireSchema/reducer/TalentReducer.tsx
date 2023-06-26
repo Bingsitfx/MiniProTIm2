@@ -1,7 +1,9 @@
 import ActionTypes from "../action/actiontype";
 
 const initialState = {
-    candidates: [],
+    candidates_apply: [],
+    candidates_interview: [],
+    candidates_contract :[],
     message: "",
     status: "",
     refresh: "",
@@ -11,8 +13,14 @@ const initialState = {
     const { type, payload } = action;
     console.log("talentReducer payload",payload);
     switch (type) {
-      case ActionTypes.RES_GET_CANDIDATE:
-        return { ...state, candidates: payload, refresh: true };  
+      case ActionTypes.RES_GET_CANDIDATE_APPLY:
+        return { ...state, candidates_apply: payload, refresh: true };  
+        
+      case ActionTypes.RES_GET_CANDIDATE_INTERVIEW:
+        return { ...state, candidates_interview: payload, refresh: true };  
+        
+      case ActionTypes.RES_GET_CANDIDATE_CONTRACT:
+        return { ...state, candidates_contract: payload, refresh: true };  
         
       case ActionTypes.RES_UPDATE_CANDIDATE:
         return { message: payload.message, status: payload.status, refresh: false };  

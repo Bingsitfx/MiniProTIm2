@@ -54,9 +54,16 @@ const searchPostJob =(data:any)=>{
 
 /*-------- TALENT APPLY ---------*/
 
-const findProCandidate =()=>{
-    return axios.get("/job-hire/talent")
+const findProCandidateApply =()=>{
+    return axios.get("/job-hire/talent/apply")
 }
+const findProCandidateInterview =()=>{
+    return axios.get("/job-hire/talent/interview")
+}
+const findProCandidateContract =()=>{
+    return axios.get("/job-hire/talent/contract")
+}
+
 
 const updateCandidate =(data:any)=>{
     console.log("API DATA UPDATE", data);
@@ -148,7 +155,9 @@ export default {
     findCity,
     findRouteaction,
 
-    findProCandidate,
+    findProCandidateApply,
+    findProCandidateInterview,
+    findProCandidateContract,
     updateCandidate
 
 }
