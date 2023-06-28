@@ -23,7 +23,6 @@ const initialState = {
         return {
           message: payload.message,
           status: payload.status,
-          message2:payload.result,
           refresh: false,
         };
       case ActionTypes.RES_UPDATE_CLIENT:
